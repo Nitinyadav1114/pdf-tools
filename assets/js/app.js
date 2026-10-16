@@ -678,9 +678,112 @@
     }
   }
 
+  // ==========================================
+  // BINARY MAGIC BYTE SECURITY VALIDATORS
+  // ==========================================
+
+  /**
+   * Validate that a file or blob contains genuine PDF magic bytes (%PDF-).
+   * Checks up to 1024 bytes per the PDF ISO 32000-1 specification.
+   * @param {File|Blob} file
+   * @returns {Promise<boolean>}
+   */
+  async function isValidPdfFile(file) {
+    if (!file) return false;
+    try {
+      let sliceBuffer;
+      if (typeof file.slice === 'function') {
+        const slice = file.slice(0, 1024);
+        sliceBuffer = await slice.arrayBuffer();
+      } else if (typeof file.arrayBuffer === 'function') {
+        sliceBuffer = await file.arrayBuffer();
+      } else {
+        return false;
+      }
+      const bytes = new Uint8Array(sliceBuffer);
+      if (bytes.length < 5) return false;
+
+      // Scan up to 1024 bytes for %PDF- (0x25 0x50 0x44 0x46 0x2D)
+      const maxScan = Math.min(bytes.length - 4, 1024);
+      for (let i = 0; i < maxScan; i++) {
+        if (
+          bytes[i] === 0x25 && // %
+          bytes[i + 1] === 0x50 && // P
+          bytes[i + 2] === 0x44 && // D
+          bytes[i + 3] === 0x46 && // F
+          bytes[i + 4] === 0x2D    // -
+        ) {
+          return true;
+        }
+      }
+      return false;
+    } catch {
+      return false;
+    }
+  }
+
+  /**
+   * Validate that a file or blob contains genuine Image magic bytes (JPEG, PNG, WebP, GIF, BMP, SVG, AVIF).
+   * @param {File|Blob} file
+   * @returns {Promise<boolean>}
+   */
+  async function isValidImageFile(file) {
+    if (!file) return false;
+    try {
+      let sliceBuffer;
+      if (typeof file.slice === 'function') {
+        const slice = file.slice(0, 64);
+        sliceBuffer = await slice.arrayBuffer();
+      } else if (typeof file.arrayBuffer === 'function') {
+        sliceBuffer = await file.arrayBuffer();
+      } else {
+        return false;
+      }
+      const b = new Uint8Array(sliceBuffer);
+      if (b.length < 4) return false;
+
+      // JPEG: FF D8 FF
+      if (b[0] === 0xFF && b[1] === 0xD8 && b[2] === 0xFF) return true;
+      // PNG: 89 50 4E 47
+      if (b[0] === 0x89 && b[1] === 0x50 && b[2] === 0x4E && b[3] === 0x47) return true;
+      // GIF: 47 49 46 38 ('GIF8')
+      if (b[0] === 0x47 && b[1] === 0x49 && b[2] === 0x46 && b[3] === 0x38) return true;
+      // BMP: 42 4D ('BM')
+      if (b[0] === 0x42 && b[1] === 0x4D) return true;
+      // WebP: 'RIFF'....'WEBP'
+      if (
+        b.length >= 12 &&
+        b[0] === 0x52 && b[1] === 0x49 && b[2] === 0x46 && b[3] === 0x46 &&
+        b[8] === 0x57 && b[9] === 0x45 && b[10] === 0x42 && b[11] === 0x50
+      ) {
+        return true;
+      }
+      // AVIF: bytes 4..7 'ftyp' and 8..11 'avif'/'avis'
+      if (
+        b.length >= 12 &&
+        b[4] === 0x66 && b[5] === 0x74 && b[6] === 0x79 && b[7] === 0x70 &&
+        b[8] === 0x61 && b[9] === 0x76 && b[10] === 0x69 && (b[11] === 0x66 || b[11] === 0x73)
+      ) {
+        return true;
+      }
+      // SVG: check for <?xml or <svg
+      if (typeof TextDecoder !== 'undefined') {
+        const text = new TextDecoder('utf-8', { fatal: false }).decode(b).trim().toLowerCase();
+        if (text.startsWith('<svg') || text.startsWith('<?xml')) {
+          return true;
+        }
+      }
+      return false;
+    } catch {
+      return false;
+    }
+  }
+
   // Export for testing and diagnostics
   if (typeof window !== 'undefined') {
     window.trackToolUsage = trackToolUsage;
+    window.isValidPdfFile = isValidPdfFile;
+    window.isValidImageFile = isValidImageFile;
   }
 
   // ==========================================
@@ -795,9 +898,31 @@
   }
 
   async function handleMergeFilesAdded(fileList) {
-    const validPdfs = Array.from(fileList).filter((f) => {
-      return f.type === 'application/pdf' || f.name.toLowerCase().endsWith('.pdf');
-    });
+    if (!fileList || fileList.length === 0) return;
+
+    const validPdfs = [];
+    const invalidFiles = [];
+
+    for (const f of Array.from(fileList)) {
+      const isExt = f.type === 'application/pdf' || f.name.toLowerCase().endsWith('.pdf');
+      if (!isExt) {
+        invalidFiles.push(f.name);
+        continue;
+      }
+      const isGenuine = await isValidPdfFile(f);
+      if (!isGenuine) {
+        invalidFiles.push(f.name);
+      } else {
+        validPdfs.push(f);
+      }
+    }
+
+    if (invalidFiles.length > 0 && validPdfs.length === 0) {
+      alert(`Security Warning: The selected file(s) [${invalidFiles.join(', ')}] are not genuine or valid PDF documents. Upload rejected.`);
+      return;
+    } else if (invalidFiles.length > 0) {
+      alert(`Security Notice: Excluded invalid or non-PDF file(s): ${invalidFiles.join(', ')}`);
+    }
 
     if (validPdfs.length === 0) {
       alert('Please select valid PDF files.');
@@ -1255,6 +1380,12 @@
       return;
     }
 
+    const isGenuinePdf = await isValidPdfFile(file);
+    if (!isGenuinePdf) {
+      alert(`Security Warning: "${file.name}" is not a genuine or valid PDF document (missing %PDF- header). Upload rejected.`);
+      return;
+    }
+
     removeState.file = file;
     removeState.selectedPages.clear();
     removeResultCard.classList.add('hidden');
@@ -1678,6 +1809,12 @@
   async function handleSlidesFileSelected(file) {
     if (!file || (file.type !== 'application/pdf' && !file.name.toLowerCase().endsWith('.pdf'))) {
       alert('Please select a valid PDF file.');
+      return;
+    }
+
+    const isGenuinePdf = await isValidPdfFile(file);
+    if (!isGenuinePdf) {
+      alert(`Security Warning: "${file.name}" is not a genuine or valid PDF document (missing %PDF- header). Upload rejected.`);
       return;
     }
 
@@ -2296,6 +2433,12 @@
       return;
     }
 
+    const isGenuinePdf = await isValidPdfFile(file);
+    if (!isGenuinePdf) {
+      alert(`Security Warning: "${file.name}" is not a genuine or valid PDF document (missing %PDF- header). Upload rejected.`);
+      return;
+    }
+
     try {
       invertFileName.textContent = file.name;
       invertFileSubtext.textContent = 'Analyzing PDF...';
@@ -2799,6 +2942,12 @@
       return;
     }
 
+    const isGenuinePdf = await isValidPdfFile(file);
+    if (!isGenuinePdf) {
+      alert(`Security Warning: "${file.name}" is not a genuine or valid PDF document (missing %PDF- header). Upload rejected.`);
+      return;
+    }
+
     try {
       const arrayBuffer = await file.arrayBuffer();
 
@@ -3222,16 +3371,36 @@
     if (!fileList || fileList.length === 0) return;
 
     const validExtensions = /\.(jpe?g|png|webp|gif|bmp|svg|avif)$/i;
-    const newFiles = Array.from(fileList).filter((f) => {
-      return f.type.startsWith('image/') || validExtensions.test(f.name);
-    });
+    const validImages = [];
+    const invalidImages = [];
 
-    if (newFiles.length === 0) {
+    for (const f of Array.from(fileList)) {
+      const isExt = f.type.startsWith('image/') || validExtensions.test(f.name);
+      if (!isExt) {
+        invalidImages.push(f.name);
+        continue;
+      }
+      const isGenuine = await isValidImageFile(f);
+      if (!isGenuine) {
+        invalidImages.push(f.name);
+      } else {
+        validImages.push(f);
+      }
+    }
+
+    if (invalidImages.length > 0 && validImages.length === 0) {
+      alert(`Security Warning: The selected file(s) [${invalidImages.join(', ')}] are not genuine image files (corrupted or unrecognized format). Upload rejected.`);
+      return;
+    } else if (invalidImages.length > 0) {
+      alert(`Security Notice: Excluded invalid or corrupted image file(s): ${invalidImages.join(', ')}`);
+    }
+
+    if (validImages.length === 0) {
       alert('Please select valid image files (JPG, PNG, WebP, GIF, BMP).');
       return;
     }
 
-    for (const file of newFiles) {
+    for (const file of validImages) {
       const objUrl = URL.createObjectURL(file);
       const dims = await new Promise((resolve) => {
         const img = new Image();
