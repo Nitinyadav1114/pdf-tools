@@ -1,0 +1,25 @@
+{
+  "name": "PDF Tools - All-in-One Browser Suite",
+  "short_name": "PDF Tools",
+  "description": "Fast, 100% private in-browser PDF suite. Merge, compress, remove pages, convert slides to A4, invert colors, and convert images to PDF without uploading any file.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#0a0f1d",
+  "theme_color": "#4f46e5",
+  "icons": [
+    {
+      "src": "assets/icon.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "assets/icon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
