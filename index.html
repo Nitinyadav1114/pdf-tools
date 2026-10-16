@@ -9,6 +9,22 @@
   <meta name="author" content="PDF Tools">
   <meta name="robots" content="index, follow">
 
+  <!-- Security & Privacy Hardening -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self' https://cloudflareinsights.com blob: data:; worker-src 'self' blob:; object-src 'self' blob:; frame-src 'self' blob:; base-uri 'self'; form-action 'self';">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <meta http-equiv="Permissions-Policy" content="camera=(), microphone=(), geolocation=(), payment=(), usb=()">
+
+  <!-- Anti-Clickjacking: prevent framing by malicious third-party websites -->
+  <script>
+    if (window.top !== window.self) {
+      try {
+        window.top.location = window.self.location;
+      } catch (e) {
+        document.documentElement.style.display = 'none';
+      }
+    }
+  </script>
+
   <!-- Open Graph / WhatsApp / Facebook / Telegram -->
   <meta property="og:type" content="website">
   <meta property="og:title" content="PDF Tools — All-in-One Private Browser PDF Suite">
