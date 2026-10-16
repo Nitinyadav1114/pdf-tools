@@ -61,7 +61,12 @@ A modern, responsive, and privacy-first web application built for daily PDF task
 
 Because this app has zero backend dependencies, you can deploy it in seconds for free:
 
-###GitHub Pages (Permanent Free Hosting)
+### Option 1: Netlify Drop (Instant, No Git Required)
+1. Open [app.netlify.com/drop](https://app.netlify.com/drop).
+2. Drag and drop this folder directly into your browser.
+3. You immediately get a live HTTPS URL (e.g. `https://my-pdf-tools.netlify.app`) to share with friends.
+
+### Option 2: GitHub Pages (Permanent Free Hosting)
 1. Push this folder to a GitHub repository.
 2. Go to **Settings** > **Pages** > Select `main` branch.
 3. Your site is live at `https://<username>.github.io/<repo-name>/`.
