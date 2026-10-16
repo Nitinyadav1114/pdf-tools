@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
   <title>PDF Tools — Free, Fast &amp; 100% Private In-Browser PDF Suite</title>
   <meta name="description" content="All-in-one free browser PDF tools. Merge PDFs, compress files up to 90%, remove pages, convert slides to A4 handouts, invert colors to save ink, and convert images to PDF. 100% private in browser — no downloads or accounts required.">
   <meta name="keywords" content="PDF tools, merge PDF, compress PDF, PDF compressor, invert PDF colors, dark to light PDF, slides to A4 handout, remove PDF pages, image to PDF, JPG to PDF, private PDF editor, client-side PDF, in-browser PDF">
@@ -61,7 +61,8 @@
             <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
             <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
           </svg>
-          100% In-Browser &amp; Private
+          <span class="privacy-text-full">100% In-Browser &amp; Private</span>
+          <span class="privacy-text-short">100% Private</span>
         </span>
         <button id="themeToggleBtn" class="btn-icon" aria-label="Toggle dark/light mode" title="Toggle theme">
           <span class="theme-icon light-icon">🌙</span>
@@ -143,8 +144,8 @@
                   <line x1="12" y1="3" x2="12" y2="15"></line>
                 </svg>
               </div>
-              <h2 class="dropzone-title">Drop your PDF files here</h2>
-              <p class="dropzone-desc">or <span class="browse-link">browse from your computer</span></p>
+              <h2 class="dropzone-title"><span class="drop-text-desktop">Drop your PDF files here</span><span class="drop-text-mobile">Tap to select PDF files</span></h2>
+              <p class="dropzone-desc">or <span class="browse-link">browse from your device</span></p>
               <p class="dropzone-hint">Supports multiple files &bull; Auto-sorts by timestamp &bull; Drag to reorder</p>
             </div>
           </div>
@@ -324,8 +325,8 @@
                   <line x1="9" y1="15" x2="15" y2="15"></line>
                 </svg>
               </div>
-              <h2 class="dropzone-title">Select a PDF to Remove Pages</h2>
-              <p class="dropzone-desc">Drop your PDF here or <span class="browse-link">browse from your computer</span></p>
+              <h2 class="dropzone-title"><span class="drop-text-desktop">Select a PDF to Remove Pages</span><span class="drop-text-mobile">Tap to select PDF</span></h2>
+              <p class="dropzone-desc"><span class="browse-link">Choose PDF file</span> from your device</p>
               <p class="dropzone-hint">Select pages by entering numbers (e.g. 1, 2, 7, 8) or click pages visually</p>
             </div>
           </div>
@@ -469,8 +470,8 @@
                   <line x1="12" y1="17" x2="12" y2="21"></line>
                 </svg>
               </div>
-              <h2 class="dropzone-title">Upload Presentation PDF</h2>
-              <p class="dropzone-desc">Drop your PPT slides PDF here or <span class="browse-link">browse from your computer</span></p>
+              <h2 class="dropzone-title"><span class="drop-text-desktop">Upload Presentation PDF</span><span class="drop-text-mobile">Tap to select Slides PDF</span></h2>
+              <p class="dropzone-desc"><span class="browse-link">Choose presentation</span> from your device</p>
               <p class="dropzone-hint">Fits 3 slides per A4 page &bull; Clean layout &bull; Optional note lines</p>
             </div>
           </div>
@@ -655,8 +656,8 @@
                   <path d="M12 2a10 10 0 0 1 0 20z" fill="currentColor"></path>
                 </svg>
               </div>
-              <h2 class="dropzone-title">Select a PDF to Invert Colors</h2>
-              <p class="dropzone-desc">Drop your PDF here or <span class="browse-link">browse from your computer</span></p>
+              <h2 class="dropzone-title"><span class="drop-text-desktop">Select a PDF to Invert Colors</span><span class="drop-text-mobile">Tap to select PDF to Invert</span></h2>
+              <p class="dropzone-desc"><span class="browse-link">Choose PDF file</span> from your device</p>
               <p class="dropzone-hint">Invert dark backgrounds to clean white paper &bull; Save printer ink &bull; Crisp hardcopy printouts</p>
             </div>
           </div>
@@ -883,8 +884,8 @@
                   <line x1="3" y1="21" x2="10" y2="14"></line>
                 </svg>
               </div>
-              <h2 class="dropzone-title">Drop PDF to Compress</h2>
-              <p class="dropzone-desc">Drop your PDF here or <span class="browse-link">browse from your computer</span></p>
+              <h2 class="dropzone-title"><span class="drop-text-desktop">Drop PDF to Compress</span><span class="drop-text-mobile">Tap to select PDF to Compress</span></h2>
+              <p class="dropzone-desc"><span class="browse-link">Choose PDF file</span> from your device</p>
               <p class="dropzone-hint">Smart lossless &amp; visual compression &bull; Up to 90% size reduction &bull; 100% private</p>
             </div>
           </div>
@@ -1115,8 +1116,8 @@
                   <polyline points="21 15 16 10 5 21"></polyline>
                 </svg>
               </div>
-              <h2 class="dropzone-title">Drop your image files here</h2>
-              <p class="dropzone-desc">or <span class="browse-link">browse from your computer</span></p>
+              <h2 class="dropzone-title"><span class="drop-text-desktop">Drop your image files here</span><span class="drop-text-mobile">Tap to select Photos / Images</span></h2>
+              <p class="dropzone-desc"><span class="browse-link">Choose images</span> from photo library or files</p>
               <p class="dropzone-hint">Supports JPG, PNG, WebP, GIF, BMP &bull; Drag to reorder &bull; Rotate &amp; convert to PDF</p>
             </div>
           </div>
@@ -1299,6 +1300,21 @@
         </section>
       </div>
     </main>
+
+    <!-- Mobile PWA Install Banner -->
+    <div id="pwaInstallBanner" class="pwa-install-banner hidden">
+      <div class="pwa-install-content">
+        <div class="pwa-install-icon">📲</div>
+        <div class="pwa-install-text">
+          <strong class="pwa-install-title">Install PDF Tools App</strong>
+          <span class="pwa-install-desc">Fast, 100% private offline access from your home screen</span>
+        </div>
+      </div>
+      <div class="pwa-install-actions">
+        <button id="pwaInstallBtn" class="btn btn-primary btn-sm">Install</button>
+        <button id="pwaDismissBtn" class="btn-pwa-dismiss" aria-label="Dismiss banner">&times;</button>
+      </div>
+    </div>
 
     <!-- Footer -->
     <footer class="app-footer">
