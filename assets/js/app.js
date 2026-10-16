@@ -370,6 +370,7 @@
   const resultSummary = document.getElementById('resultSummary');
   const downloadBtn = document.getElementById('downloadBtn');
   const previewBtn = document.getElementById('previewBtn');
+  const shareBtn = document.getElementById('shareBtn');
 
   // Remove Pages DOM Elements
   const removeDropzone = document.getElementById('removeDropzone');
@@ -397,6 +398,7 @@
   const removeResultSummary = document.getElementById('removeResultSummary');
   const removeDownloadBtn = document.getElementById('removeDownloadBtn');
   const removePreviewBtn = document.getElementById('removePreviewBtn');
+  const removeShareBtn = document.getElementById('removeShareBtn');
 
   // Slides to A4 DOM Elements
   const slidesDropzone = document.getElementById('slidesDropzone');
@@ -424,6 +426,7 @@
   const slidesResultSummary = document.getElementById('slidesResultSummary');
   const slidesDownloadBtn = document.getElementById('slidesDownloadBtn');
   const slidesPreviewBtn = document.getElementById('slidesPreviewBtn');
+  const slidesShareBtn = document.getElementById('slidesShareBtn');
 
   // Invert Colors DOM Elements
   const invertDropzone = document.getElementById('invertDropzone');
@@ -457,6 +460,7 @@
   const invertResultSummary = document.getElementById('invertResultSummary');
   const invertDownloadBtn = document.getElementById('invertDownloadBtn');
   const invertPreviewBtn = document.getElementById('invertPreviewBtn');
+  const invertShareBtn = document.getElementById('invertShareBtn');
 
   // Merge tab optimization toggle
   const mergeCompressToggle = document.getElementById('mergeCompressToggle');
@@ -495,6 +499,7 @@
   const statPercentSaved = document.getElementById('statPercentSaved');
   const compressDownloadBtn = document.getElementById('compressDownloadBtn');
   const compressPreviewBtn = document.getElementById('compressPreviewBtn');
+  const compressShareBtn = document.getElementById('compressShareBtn');
 
   // Simplified Tab 4 & 5 UI Elements
   const btnShowOriginal = document.getElementById('btnShowOriginal');
@@ -535,6 +540,7 @@
   const imagesResultSummary = document.getElementById('imagesResultSummary');
   const imagesDownloadBtn = document.getElementById('imagesDownloadBtn');
   const imagesPreviewBtn = document.getElementById('imagesPreviewBtn');
+  const imagesShareBtn = document.getElementById('imagesShareBtn');
   const imagesSendToCompressBtn = document.getElementById('imagesSendToCompressBtn');
 
   // SortableJS instance
@@ -1041,7 +1047,45 @@
     }
   }
 
+  // --- Web Share API Helper ---
+  async function handleSharePdf(blob, filename) {
+    if (!blob) return;
+    const safeFilename = filename || 'document.pdf';
+    try {
+      if (typeof File !== 'undefined' && typeof navigator !== 'undefined' && navigator.canShare) {
+        const file = new File([blob], safeFilename, { type: 'application/pdf' });
+        if (navigator.canShare({ files: [file] })) {
+          await navigator.share({
+            files: [file],
+            title: safeFilename,
+            text: 'Sharing processed PDF from PDF Tools.'
+          });
+          return;
+        }
+      }
+    } catch (err) {
+      if (err.name === 'AbortError') return;
+      console.warn('File share failed, falling back to URL share:', err);
+    }
+
+    if (typeof navigator !== 'undefined' && navigator.share) {
+      try {
+        await navigator.share({
+          title: safeFilename,
+          url: window.location.href
+        });
+      } catch (err) {
+        if (err.name !== 'AbortError') {
+          console.error('Share fallback failed:', err);
+        }
+      }
+    } else {
+      alert('Sharing is not supported on this device. Please use the Download button.');
+    }
+  }
+
   async function mergePdfs() {
+    if (mergeBtn && mergeBtn.disabled) return;
     if (mergeState.files.length < 2) {
       alert('Please add at least 2 PDF files to merge.');
       return;
@@ -1120,6 +1164,7 @@
       downloadBtn.download = rawFilename;
 
       resultSummary.textContent = `Successfully merged ${totalFiles} files (${totalMergedPages} total pages • ${formatBytes(mergeState.mergedBlob.size)}).`;
+      if (shareBtn && typeof navigator !== 'undefined' && navigator.share) shareBtn.classList.remove('hidden');
       resultCard.classList.remove('hidden');
       resultCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     } catch (err) {
@@ -1466,6 +1511,7 @@
 
   // Execute Deletion of Selected Pages & Build Clean PDF
   async function executeRemovePages() {
+    if (executeRemoveBtn && executeRemoveBtn.disabled) return;
     if (!removeState.file || removeState.totalPages === 0) {
       alert('Please upload a PDF first.');
       return;
@@ -1543,6 +1589,7 @@
       const deletedCount = removeState.selectedPages.size;
       const keptCount = keptPages.length;
       removeResultSummary.textContent = `Deleted ${deletedCount} ${deletedCount === 1 ? 'page' : 'pages'}. New PDF contains ${keptCount} ${keptCount === 1 ? 'page' : 'pages'} (${formatBytes(removeState.outputBlob.size)}).`;
+      if (removeShareBtn && typeof navigator !== 'undefined' && navigator.share) removeShareBtn.classList.remove('hidden');
       removeResultCard.classList.remove('hidden');
       removeResultCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     } catch (err) {
@@ -1816,6 +1863,7 @@
 
   // Generate A4 Handout with embedded slides via PDFLib
   async function executeGenerateSlidesA4() {
+    if (executeSlidesBtn && executeSlidesBtn.disabled) return;
     if (!slidesState.file || slidesState.totalSlides === 0) {
       alert('Please upload a presentation PDF first.');
       return;
@@ -2154,6 +2202,7 @@
       slidesDownloadBtn.download = rawFilename;
 
       slidesResultSummary.textContent = `Formatted ${totalSlides} slides onto ${totalA4Pages} A4 pages (${formatBytes(slidesState.outputBlob.size)}).`;
+      if (slidesShareBtn && typeof navigator !== 'undefined' && navigator.share) slidesShareBtn.classList.remove('hidden');
       slidesResultCard.classList.remove('hidden');
       slidesResultCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     } catch (err) {
@@ -2502,6 +2551,7 @@
   }
 
   async function executeInvertPdf() {
+    if (executeInvertBtn && executeInvertBtn.disabled) return;
     if (!invertState.file || invertState.totalPages === 0) {
       alert('Please upload a PDF document first.');
       return;
@@ -2649,6 +2699,7 @@
       invertDownloadBtn.download = rawFilename;
 
       invertResultSummary.textContent = `Successfully inverted ${pagesToInvertSet.size} of ${totalPages} pages (${formatBytes(invertState.outputBlob.size)}). Ready for printing!`;
+      if (invertShareBtn && typeof navigator !== 'undefined' && navigator.share) invertShareBtn.classList.remove('hidden');
       invertResultCard.classList.remove('hidden');
       invertResultCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     } catch (err) {
@@ -2916,6 +2967,7 @@
   }
 
   async function executeCompressPDF() {
+    if (executeCompressBtn && executeCompressBtn.disabled) return;
     if (!compressState.arrayBuffer || !window.PDFLib) {
       alert('No PDF file loaded or PDF-Lib is not ready.');
       return;
@@ -3075,6 +3127,7 @@
         compressResultSummary.textContent = `Document is already packed with optimal streams (${formatBytes(compBytes)}).`;
       }
 
+      if (compressShareBtn && typeof navigator !== 'undefined' && navigator.share) compressShareBtn.classList.remove('hidden');
       compressResultCard.classList.remove('hidden');
       compressResultCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     } catch (err) {
@@ -3272,6 +3325,7 @@
   }
 
   async function executeImagesToPDF() {
+    if (executeImagesBtn && executeImagesBtn.disabled) return;
     if (!imagesState.images || imagesState.images.length === 0) {
       alert('Please add at least one image to convert.');
       return;
@@ -3424,6 +3478,7 @@
       imagesDownloadBtn.download = filename;
       imagesResultSummary.textContent = `Successfully converted ${total} image${total > 1 ? 's' : ''} into a ${formatBytes(pdfBytes.length)} PDF document.`;
 
+      if (imagesShareBtn && typeof navigator !== 'undefined' && navigator.share) imagesShareBtn.classList.remove('hidden');
       imagesResultCard.classList.remove('hidden');
       imagesResultCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     } catch (err) {
@@ -3461,6 +3516,7 @@
 
     // --- Merge Tab Events ---
     dropzone.addEventListener('click', () => fileInput.click());
+    dropzone.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); fileInput.click(); } });
     fileInput.addEventListener('change', (e) => {
       if (e.target.files && e.target.files.length > 0) {
         handleMergeFilesAdded(e.target.files);
@@ -3515,6 +3571,11 @@
     });
 
     mergeBtn.addEventListener('click', mergePdfs);
+    if (shareBtn) {
+      shareBtn.addEventListener('click', () => {
+        handleSharePdf(mergeState.mergedBlob, downloadBtn.download || 'merged-document.pdf');
+      });
+    }
     previewBtn.addEventListener('click', () => {
       if (mergeState.mergedUrl) {
         window.open(mergeState.mergedUrl, '_blank');
@@ -3523,6 +3584,7 @@
 
     // --- Remove Pages Tab Events ---
     removeDropzone.addEventListener('click', () => removeFileInput.click());
+    removeDropzone.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); removeFileInput.click(); } });
     removeFileInput.addEventListener('change', (e) => {
       if (e.target.files && e.target.files.length > 0) {
         handleRemoveFileSelected(e.target.files[0]);
@@ -3558,6 +3620,11 @@
     btnInvertSelect.addEventListener('click', invertSelection);
     btnClearSelect.addEventListener('click', clearPageSelection);
     executeRemoveBtn.addEventListener('click', executeRemovePages);
+    if (removeShareBtn) {
+      removeShareBtn.addEventListener('click', () => {
+        handleSharePdf(removeState.outputBlob, removeDownloadBtn.download || 'document_pages_removed.pdf');
+      });
+    }
     removePreviewBtn.addEventListener('click', () => {
       if (removeState.outputUrl) {
         window.open(removeState.outputUrl, '_blank');
@@ -3566,6 +3633,7 @@
 
     // --- Slides to A4 Tab Events ---
     slidesDropzone.addEventListener('click', () => slidesFileInput.click());
+    slidesDropzone.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); slidesFileInput.click(); } });
     slidesFileInput.addEventListener('change', (e) => {
       if (e.target.files && e.target.files.length > 0) {
         handleSlidesFileSelected(e.target.files[0]);
@@ -3615,6 +3683,11 @@
       renderA4SheetPreview();
     });
     executeSlidesBtn.addEventListener('click', executeGenerateSlidesA4);
+    if (slidesShareBtn) {
+      slidesShareBtn.addEventListener('click', () => {
+        handleSharePdf(slidesState.outputBlob, slidesDownloadBtn.download || 'presentation_A4_handout.pdf');
+      });
+    }
     slidesPreviewBtn.addEventListener('click', () => {
       if (slidesState.outputUrl) {
         window.open(slidesState.outputUrl, '_blank');
@@ -3627,6 +3700,7 @@
     }
     if (invertDropzone) {
       invertDropzone.addEventListener('click', () => invertFileInput.click());
+      invertDropzone.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); invertFileInput.click(); } });
       ['dragenter', 'dragover'].forEach((eventName) => {
         invertDropzone.addEventListener(eventName, (e) => {
           e.preventDefault();
@@ -3755,6 +3829,11 @@
       executeInvertBtn.addEventListener('click', executeInvertPdf);
     }
 
+    if (invertShareBtn) {
+      invertShareBtn.addEventListener('click', () => {
+        handleSharePdf(invertState.outputBlob, invertDownloadBtn.download || 'document_inverted.pdf');
+      });
+    }
     if (invertPreviewBtn) {
       invertPreviewBtn.addEventListener('click', () => {
         if (invertState.outputUrl) {
@@ -3770,6 +3849,7 @@
 
     if (compressDropzone) {
       compressDropzone.addEventListener('click', () => compressFileInput.click());
+      compressDropzone.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); compressFileInput.click(); } });
       ['dragenter', 'dragover'].forEach((eventName) => {
         compressDropzone.addEventListener(eventName, (e) => {
           e.preventDefault();
@@ -3867,6 +3947,11 @@
       executeCompressBtn.addEventListener('click', executeCompressPDF);
     }
 
+    if (compressShareBtn) {
+      compressShareBtn.addEventListener('click', () => {
+        handleSharePdf(compressState.outputBlob, compressDownloadBtn.download || 'document_compressed.pdf');
+      });
+    }
     if (compressPreviewBtn) {
       compressPreviewBtn.addEventListener('click', () => {
         if (compressState.outputUrl) {
@@ -3918,6 +4003,7 @@
 
     if (imagesDropzone) {
       imagesDropzone.addEventListener('click', () => imagesFileInput.click());
+      imagesDropzone.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); imagesFileInput.click(); } });
       ['dragenter', 'dragover'].forEach((eventName) => {
         imagesDropzone.addEventListener(eventName, (e) => {
           e.preventDefault();
@@ -4000,6 +4086,11 @@
       executeImagesBtn.addEventListener('click', executeImagesToPDF);
     }
 
+    if (imagesShareBtn) {
+      imagesShareBtn.addEventListener('click', () => {
+        handleSharePdf(imagesState.outputBlob, imagesDownloadBtn.download || 'converted_images.pdf');
+      });
+    }
     if (imagesPreviewBtn) {
       imagesPreviewBtn.addEventListener('click', () => {
         if (imagesState.outputUrl) {
