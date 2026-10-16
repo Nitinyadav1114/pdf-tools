@@ -838,6 +838,7 @@
     window.isValidImageFile = isValidImageFile;
     window.createZipArchive = createZipArchive;
     window.pdfToImagesState = pdfToImagesState;
+    window.switchTab = switchTab;
   }
 
   // ==========================================
@@ -4252,9 +4253,18 @@
   // ==========================================
   function initEvents() {
     // Navigation Tabs
-    tabMergeBtn.addEventListener('click', () => switchTab('merge'));
-    tabRemoveBtn.addEventListener('click', () => switchTab('remove'));
-    tabSlidesBtn.addEventListener('click', () => switchTab('slides'));
+    const navTabsContainer = document.querySelector('.nav-tabs');
+    if (navTabsContainer) {
+      navTabsContainer.addEventListener('click', (e) => {
+        const tabBtn = e.target.closest('.nav-tab');
+        if (tabBtn && tabBtn.dataset.tab) {
+          switchTab(tabBtn.dataset.tab);
+        }
+      });
+    }
+    if (tabMergeBtn) tabMergeBtn.addEventListener('click', () => switchTab('merge'));
+    if (tabRemoveBtn) tabRemoveBtn.addEventListener('click', () => switchTab('remove'));
+    if (tabSlidesBtn) tabSlidesBtn.addEventListener('click', () => switchTab('slides'));
 
     // --- Merge Tab Events ---
     dropzone.addEventListener('click', () => fileInput.click());
@@ -4890,7 +4900,11 @@
     }
 
     if (pdfToImagesDropzone) {
-      pdfToImagesDropzone.addEventListener('click', () => pdfToImagesFileInput.click());
+      pdfToImagesDropzone.addEventListener('click', (e) => {
+        if (e.target !== pdfToImagesFileInput) {
+          pdfToImagesFileInput.click();
+        }
+      });
       pdfToImagesDropzone.addEventListener('keydown', (e) => {
         if (e.key === 'Enter' || e.key === ' ') {
           e.preventDefault();
@@ -5103,6 +5117,13 @@
     } else if (tabParam === 'pdftoimages') {
       switchTab('pdftoimages');
     }
+
+    window.addEventListener('hashchange', () => {
+      const hash = window.location.hash.replace('#', '');
+      if (['merge', 'remove', 'slides', 'invert', 'compress', 'images', 'pdftoimages'].includes(hash)) {
+        switchTab(hash);
+      }
+    });
   }
 
   if (document.readyState === 'loading') {

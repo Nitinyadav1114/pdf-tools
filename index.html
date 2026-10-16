@@ -46,7 +46,7 @@
   <link rel="manifest" href="manifest.json">
 
   <!-- Styles & Scripts -->
-  <link rel="stylesheet" href="assets/css/styles.css">
+  <link rel="stylesheet" href="assets/css/styles.css?v=3">
   <script src="assets/vendor/pdf-lib.min.js"></script>
   <script src="assets/vendor/pdf.min.js"></script>
   <script src="assets/vendor/sortable.min.js"></script>
@@ -1389,20 +1389,22 @@
       <!-- ============================================== -->
       <div id="pdfToImagesTabView" class="tab-view hidden">
         <!-- Dropzone Section -->
-        <section id="pdfToImagesDropzoneSection" class="upload-section">
+        <section id="pdfToImagesDropzoneSection" class="dropzone-section">
           <div id="pdfToImagesDropzone" class="dropzone" role="button" tabindex="0" aria-label="Dropzone for PDF to Images. Drop a PDF here or press Enter to browse files.">
-            <div class="dropzone-icon">
-              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                <polyline points="14 2 14 8 20 8"></polyline>
-                <circle cx="10" cy="13" r="2"></circle>
-                <path d="m18 17-2.5-2.5a1.5 1.5 0 0 0-2.12 0L9 19"></path>
-              </svg>
+            <input type="file" id="pdfToImagesFileInput" class="file-input-hidden" accept=".pdf,application/pdf">
+            <div class="dropzone-content">
+              <div class="dropzone-icon-wrapper" style="background-color: rgba(2, 132, 199, 0.1); color: #0284c7;">
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                  <polyline points="14 2 14 8 20 8"></polyline>
+                  <circle cx="10" cy="13" r="2"></circle>
+                  <path d="m18 17-2.5-2.5a1.5 1.5 0 0 0-2.12 0L9 19"></path>
+                </svg>
+              </div>
+              <h2 class="dropzone-title"><span class="drop-text-desktop">Drop your PDF document here</span><span class="drop-text-mobile">Tap to select PDF Document</span></h2>
+              <p class="dropzone-desc"><span class="browse-link">Choose PDF document</span> from your device</p>
+              <p class="dropzone-hint">Convert each page into high-resolution JPG or PNG images &bull; 100% Private in Browser</p>
             </div>
-            <h2 class="dropzone-title">Drop your PDF document here</h2>
-            <p class="dropzone-subtitle">or <span class="browse-link">browse from your computer</span></p>
-            <p class="dropzone-hint">Convert each page into high-resolution JPG or PNG images &bull; 100% Private in Browser</p>
-            <input type="file" id="pdfToImagesFileInput" class="file-input" accept=".pdf,application/pdf">
           </div>
         </section>
 
@@ -1609,12 +1611,22 @@
     </footer>
   </div>
 
-  <script src="assets/js/app.js"></script>
+  <script src="assets/js/app.js?v=3"></script>
   <script>
     // Register Service Worker for fast browser caching & offline access
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw.js').catch(() => {});
+        navigator.serviceWorker.register('./sw.js').then((reg) => {
+          reg.update().catch(() => {});
+        }).catch(() => {});
+      });
+
+      let refreshing = false;
+      navigator.serviceWorker.addEventListener('controllerchange', () => {
+        if (!refreshing) {
+          refreshing = true;
+          window.location.reload();
+        }
       });
     }
   </script>
