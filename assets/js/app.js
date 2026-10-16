@@ -545,7 +545,7 @@
 
   // SortableJS instance
   let sortableInstance = null;
-  if (window.Sortable) {
+  if (window.Sortable && fileListEl) {
     sortableInstance = new Sortable(fileListEl, {
       animation: 200,
       handle: '.drag-handle, .file-card',
@@ -625,6 +625,62 @@
         // Fallback for older browsers
       }
     }
+
+    if (typeof window !== 'undefined' && window.history && window.history.replaceState) {
+      try {
+        window.history.replaceState(null, '', '#' + tab);
+      } catch (e) {}
+    }
+    trackToolUsage(tab, 'viewed');
+  }
+
+  // ==========================================
+  // PRIVACY-PRESERVING TOOL USAGE TRACKING
+  // ==========================================
+  function trackToolUsage(toolName, eventType = 'used') {
+    const eventPath = `/tool-${toolName}`;
+    const eventTitle = `${eventType === 'used' ? 'Used' : 'Viewed'} ${toolName}`;
+
+    // 1. GoatCounter Event Tracking (if configured)
+    try {
+      if (typeof window !== 'undefined' && window.goatcounter && typeof window.goatcounter.count === 'function') {
+        window.goatcounter.count({
+          path: eventPath,
+          title: eventTitle,
+          event: true
+        });
+      }
+    } catch (e) {
+      // Ignore analytics failures silently
+    }
+
+    // 2. Google Analytics 4 (if configured)
+    try {
+      if (typeof window !== 'undefined' && typeof window.gtag === 'function') {
+        window.gtag('event', 'tool_usage', {
+          tool_name: toolName,
+          event_type: eventType
+        });
+      }
+    } catch (e) {
+      // Ignore
+    }
+
+    // 3. Custom DOM Event for extensibility and unit testing
+    try {
+      if (typeof window !== 'undefined' && typeof window.dispatchEvent === 'function') {
+        window.dispatchEvent(new CustomEvent('tool_usage', {
+          detail: { toolName, eventType, timestamp: Date.now() }
+        }));
+      }
+    } catch (e) {
+      // Ignore
+    }
+  }
+
+  // Export for testing and diagnostics
+  if (typeof window !== 'undefined') {
+    window.trackToolUsage = trackToolUsage;
   }
 
   // ==========================================
@@ -1167,6 +1223,7 @@
       if (shareBtn && typeof navigator !== 'undefined' && navigator.share) shareBtn.classList.remove('hidden');
       resultCard.classList.remove('hidden');
       resultCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      trackToolUsage('merge_pdfs');
     } catch (err) {
       if (err.message === 'OPERATION_CANCELLED') {
         setMergeProgress(0, 'Merge cancelled.');
@@ -1592,6 +1649,7 @@
       if (removeShareBtn && typeof navigator !== 'undefined' && navigator.share) removeShareBtn.classList.remove('hidden');
       removeResultCard.classList.remove('hidden');
       removeResultCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      trackToolUsage('remove_pages');
     } catch (err) {
       if (err.message === 'OPERATION_CANCELLED') {
         setRemoveProgress(0, 'Page removal cancelled.');
@@ -2205,6 +2263,7 @@
       if (slidesShareBtn && typeof navigator !== 'undefined' && navigator.share) slidesShareBtn.classList.remove('hidden');
       slidesResultCard.classList.remove('hidden');
       slidesResultCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      trackToolUsage('slides_to_a4');
     } catch (err) {
       if (err.message === 'OPERATION_CANCELLED') {
         setSlidesProgress(0, 'Handout generation cancelled.');
@@ -2702,6 +2761,7 @@
       if (invertShareBtn && typeof navigator !== 'undefined' && navigator.share) invertShareBtn.classList.remove('hidden');
       invertResultCard.classList.remove('hidden');
       invertResultCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      trackToolUsage('invert_colors');
     } catch (err) {
       if (err.message === 'OPERATION_CANCELLED') {
         setInvertProgress(0, 'Document inversion cancelled.');
@@ -3130,6 +3190,7 @@
       if (compressShareBtn && typeof navigator !== 'undefined' && navigator.share) compressShareBtn.classList.remove('hidden');
       compressResultCard.classList.remove('hidden');
       compressResultCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      trackToolUsage('compress_pdf');
     } catch (err) {
       if (err.message === 'OPERATION_CANCELLED') {
         setCompressProgress(0, 'Compression cancelled.');
@@ -3481,6 +3542,7 @@
       if (imagesShareBtn && typeof navigator !== 'undefined' && navigator.share) imagesShareBtn.classList.remove('hidden');
       imagesResultCard.classList.remove('hidden');
       imagesResultCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      trackToolUsage('images_to_pdf');
     } catch (err) {
       if (err.message === 'OPERATION_CANCELLED') {
         setImagesProgress(0, 'Conversion cancelled.');
