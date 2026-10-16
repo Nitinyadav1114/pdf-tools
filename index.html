@@ -134,7 +134,7 @@
       <div id="mergeTabView" class="tab-view active">
         <!-- Upload Drop Zone -->
         <section class="dropzone-section">
-          <div id="dropzone" class="dropzone" tabindex="0">
+          <div id="dropzone" class="dropzone" tabindex="0" role="button" aria-label="Upload PDF files to merge">
             <input type="file" id="fileInput" multiple accept=".pdf,application/pdf" class="file-input-hidden">
             <div class="dropzone-content">
               <div class="dropzone-icon-wrapper">
@@ -301,6 +301,16 @@
                 </svg>
                 Preview
               </button>
+              <button type="button" id="shareBtn" class="btn btn-secondary btn-lg btn-share-pdf hidden" title="Share PDF via WhatsApp, Gmail, Slack, AirDrop">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="18" cy="5" r="3"></circle>
+                  <circle cx="6" cy="12" r="3"></circle>
+                  <circle cx="18" cy="19" r="3"></circle>
+                  <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+                  <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+                </svg>
+                Share
+              </button>
               <button type="button" id="mergeSendToCompressBtn" class="btn btn-secondary btn-lg btn-flow-jump" title="Send this merged PDF directly to Compress tool without re-uploading">
                 🗜️ Compress PDF
               </button>
@@ -315,7 +325,7 @@
       <div id="removeTabView" class="tab-view hidden">
         <!-- Single PDF Upload Dropzone -->
         <section class="dropzone-section" id="removeDropzoneSection">
-          <div id="removeDropzone" class="dropzone" tabindex="0">
+          <div id="removeDropzone" class="dropzone" tabindex="0" role="button" aria-label="Upload PDF to remove pages">
             <input type="file" id="removeFileInput" accept=".pdf,application/pdf" class="file-input-hidden">
             <div class="dropzone-content">
               <div class="dropzone-icon-wrapper" style="background-color: var(--danger-light); color: var(--danger);">
@@ -449,6 +459,16 @@
                 </svg>
                 Preview
               </button>
+              <button type="button" id="removeShareBtn" class="btn btn-secondary btn-lg btn-share-pdf hidden" title="Share PDF via WhatsApp, Gmail, Slack, AirDrop">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="18" cy="5" r="3"></circle>
+                  <circle cx="6" cy="12" r="3"></circle>
+                  <circle cx="18" cy="19" r="3"></circle>
+                  <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+                  <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+                </svg>
+                Share
+              </button>
             </div>
           </div>
         </section>
@@ -460,7 +480,7 @@
       <div id="slidesTabView" class="tab-view hidden">
         <!-- Presentation Upload Drop Zone -->
         <section class="dropzone-section" id="slidesDropzoneSection">
-          <div id="slidesDropzone" class="dropzone" tabindex="0">
+          <div id="slidesDropzone" class="dropzone" tabindex="0" role="button" aria-label="Upload PDF presentation slides">
             <input type="file" id="slidesFileInput" accept=".pdf,application/pdf" class="file-input-hidden">
             <div class="dropzone-content">
               <div class="dropzone-icon-wrapper" style="background-color: rgba(37, 99, 235, 0.1); color: var(--tool-slides);">
@@ -633,6 +653,16 @@
                 </svg>
                 Preview
               </button>
+              <button type="button" id="slidesShareBtn" class="btn btn-secondary btn-lg btn-share-pdf hidden" title="Share PDF via WhatsApp, Gmail, Slack, AirDrop">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="18" cy="5" r="3"></circle>
+                  <circle cx="6" cy="12" r="3"></circle>
+                  <circle cx="18" cy="19" r="3"></circle>
+                  <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+                  <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+                </svg>
+                Share
+              </button>
               <button type="button" id="slidesSendToInvertBtn" class="btn btn-secondary btn-lg btn-flow-jump" title="Send this handout PDF directly to Color Inverter to save ink before printing">
                 🌓 Invert for Printing
               </button>
@@ -647,7 +677,7 @@
       <div id="invertTabView" class="tab-view hidden">
         <!-- Invert Upload Drop Zone -->
         <section class="dropzone-section" id="invertDropzoneSection">
-          <div id="invertDropzone" class="dropzone" tabindex="0">
+          <div id="invertDropzone" class="dropzone" tabindex="0" role="button" aria-label="Upload PDF to invert colors for printing">
             <input type="file" id="invertFileInput" accept=".pdf,application/pdf" class="file-input-hidden">
             <div class="dropzone-content">
               <div class="dropzone-icon-wrapper" style="background-color: rgba(124, 58, 237, 0.1); color: var(--tool-invert);">
@@ -862,6 +892,16 @@
                 </svg>
                 Preview
               </button>
+              <button type="button" id="invertShareBtn" class="btn btn-secondary btn-lg btn-share-pdf hidden" title="Share PDF via WhatsApp, Gmail, Slack, AirDrop">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="18" cy="5" r="3"></circle>
+                  <circle cx="6" cy="12" r="3"></circle>
+                  <circle cx="18" cy="19" r="3"></circle>
+                  <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+                  <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+                </svg>
+                Share
+              </button>
             </div>
           </div>
         </section>
@@ -873,7 +913,7 @@
       <div id="compressTabView" class="tab-view hidden">
         <!-- Upload Drop Zone -->
         <section class="dropzone-section">
-          <div id="compressDropzone" class="dropzone" tabindex="0">
+          <div id="compressDropzone" class="dropzone" tabindex="0" role="button" aria-label="Upload PDF to compress">
             <input type="file" id="compressFileInput" accept=".pdf,application/pdf" class="file-input-hidden">
             <div class="dropzone-content">
               <div class="dropzone-icon-wrapper" style="background-color: rgba(5, 150, 105, 0.1); color: var(--tool-compress);">
@@ -1095,6 +1135,16 @@
                 </svg>
                 Preview
               </button>
+              <button type="button" id="compressShareBtn" class="btn btn-secondary btn-lg btn-share-pdf hidden" title="Share PDF via WhatsApp, Gmail, Slack, AirDrop">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="18" cy="5" r="3"></circle>
+                  <circle cx="6" cy="12" r="3"></circle>
+                  <circle cx="18" cy="19" r="3"></circle>
+                  <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+                  <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+                </svg>
+                Share
+              </button>
             </div>
           </div>
         </section>
@@ -1106,7 +1156,7 @@
       <div id="imagesTabView" class="tab-view hidden">
         <!-- Upload Drop Zone -->
         <section class="dropzone-section" id="imagesDropzoneSection">
-          <div id="imagesDropzone" class="dropzone" tabindex="0">
+          <div id="imagesDropzone" class="dropzone" tabindex="0" role="button" aria-label="Upload images to convert to PDF">
             <input type="file" id="imagesFileInput" multiple accept="image/*,.jpg,.jpeg,.png,.webp,.gif,.bmp" class="file-input-hidden">
             <div class="dropzone-content">
               <div class="dropzone-icon-wrapper" style="background-color: rgba(13, 148, 136, 0.1); color: var(--tool-images);">
@@ -1291,6 +1341,16 @@
                   <circle cx="12" cy="12" r="3"></circle>
                 </svg>
                 Preview
+              </button>
+              <button type="button" id="imagesShareBtn" class="btn btn-secondary btn-lg btn-share-pdf hidden" title="Share PDF via WhatsApp, Gmail, Slack, AirDrop">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="18" cy="5" r="3"></circle>
+                  <circle cx="6" cy="12" r="3"></circle>
+                  <circle cx="18" cy="19" r="3"></circle>
+                  <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+                  <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+                </svg>
+                Share
               </button>
               <button type="button" id="imagesSendToCompressBtn" class="btn btn-secondary btn-lg btn-flow-jump" title="Compress this PDF to reduce file size">
                 🗜️ Compress PDF
