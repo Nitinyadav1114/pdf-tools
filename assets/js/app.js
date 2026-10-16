@@ -12,6 +12,232 @@
   }
 
   // ==========================================
+  // MULTITHREADED WEB WORKER POOL MANAGER
+  // ==========================================
+  class WorkerPoolManager {
+    constructor(workerPath = 'assets/js/worker.js', maxWorkers = 4) {
+      this.workerPath = workerPath;
+      const concurrency = (typeof navigator !== 'undefined' && navigator.hardwareConcurrency) || 4;
+      this.poolSize = Math.max(1, Math.min(concurrency, maxWorkers));
+      this.workers = [];
+      this.busyWorkers = new Set();
+      this.workerTaskMap = new Map(); // worker -> taskId
+      this.queue = [];
+      this.isSupported = typeof Worker !== 'undefined';
+      this.isAvailable = false;
+      this.hasOffscreenCanvas = false;
+      this.initPromise = null;
+      this.taskIdCounter = 0;
+      this.pendingCallbacks = new Map();
+    }
+
+    init() {
+      if (this.initPromise) return this.initPromise;
+      if (!this.isSupported) {
+        console.warn('[WorkerPool] Web Workers not supported in this environment, using main thread fallback');
+        this.isAvailable = false;
+        this.initPromise = Promise.resolve(false);
+        return this.initPromise;
+      }
+
+      this.initPromise = (async () => {
+        try {
+          for (let i = 0; i < this.poolSize; i++) {
+            const worker = new Worker(this.workerPath);
+            worker.onmessage = (e) => this._handleMessage(e, worker);
+            worker.onerror = (err) => this._handleError(err, worker);
+            this.workers.push(worker);
+          }
+
+          const pingResult = await this._pingWorker(this.workers[0]);
+          if (pingResult && pingResult.pong) {
+            this.isAvailable = true;
+            this.hasOffscreenCanvas = !!pingResult.hasOffscreenCanvas;
+            console.log(`[WorkerPool] Active with ${this.workers.length} threads (OffscreenCanvas: ${this.hasOffscreenCanvas})`);
+          } else {
+            console.warn('[WorkerPool] Ping failed, disabling workers');
+            this.terminate();
+            this.isAvailable = false;
+          }
+        } catch (err) {
+          console.warn('[WorkerPool] Initialization failed (e.g. file:// or CSP policy), using main thread fallback:', err);
+          this.terminate();
+          this.isAvailable = false;
+        }
+        return this.isAvailable;
+      })();
+
+      return this.initPromise;
+    }
+
+    _pingWorker(worker) {
+      return new Promise((resolve) => {
+        const id = ++this.taskIdCounter;
+        const timeout = setTimeout(() => {
+          this.pendingCallbacks.delete(id);
+          resolve(null);
+        }, 1500);
+
+        this.pendingCallbacks.set(id, {
+          resolve: (val) => {
+            clearTimeout(timeout);
+            resolve(val);
+          },
+          reject: () => {
+            clearTimeout(timeout);
+            resolve(null);
+          }
+        });
+
+        try {
+          worker.postMessage({ id, type: 'ping' });
+        } catch (e) {
+          clearTimeout(timeout);
+          resolve(null);
+        }
+      });
+    }
+
+    _handleMessage(e, worker) {
+      const { id, success, error, fallback, ...rest } = e.data || {};
+      this.busyWorkers.delete(worker);
+      this.workerTaskMap.delete(worker);
+
+      const cb = this.pendingCallbacks.get(id);
+      if (cb) {
+        this.pendingCallbacks.delete(id);
+        if (success) {
+          cb.resolve(rest);
+        } else {
+          cb.reject(new Error(error || (fallback ? 'WORKER_FALLBACK' : 'Worker task failed')));
+        }
+      }
+
+      this._drainQueue();
+    }
+
+    _handleError(err, worker) {
+      console.warn('[WorkerPool] Worker error:', err);
+      this.busyWorkers.delete(worker);
+      const taskId = this.workerTaskMap.get(worker);
+      if (taskId) {
+        this.workerTaskMap.delete(worker);
+        const cb = this.pendingCallbacks.get(taskId);
+        if (cb) {
+          this.pendingCallbacks.delete(taskId);
+          cb.reject(new Error(err && err.message ? err.message : 'Worker execution error'));
+        }
+      }
+      this._drainQueue();
+    }
+
+    _drainQueue() {
+      while (this.queue.length > 0) {
+        const idleWorker = this.workers.find((w) => !this.busyWorkers.has(w));
+        if (!idleWorker) break;
+
+        const task = this.queue.shift();
+        this._executeOnWorker(idleWorker, task);
+      }
+    }
+
+    _executeOnWorker(worker, task) {
+      this.busyWorkers.add(worker);
+      this.workerTaskMap.set(worker, task.id);
+      const { id, type, payload, transferables, resolve, reject, timeoutId } = task;
+      this.pendingCallbacks.set(id, { resolve, reject, timeoutId, worker });
+      try {
+        worker.postMessage({ id, type, payload }, transferables || []);
+      } catch (err) {
+        if (timeoutId) clearTimeout(timeoutId);
+        this.busyWorkers.delete(worker);
+        this.workerTaskMap.delete(worker);
+        this.pendingCallbacks.delete(id);
+        reject(err);
+      }
+    }
+
+    async runTask(type, payload, transferables = [], timeoutMs = 30000) {
+      if (this.initPromise && !this.isAvailable) {
+        await this.initPromise;
+      }
+      if (!this.isAvailable) {
+        throw new Error('WORKER_UNAVAILABLE');
+      }
+
+      return new Promise((resolve, reject) => {
+        const id = ++this.taskIdCounter;
+        let timeoutId = null;
+        if (timeoutMs > 0) {
+          timeoutId = setTimeout(() => {
+            const cb = this.pendingCallbacks.get(id);
+            if (cb) {
+              this.pendingCallbacks.delete(id);
+              if (cb.worker) {
+                this.busyWorkers.delete(cb.worker);
+                this.workerTaskMap.delete(cb.worker);
+              }
+              cb.reject(new Error(`Worker task timed out after ${timeoutMs}ms`));
+              this._drainQueue();
+            }
+          }, timeoutMs);
+        }
+
+        const task = {
+          id,
+          type,
+          payload,
+          transferables,
+          timeoutId,
+          resolve: (val) => {
+            if (timeoutId) clearTimeout(timeoutId);
+            resolve(val);
+          },
+          reject: (err) => {
+            if (timeoutId) clearTimeout(timeoutId);
+            reject(err);
+          }
+        };
+
+        const idleWorker = this.workers.find((w) => !this.busyWorkers.has(w));
+        if (idleWorker) {
+          this._executeOnWorker(idleWorker, task);
+        } else {
+          this.queue.push(task);
+        }
+      });
+    }
+
+    terminate() {
+      this.workers.forEach((w) => {
+        try { w.terminate(); } catch (e) {}
+      });
+      this.workers = [];
+      this.busyWorkers.clear();
+      this.workerTaskMap.clear();
+      this.queue.forEach((t) => {
+        if (t.timeoutId) clearTimeout(t.timeoutId);
+        t.reject(new Error('Worker terminated'));
+      });
+      this.queue = [];
+      this.pendingCallbacks.forEach((cb) => {
+        if (cb.timeoutId) clearTimeout(cb.timeoutId);
+        cb.reject(new Error('Worker terminated'));
+      });
+      this.pendingCallbacks.clear();
+      this.isAvailable = false;
+      this.initPromise = null;
+    }
+  }
+
+  const appWorkerPool = new WorkerPoolManager('assets/js/worker.js');
+  // Initialize worker pool in background
+  appWorkerPool.init().catch(() => {});
+  // Expose globally for testing/verification
+  window.PDF_TOOLS_WORKER_POOL = appWorkerPool;
+  window.WorkerPoolManager = WorkerPoolManager;
+
+  // ==========================================
   // STATE MANAGEMENT
   // ==========================================
   
@@ -2189,24 +2415,48 @@
     }
   }
 
-  function updateInvertedPreviewCanvas() {
+  async function updateInvertedPreviewCanvas() {
     if (!invertState.originalCanvasCache) return;
 
     invertPreviewCanvas.width = invertOriginalCanvas.width;
     invertPreviewCanvas.height = invertOriginalCanvas.height;
     const prevCtx = invertPreviewCanvas.getContext('2d');
+    const width = invertState.originalCanvasCache.width;
+    const height = invertState.originalCanvasCache.height;
+    const currentRenderId = invertState.activeRenderId;
 
-    const imgDataCopy = prevCtx.createImageData(
-      invertState.originalCanvasCache.width,
-      invertState.originalCanvasCache.height
-    );
-    imgDataCopy.data.set(invertState.originalCanvasCache.data);
+    let workerSuccess = false;
+    if (appWorkerPool && appWorkerPool.isAvailable) {
+      try {
+        const bufferCopy = invertState.originalCanvasCache.data.buffer.slice(0);
+        const res = await appWorkerPool.runTask('invert', {
+          buffer: bufferCopy,
+          width,
+          height,
+          mode: invertState.mode,
+          returnJpeg: false
+        }, [bufferCopy]);
 
-    applyInvertAlgorithm(imgDataCopy, invertState.mode);
+        if (currentRenderId === invertState.activeRenderId && res && res.buffer) {
+          const invData = new ImageData(new Uint8ClampedArray(res.buffer), width, height);
+          prevCtx.putImageData(invData, 0, 0);
+          invertPreviewSpinner.classList.add('hidden');
+          refreshInvertDisplay();
+          workerSuccess = true;
+        }
+      } catch (err) {
+        // Fallback to main thread
+      }
+    }
 
-    prevCtx.putImageData(imgDataCopy, 0, 0);
-    invertPreviewSpinner.classList.add('hidden');
-    refreshInvertDisplay();
+    if (!workerSuccess && currentRenderId === invertState.activeRenderId) {
+      const imgDataCopy = prevCtx.createImageData(width, height);
+      imgDataCopy.data.set(invertState.originalCanvasCache.data);
+      applyInvertAlgorithm(imgDataCopy, invertState.mode);
+      prevCtx.putImageData(imgDataCopy, 0, 0);
+      invertPreviewSpinner.classList.add('hidden');
+      refreshInvertDisplay();
+    }
   }
 
   function refreshInvertDisplay() {
@@ -2323,14 +2573,47 @@
           if (invertState.isCancelled) throw new Error('OPERATION_CANCELLED');
 
           const imgData = offCtx.getImageData(0, 0, viewport.width, viewport.height);
-          applyInvertAlgorithm(imgData, invertState.mode);
-          offCtx.putImageData(imgData, 0, 0);
+          let embeddedImage = null;
 
-          const jpegDataUrl = offCanvas.toDataURL('image/jpeg', 0.92);
-          const base64Data = jpegDataUrl.split(',')[1];
-          const jpegBytes = Uint8Array.from(atob(base64Data), (c) => c.charCodeAt(0));
+          if (appWorkerPool && appWorkerPool.isAvailable) {
+            try {
+              const bufferCopy = imgData.data.buffer.slice(0);
+              const res = await appWorkerPool.runTask('invert', {
+                buffer: bufferCopy,
+                width: viewport.width,
+                height: viewport.height,
+                mode: invertState.mode,
+                returnJpeg: appWorkerPool.hasOffscreenCanvas !== false,
+                quality: 0.92
+              }, [bufferCopy]);
 
-          const embeddedImage = await outDoc.embedJpg(jpegBytes);
+              if (res && res.jpegBuffer) {
+                const jpegBytes = new Uint8Array(res.jpegBuffer);
+                embeddedImage = await outDoc.embedJpg(jpegBytes);
+              } else if (res && res.buffer) {
+                const invImgData = new ImageData(new Uint8ClampedArray(res.buffer), viewport.width, viewport.height);
+                offCtx.putImageData(invImgData, 0, 0);
+                const jpegDataUrl = offCanvas.toDataURL('image/jpeg', 0.92);
+                const base64Data = jpegDataUrl.split(',')[1];
+                const jpegBytes = Uint8Array.from(atob(base64Data), (c) => c.charCodeAt(0));
+                embeddedImage = await outDoc.embedJpg(jpegBytes);
+              }
+            } catch (wErr) {
+              console.warn('[Worker] Invert page task fallback:', wErr);
+            }
+          }
+
+          if (!embeddedImage) {
+            const fallbackImgData = offCtx.getImageData(0, 0, viewport.width, viewport.height);
+            applyInvertAlgorithm(fallbackImgData, invertState.mode);
+            offCtx.putImageData(fallbackImgData, 0, 0);
+
+            const jpegDataUrl = offCanvas.toDataURL('image/jpeg', 0.92);
+            const base64Data = jpegDataUrl.split(',')[1];
+            const jpegBytes = Uint8Array.from(atob(base64Data), (c) => c.charCodeAt(0));
+
+            embeddedImage = await outDoc.embedJpg(jpegBytes);
+          }
           const outPage = outDoc.addPage([origWidth, origHeight]);
           outPage.drawImage(embeddedImage, {
             x: 0,
@@ -2711,11 +2994,33 @@
           await pdfjsPage.render({ canvasContext: offCtx, viewport }).promise;
           if (compressState.isCancelled) throw new Error('OPERATION_CANCELLED');
 
-          const jpegDataUrl = offCanvas.toDataURL('image/jpeg', jpegQuality);
-          const base64Data = jpegDataUrl.split(',')[1];
-          const jpegBytes = Uint8Array.from(atob(base64Data), (c) => c.charCodeAt(0));
+          let embeddedImage = null;
+          if (appWorkerPool && appWorkerPool.isAvailable && appWorkerPool.hasOffscreenCanvas !== false) {
+            try {
+              const imgData = offCtx.getImageData(0, 0, viewport.width, viewport.height);
+              const bufferCopy = imgData.data.buffer.slice(0);
+              const res = await appWorkerPool.runTask('compress-resample', {
+                buffer: bufferCopy,
+                width: viewport.width,
+                height: viewport.height,
+                quality: jpegQuality
+              }, [bufferCopy]);
 
-          const embeddedImage = await outDoc.embedJpg(jpegBytes);
+              if (res && res.jpegBuffer) {
+                const jpegBytes = new Uint8Array(res.jpegBuffer);
+                embeddedImage = await outDoc.embedJpg(jpegBytes);
+              }
+            } catch (wErr) {
+              console.warn('[Worker] Compress page task fallback:', wErr);
+            }
+          }
+
+          if (!embeddedImage) {
+            const jpegDataUrl = offCanvas.toDataURL('image/jpeg', jpegQuality);
+            const base64Data = jpegDataUrl.split(',')[1];
+            const jpegBytes = Uint8Array.from(atob(base64Data), (c) => c.charCodeAt(0));
+            embeddedImage = await outDoc.embedJpg(jpegBytes);
+          }
           const outPage = outDoc.addPage([origWidth, origHeight]);
           outPage.drawImage(embeddedImage, {
             x: 0,
@@ -3789,6 +4094,10 @@
   // INITIALIZATION
   // ==========================================
   function init() {
+    if (!document.getElementById('mergeTabView')) {
+      // DOM elements not present (e.g. running inside headless unit tests)
+      return;
+    }
     initTheme();
     setDefaultOutputFilename();
     initEvents();
