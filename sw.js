@@ -55,6 +55,11 @@ self.addEventListener('fetch', (event) => {
   // Only handle http / https schemes
   if (!url.protocol.startsWith('http')) return;
 
+  // Bypass third-party analytics beacons so they always go straight to the network
+  if (url.hostname.includes('cloudflareinsights.com') || url.hostname.includes('cloudflare.com')) {
+    return;
+  }
+
   event.respondWith(
     caches.match(event.request, { ignoreSearch: true }).then((cachedResponse) => {
       if (cachedResponse) {
