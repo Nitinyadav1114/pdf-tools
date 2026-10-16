@@ -84,10 +84,20 @@ body {
   max-width: 960px;
   margin: 0 auto;
   padding: 1.75rem 1.5rem 3.5rem 1.5rem;
+  padding-top: max(1.75rem, env(safe-area-inset-top));
+  padding-bottom: max(3.5rem, env(safe-area-inset-bottom));
+  padding-left: max(1.5rem, env(safe-area-inset-left));
+  padding-right: max(1.5rem, env(safe-area-inset-right));
   display: flex;
   flex-direction: column;
   min-height: 100vh;
 }
+
+/* Responsive helper span defaults (Desktop) */
+.privacy-text-full { display: inline; }
+.privacy-text-short { display: none; }
+.drop-text-desktop { display: inline; }
+.drop-text-mobile { display: none; }
 
 /* Header */
 .app-header {
@@ -862,70 +872,6 @@ body.theme-dark .timestamp-badge {
   padding-top: 2.5rem;
   font-size: 0.8rem;
   color: var(--text-muted);
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-  .app-container {
-    padding: 1.25rem 1rem;
-  }
-  
-  .toolbar {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .toolbar-left, .toolbar-right {
-    justify-content: space-between;
-  }
-
-  .merge-action-card, .action-bar-card, .action-bar {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .input-text, .filename-input {
-    min-width: 0;
-    width: 100%;
-  }
-
-  .btn-lg {
-    width: 100%;
-    justify-content: center;
-  }
-
-  .result-card {
-    flex-direction: column;
-    align-items: stretch;
-    text-align: center;
-  }
-
-  .result-icon {
-    margin: 0 auto;
-  }
-
-  .result-actions {
-    flex-direction: column;
-    width: 100%;
-  }
-
-  .result-actions a, .result-actions button {
-    width: 100%;
-    justify-content: center;
-  }
-
-  .page-select-toolbar {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .page-input-wrapper {
-    width: 100%;
-  }
-
-  .pages-grid {
-    grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
-  }
 }
 
 /* ========================================= */
@@ -2541,6 +2487,578 @@ body.theme-dark .btn-image-action.btn-image-delete:hover {
   background: rgba(239, 68, 68, 0.2);
   color: #fca5a5;
 }
+
+/* ============================================== */
+/* MOBILE PWA INSTALL BANNER                      */
+/* ============================================== */
+.pwa-install-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.85rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 14px;
+  padding: 0.75rem 1rem;
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  position: relative;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.pwa-install-banner.hidden {
+  display: none !important;
+}
+
+.pwa-install-content {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex: 1;
+  min-width: 0;
+}
+
+.pwa-install-icon {
+  font-size: 1.6rem;
+  flex-shrink: 0;
+}
+
+.pwa-install-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.pwa-install-title {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--text-main);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.pwa-install-desc {
+  font-size: 0.75rem;
+  color: var(--text-sub);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.pwa-install-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+
+.btn-sm {
+  padding: 0.35rem 0.75rem;
+  font-size: 0.8rem;
+  border-radius: 8px;
+}
+
+.btn-pwa-dismiss {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  font-size: 1.4rem;
+  line-height: 1;
+  padding: 0.2rem 0.4rem;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: var(--transition);
+}
+
+.btn-pwa-dismiss:hover {
+  color: var(--text-main);
+  background: var(--bg-card-secondary);
+}
+
+/* ============================================== */
+/* COMPREHENSIVE RESPONSIVE DESIGN (MOBILE-FIRST) */
+/* ============================================== */
+
+/* TABLETS & LARGE MOBILE (<= 768px) */
+@media (max-width: 768px) {
+  /* Prevent iOS automatic page zoom on focus */
+  input, select, textarea, .input-text, .filename-input, .page-numbers-input, .custom-range-input {
+    font-size: 16px !important;
+  }
+
+  .app-container {
+    padding: 1.15rem 1rem 3rem 1rem;
+    padding-top: max(1.15rem, env(safe-area-inset-top));
+    padding-bottom: max(3rem, env(safe-area-inset-bottom));
+    padding-left: max(1rem, env(safe-area-inset-left));
+    padding-right: max(1rem, env(safe-area-inset-right));
+  }
+
+  .toolbar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.75rem;
+  }
+
+  .toolbar-left, .toolbar-right {
+    justify-content: space-between;
+    width: 100%;
+    gap: 0.5rem;
+  }
+
+  .merge-action-card, .action-bar-card, .action-bar {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 1.1rem;
+    gap: 0.85rem;
+  }
+
+  .input-text, .filename-input, .page-input-wrapper, .filename-input-wrapper {
+    min-width: 0;
+    width: 100%;
+  }
+
+  .btn-lg {
+    width: 100%;
+    min-height: 48px;
+    justify-content: center;
+  }
+
+  .result-card {
+    flex-direction: column;
+    align-items: stretch;
+    text-align: center;
+    padding: 1.25rem 1rem;
+  }
+
+  .result-icon {
+    margin: 0 auto;
+  }
+
+  .result-actions {
+    flex-direction: column;
+    width: 100%;
+    gap: 0.65rem;
+  }
+
+  .result-actions a, .result-actions button {
+    width: 100%;
+    justify-content: center;
+    min-height: 48px;
+  }
+
+  .page-select-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.75rem;
+  }
+
+  .quick-select-buttons {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.35rem;
+  }
+
+  .quick-select-buttons .btn-chip {
+    text-align: center;
+    justify-content: center;
+    min-height: 38px;
+    padding: 0.4rem 0.2rem;
+  }
+
+  .pages-grid {
+    grid-template-columns: repeat(auto-fill, minmax(105px, 1fr));
+    gap: 0.75rem;
+  }
+
+  .preset-choice-grid {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+}
+
+/* SMARTPHONES (<= 580px) */
+@media (max-width: 580px) {
+  /* Header Mobile Optimization */
+  .app-header {
+    margin-bottom: 1rem;
+    padding-bottom: 0.9rem;
+    gap: 0.5rem;
+  }
+
+  .header-left {
+    gap: 0.65rem;
+    min-width: 0;
+  }
+
+  .logo-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 11px;
+    flex-shrink: 0;
+  }
+
+  .logo-icon svg {
+    width: 22px;
+    height: 22px;
+  }
+
+  .app-title {
+    font-size: 1.28rem;
+    line-height: 1.15;
+  }
+
+  .app-subtitle {
+    font-size: 0.74rem;
+    line-height: 1.25;
+    color: var(--text-sub);
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    max-width: 220px;
+  }
+
+  .header-right {
+    gap: 0.5rem;
+    flex-shrink: 0;
+  }
+
+  /* Privacy Badge: Show condensed "100% Private" on smartphones */
+  .privacy-text-full { display: none !important; }
+  .privacy-text-short { display: inline !important; }
+  .privacy-badge {
+    padding: 0.35rem 0.6rem;
+    font-size: 0.72rem;
+    gap: 0.35rem;
+  }
+
+  /* Segmented Nav Tabs Mobile Polish */
+  .nav-tabs {
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x mandatory;
+    scroll-padding: 0.5rem;
+    gap: 0.3rem;
+    padding: 0.3rem;
+    margin-bottom: 1.15rem;
+    border-radius: 12px;
+    justify-content: flex-start;
+  }
+
+  .nav-tab {
+    padding: 0.55rem 0.8rem;
+    font-size: 0.8rem;
+    min-height: 44px;
+    scroll-snap-align: center;
+    flex-shrink: 0;
+  }
+
+  .nav-tab svg {
+    width: 15px;
+    height: 15px;
+  }
+
+  /* Dropzones Mobile Optimization */
+  .drop-text-desktop { display: none !important; }
+  .drop-text-mobile { display: inline !important; }
+
+  .dropzone {
+    padding: 1.5rem 1rem;
+    border-radius: 14px;
+  }
+
+  .dropzone-icon-wrapper {
+    padding: 0.75rem;
+    margin-bottom: 0.55rem;
+  }
+
+  .dropzone-icon-wrapper svg {
+    width: 36px;
+    height: 36px;
+  }
+
+  .dropzone-title {
+    font-size: 1.08rem;
+    margin-bottom: 0.25rem;
+  }
+
+  .dropzone-desc {
+    font-size: 0.85rem;
+    margin-bottom: 0.45rem;
+  }
+
+  .dropzone-hint {
+    font-size: 0.72rem;
+    line-height: 1.4;
+  }
+
+  /* Tab 1: Merge PDFs - Mobile File Card */
+  .file-card {
+    padding: 0.65rem 0.75rem;
+    gap: 0.65rem;
+    flex-wrap: wrap;
+    position: relative;
+  }
+
+  .file-thumb-container {
+    width: 42px;
+    height: 56px;
+  }
+
+  .file-info {
+    flex: 1 1 calc(100% - 130px);
+    min-width: 0;
+  }
+
+  .file-name {
+    font-size: 0.88rem;
+  }
+
+  .file-meta-row {
+    font-size: 0.72rem;
+    gap: 0.3rem;
+  }
+
+  .file-actions {
+    margin-left: auto;
+    gap: 0.45rem;
+  }
+
+  .btn-card-action {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    font-size: 1rem;
+  }
+
+  /* File Loaded Banner (Tabs 2-5) */
+  .file-loaded-banner {
+    padding: 0.85rem 1rem;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.75rem;
+  }
+
+  .file-loaded-banner .btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .loaded-file-title {
+    max-width: 240px;
+    font-size: 0.95rem;
+  }
+
+  /* Tab 2: Remove Pages Grid */
+  .pages-grid {
+    grid-template-columns: repeat(auto-fill, minmax(96px, 1fr));
+    gap: 0.6rem;
+  }
+
+  .page-card-header {
+    padding: 0.3rem 0.45rem;
+  }
+
+  /* Tab 3: Slides to A4 Handout */
+  .handout-settings-card {
+    padding: 1rem;
+  }
+
+  .settings-row {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.85rem;
+  }
+
+  .setting-item {
+    width: 100%;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.35rem;
+  }
+
+  .setting-item select {
+    width: 100%;
+  }
+
+  .setting-item-options {
+    justify-content: space-between;
+    width: 100%;
+    gap: 0.65rem;
+    padding-top: 0.25rem;
+  }
+
+  .handout-preview-wrapper {
+    padding: 0.85rem;
+  }
+
+  .a4-sheet-preview-container {
+    padding: 0.85rem 0.35rem;
+  }
+
+  .a4-sheet-preview {
+    width: 230px;
+    height: 325px;
+    padding: 10px 10px;
+  }
+
+  /* Tab 4: Invert Colors Preview */
+  .single-preview-card {
+    padding: 0.85rem;
+  }
+
+  .preview-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.65rem;
+  }
+
+  .preview-mode-toggle {
+    display: flex;
+    width: 100%;
+  }
+
+  .toggle-pill-btn {
+    flex: 1;
+    text-align: center;
+    padding: 0.45rem 0.5rem;
+    min-height: 40px;
+  }
+
+  .preview-page-nav {
+    justify-content: center;
+    width: 100%;
+  }
+
+  .single-preview-canvas-wrap {
+    max-width: 100%;
+    width: 100%;
+  }
+
+  /* Tab 5: Compress PDF Savings Meter */
+  .savings-meter-card {
+    padding: 0.75rem 0.85rem;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.65rem;
+    text-align: center;
+  }
+
+  .savings-meter-item {
+    align-items: center;
+  }
+
+  .savings-meter-arrow {
+    justify-content: center;
+    transform: rotate(90deg);
+    margin: -0.25rem 0;
+  }
+
+  .savings-meter-badge {
+    text-align: center;
+    width: 100%;
+  }
+
+  .compress-stats-row {
+    justify-content: center;
+    gap: 0.5rem;
+  }
+
+  .stat-box {
+    min-width: 75px;
+    padding: 0.35rem 0.55rem;
+    align-items: center;
+    text-align: center;
+  }
+
+  .stat-val {
+    font-size: 0.88rem;
+  }
+
+  /* Tab 6: Image to PDF - 2-Column Mobile Photo Grid */
+  .images-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.65rem;
+    margin-top: 0.85rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .image-card-meta {
+    padding: 0.45rem 0.55rem;
+  }
+
+  .image-card-title {
+    font-size: 0.75rem;
+  }
+
+  .image-card-details {
+    font-size: 0.68rem;
+  }
+
+  .image-card-actions {
+    padding: 0.35rem 0.45rem;
+  }
+
+  .btn-image-action {
+    width: 34px;
+    height: 34px;
+    border-radius: 7px;
+  }
+
+  .action-bar-left, .action-bar-right {
+    width: 100%;
+  }
+
+  /* Footer */
+  .app-footer {
+    padding-top: 1.75rem;
+    font-size: 0.75rem;
+    line-height: 1.45;
+  }
+}
+
+/* COMPACT PHONES (<= 380px) */
+@media (max-width: 380px) {
+  .app-container {
+    padding-left: max(0.65rem, env(safe-area-inset-left));
+    padding-right: max(0.65rem, env(safe-area-inset-right));
+  }
+
+  .app-title {
+    font-size: 1.15rem;
+  }
+
+  .app-subtitle {
+    display: none;
+  }
+
+  .privacy-badge {
+    display: none; /* Keep header clean and uncluttered on 320-375px screens */
+  }
+
+  .pages-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.5rem;
+  }
+
+  .images-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.5rem;
+  }
+
+  .a4-sheet-preview {
+    width: 200px;
+    height: 283px;
+  }
+
+  .quick-select-buttons {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
 
 
 
