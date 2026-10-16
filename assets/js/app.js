@@ -321,6 +321,9 @@
       chosenClass: 'sortable-chosen',
       filter: '.btn-card-action',
       preventOnFilter: false,
+      delay: 150,
+      delayOnTouchOnly: true,
+      touchStartThreshold: 5,
       onEnd: handleDragReorder,
     });
   }
@@ -350,30 +353,45 @@
       if (view) view.classList.add('hidden');
     });
 
+    let activeBtn = null;
     if (tab === 'merge') {
+      activeBtn = tabMergeBtn;
       tabMergeBtn.classList.add('active');
       mergeTabView.classList.remove('hidden');
       appMainSubtitle.textContent = 'Sort by timestamp or drag & drop to reorder';
     } else if (tab === 'remove') {
+      activeBtn = tabRemoveBtn;
       tabRemoveBtn.classList.add('active');
       removeTabView.classList.remove('hidden');
       appMainSubtitle.textContent = 'Select and remove unwanted pages with live visual preview';
     } else if (tab === 'slides') {
+      activeBtn = tabSlidesBtn;
       tabSlidesBtn.classList.add('active');
       slidesTabView.classList.remove('hidden');
       appMainSubtitle.textContent = 'Fit 3 presentation slides per A4 page for printing & notes';
     } else if (tab === 'invert') {
+      activeBtn = tabInvertBtn;
       if (tabInvertBtn) tabInvertBtn.classList.add('active');
       if (invertTabView) invertTabView.classList.remove('hidden');
       appMainSubtitle.textContent = 'Invert dark PDF pages to clean white paper for hardcopy printing';
     } else if (tab === 'compress') {
+      activeBtn = tabCompressBtn;
       if (tabCompressBtn) tabCompressBtn.classList.add('active');
       if (compressTabView) compressTabView.classList.remove('hidden');
       appMainSubtitle.textContent = 'Compress and shrink large PDF files with zero or visually-lossless quality';
     } else if (tab === 'images') {
+      activeBtn = tabImagesBtn;
       if (tabImagesBtn) tabImagesBtn.classList.add('active');
       if (imagesTabView) imagesTabView.classList.remove('hidden');
       appMainSubtitle.textContent = 'Convert JPG, PNG, and WebP images into a single clean PDF document';
+    }
+
+    if (activeBtn && typeof activeBtn.scrollIntoView === 'function') {
+      try {
+        activeBtn.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+      } catch (e) {
+        // Fallback for older browsers
+      }
     }
   }
 
@@ -3715,6 +3733,9 @@
         ghostClass: 'sortable-ghost',
         filter: '.btn-image-action',
         preventOnFilter: false,
+        delay: 150,
+        delayOnTouchOnly: true,
+        touchStartThreshold: 5,
         onEnd: (evt) => {
           if (evt.oldIndex !== evt.newIndex) {
             const [moved] = imagesState.images.splice(evt.oldIndex, 1);
@@ -3727,12 +3748,51 @@
   }
 
   // ==========================================
+  // MOBILE PWA INSTALL PROMPT
+  // ==========================================
+  function initPWAInstallBanner() {
+    const banner = document.getElementById('pwaInstallBanner');
+    const installBtn = document.getElementById('pwaInstallBtn');
+    const dismissBtn = document.getElementById('pwaDismissBtn');
+    if (!banner || !installBtn || !dismissBtn) return;
+
+    let deferredPrompt = null;
+    const dismissedTime = localStorage.getItem('pdf_pwa_banner_dismissed');
+    const isDismissedRecently = dismissedTime && (Date.now() - parseInt(dismissedTime, 10) < 7 * 24 * 60 * 60 * 1000);
+
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+      if (!isDismissedRecently) {
+        banner.classList.remove('hidden');
+      }
+    });
+
+    installBtn.addEventListener('click', async () => {
+      if (!deferredPrompt) return;
+      banner.classList.add('hidden');
+      deferredPrompt.prompt();
+      const { outcome } = await deferredPrompt.userChoice;
+      if (outcome === 'accepted') {
+        localStorage.setItem('pdf_pwa_installed', 'true');
+      }
+      deferredPrompt = null;
+    });
+
+    dismissBtn.addEventListener('click', () => {
+      banner.classList.add('hidden');
+      localStorage.setItem('pdf_pwa_banner_dismissed', Date.now().toString());
+    });
+  }
+
+  // ==========================================
   // INITIALIZATION
   // ==========================================
   function init() {
     initTheme();
     setDefaultOutputFilename();
     initEvents();
+    initPWAInstallBanner();
 
     const urlParams = new URLSearchParams(window.location.search);
     const tabParam = urlParams.get('tab') || window.location.hash.replace('#', '');
