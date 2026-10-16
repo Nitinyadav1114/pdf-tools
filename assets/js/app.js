@@ -543,6 +543,53 @@
   const imagesShareBtn = document.getElementById('imagesShareBtn');
   const imagesSendToCompressBtn = document.getElementById('imagesSendToCompressBtn');
 
+  // Tab 7: PDF to Images DOM Elements
+  const tabPdfToImagesBtn = document.getElementById('tabPdfToImagesBtn');
+  const pdfToImagesTabView = document.getElementById('pdfToImagesTabView');
+  const pdfToImagesDropzoneSection = document.getElementById('pdfToImagesDropzoneSection');
+  const pdfToImagesDropzone = document.getElementById('pdfToImagesDropzone');
+  const pdfToImagesFileInput = document.getElementById('pdfToImagesFileInput');
+  const pdfToImagesWorkspace = document.getElementById('pdfToImagesWorkspace');
+  const pdfToImagesFileName = document.getElementById('pdfToImagesFileName');
+  const pdfToImagesPageCountBadge = document.getElementById('pdfToImagesPageCountBadge');
+  const pdfToImagesFileSizeBadge = document.getElementById('pdfToImagesFileSizeBadge');
+  const pdfToImagesChangeFileBtn = document.getElementById('pdfToImagesChangeFileBtn');
+  const pdfToImagesFormatCards = document.querySelectorAll('#pdfToImagesWorkspace .preset-choice-card[data-format]');
+  const pdfToImagesScaleCards = document.querySelectorAll('#pdfToImagesWorkspace .preset-choice-card[data-scale]');
+  const pdfToImagesPageModeAll = document.getElementById('pdfToImagesPageModeAll');
+  const pdfToImagesPageModeCustom = document.getElementById('pdfToImagesPageModeCustom');
+  const pdfToImagesCustomRangeContainer = document.getElementById('pdfToImagesCustomRangeContainer');
+  const pdfToImagesPageRangeInput = document.getElementById('pdfToImagesPageRangeInput');
+  const pdfToImagesOutputPrefix = document.getElementById('pdfToImagesOutputPrefix');
+  const pdfToImagesExecuteBtn = document.getElementById('pdfToImagesExecuteBtn');
+  const pdfToImagesProgressContainer = document.getElementById('pdfToImagesProgressContainer');
+  const pdfToImagesProgressBar = document.getElementById('pdfToImagesProgressBar');
+  const pdfToImagesProgressText = document.getElementById('pdfToImagesProgressText');
+  const pdfToImagesProgressPercent = document.getElementById('pdfToImagesProgressPercent');
+  const pdfToImagesCancelBtn = document.getElementById('pdfToImagesCancelBtn');
+  const pdfToImagesResultCard = document.getElementById('pdfToImagesResultCard');
+  const pdfToImagesResultSummary = document.getElementById('pdfToImagesResultSummary');
+  const pdfToImagesDownloadZipBtn = document.getElementById('pdfToImagesDownloadZipBtn');
+  const pdfToImagesShareBtn = document.getElementById('pdfToImagesShareBtn');
+  const pdfToImagesResetBtn = document.getElementById('pdfToImagesResetBtn');
+  const pdfToImagesGallery = document.getElementById('pdfToImagesGallery');
+
+  // Tab 7 State
+  const pdfToImagesState = {
+    file: null,
+    arrayBuffer: null,
+    pdfjsDoc: null,
+    totalPages: 0,
+    format: 'jpg',
+    scale: 1.5,
+    pageMode: 'all',
+    customRangeStr: '',
+    isCancelled: false,
+    isConverting: false,
+    images: [],
+    zipBlob: null
+  };
+
   // SortableJS instance
   let sortableInstance = null;
   if (window.Sortable && fileListEl) {
@@ -578,10 +625,10 @@
   // TAB NAVIGATION
   // ==========================================
   function switchTab(tab) {
-    [tabMergeBtn, tabRemoveBtn, tabSlidesBtn, tabInvertBtn, tabCompressBtn, tabImagesBtn].forEach((btn) => {
+    [tabMergeBtn, tabRemoveBtn, tabSlidesBtn, tabInvertBtn, tabCompressBtn, tabImagesBtn, tabPdfToImagesBtn].forEach((btn) => {
       if (btn) btn.classList.remove('active');
     });
-    [mergeTabView, removeTabView, slidesTabView, invertTabView, compressTabView, imagesTabView].forEach((view) => {
+    [mergeTabView, removeTabView, slidesTabView, invertTabView, compressTabView, imagesTabView, pdfToImagesTabView].forEach((view) => {
       if (view) view.classList.add('hidden');
     });
 
@@ -616,6 +663,11 @@
       if (tabImagesBtn) tabImagesBtn.classList.add('active');
       if (imagesTabView) imagesTabView.classList.remove('hidden');
       appMainSubtitle.textContent = 'Convert JPG, PNG, and WebP images into a single clean PDF document';
+    } else if (tab === 'pdftoimages') {
+      activeBtn = tabPdfToImagesBtn;
+      if (tabPdfToImagesBtn) tabPdfToImagesBtn.classList.add('active');
+      if (pdfToImagesTabView) pdfToImagesTabView.classList.remove('hidden');
+      appMainSubtitle.textContent = 'Convert PDF pages into high-resolution JPG or PNG images & download as ZIP';
     }
 
     if (activeBtn && typeof activeBtn.scrollIntoView === 'function') {
@@ -784,6 +836,8 @@
     window.trackToolUsage = trackToolUsage;
     window.isValidPdfFile = isValidPdfFile;
     window.isValidImageFile = isValidImageFile;
+    window.createZipArchive = createZipArchive;
+    window.pdfToImagesState = pdfToImagesState;
   }
 
   // ==========================================
@@ -3737,6 +3791,463 @@
   }
 
   // ==========================================
+  // TAB 7: PDF TO IMAGES CORE ENGINE
+  // ==========================================
+
+  /**
+   * Generates a standard PKZIP archive (Store mode, method 0) in pure JavaScript.
+   * Method 0 (Store) is instantaneous and optimal for JPG/PNG files which are already compressed.
+   * Compatible with Windows Explorer, macOS Archive Utility, Linux, iOS Files, Android, and 7-Zip.
+   * @param {Array<{ name: string, data: Uint8Array }>} files
+   * @returns {Blob}
+   */
+  function createZipArchive(files) {
+    const crcTable = new Uint32Array(256);
+    for (let i = 0; i < 256; i++) {
+      let c = i;
+      for (let k = 0; k < 8; k++) {
+        c = (c & 1) ? (0xEDB88320 ^ (c >>> 1)) : (c >>> 1);
+      }
+      crcTable[i] = c;
+    }
+
+    function crc32(buf) {
+      let c = 0xFFFFFFFF;
+      for (let i = 0; i < buf.length; i++) {
+        c = (c >>> 8) ^ crcTable[(c ^ buf[i]) & 0xFF];
+      }
+      return (c ^ 0xFFFFFFFF) >>> 0;
+    }
+
+    const parts = [];
+    const centralEntries = [];
+    let offset = 0;
+
+    for (const file of files) {
+      const nameBytes = new TextEncoder().encode(file.name);
+      const dataBytes = file.data;
+      const crc = crc32(dataBytes);
+      const size = dataBytes.length;
+
+      // Local file header (30 bytes + name length)
+      const localHeader = new Uint8Array(30 + nameBytes.length);
+      const lv = new DataView(localHeader.buffer);
+      lv.setUint32(0, 0x04034b50, true); // signature
+      lv.setUint16(4, 20, true);         // version needed (2.0)
+      lv.setUint16(6, 0, true);          // flags
+      lv.setUint16(8, 0, true);          // compression (0 = Store)
+      lv.setUint16(10, 0, true);         // time
+      lv.setUint16(12, 0, true);         // date
+      lv.setUint32(14, crc, true);       // crc32
+      lv.setUint32(18, size, true);      // compressed size
+      lv.setUint32(22, size, true);      // uncompressed size
+      lv.setUint16(26, nameBytes.length, true);
+      lv.setUint16(28, 0, true);         // extra field length
+      localHeader.set(nameBytes, 30);
+
+      parts.push(localHeader);
+      parts.push(dataBytes);
+
+      // Central directory entry (46 bytes + name length)
+      const centralHeader = new Uint8Array(46 + nameBytes.length);
+      const cv = new DataView(centralHeader.buffer);
+      cv.setUint32(0, 0x02014b50, true); // signature
+      cv.setUint16(4, 20, true);         // version made by
+      cv.setUint16(6, 20, true);         // version needed
+      cv.setUint16(8, 0, true);          // flags
+      cv.setUint16(10, 0, true);         // compression (Store)
+      cv.setUint16(12, 0, true);         // time
+      cv.setUint16(14, 0, true);         // date
+      cv.setUint32(16, crc, true);       // crc32
+      cv.setUint32(20, size, true);      // compressed size
+      cv.setUint32(24, size, true);      // uncompressed size
+      cv.setUint16(28, nameBytes.length, true);
+      cv.setUint16(30, 0, true);         // extra field length
+      cv.setUint16(32, 0, true);         // comment length
+      cv.setUint16(34, 0, true);         // disk start
+      cv.setUint16(36, 0, true);         // internal attributes
+      cv.setUint32(38, 0, true);         // external attributes
+      cv.setUint32(42, offset, true);    // local header offset
+      centralHeader.set(nameBytes, 46);
+
+      centralEntries.push(centralHeader);
+      offset += localHeader.length + dataBytes.length;
+    }
+
+    const centralOffset = offset;
+    let centralSize = 0;
+    for (const ch of centralEntries) {
+      parts.push(ch);
+      centralSize += ch.length;
+    }
+
+    // End of central directory record (22 bytes)
+    const eocd = new Uint8Array(22);
+    const ev = new DataView(eocd.buffer);
+    ev.setUint32(0, 0x06054b50, true);     // signature
+    ev.setUint16(4, 0, true);              // disk number
+    ev.setUint16(6, 0, true);              // disk with central dir
+    ev.setUint16(8, files.length, true);   // records on this disk
+    ev.setUint16(10, files.length, true);  // total records
+    ev.setUint32(12, centralSize, true);   // central dir size
+    ev.setUint32(16, centralOffset, true); // central dir offset
+    ev.setUint16(20, 0, true);             // comment length
+    parts.push(eocd);
+
+    let totalLen = parts.reduce((sum, p) => sum + p.length, 0);
+    const out = new Uint8Array(totalLen);
+    let ptr = 0;
+    for (const p of parts) {
+      out.set(p, ptr);
+      ptr += p.length;
+    }
+
+    return new Blob([out], { type: 'application/zip' });
+  }
+
+  async function handlePdfToImagesFileSelected(file) {
+    if (!file) return;
+
+    if (!file.type.includes('pdf') && !file.name.toLowerCase().endsWith('.pdf')) {
+      alert('Please upload a valid PDF file.');
+      return;
+    }
+
+    const isGenuinePdf = await isValidPdfFile(file);
+    if (!isGenuinePdf) {
+      alert(`Security Warning: "${file.name}" is not a genuine or valid PDF document (missing %PDF- header). Upload rejected.`);
+      return;
+    }
+
+    try {
+      const arrayBuffer = await file.arrayBuffer();
+
+      let pdfjsDoc;
+      try {
+        const bufferCopy = new Uint8Array(arrayBuffer.slice(0));
+        pdfjsDoc = await pdfjsLib.getDocument({ data: bufferCopy }).promise;
+      } catch (loadErr) {
+        if (isPasswordProtectedError(loadErr)) {
+          alert('🔒 This PDF document is password-protected or encrypted. Please remove password protection before converting.');
+          return;
+        }
+        throw loadErr;
+      }
+
+      pdfToImagesState.file = file;
+      pdfToImagesState.arrayBuffer = arrayBuffer;
+      pdfToImagesState.pdfjsDoc = pdfjsDoc;
+      pdfToImagesState.totalPages = pdfjsDoc.numPages;
+      pdfToImagesState.images = [];
+      pdfToImagesState.zipBlob = null;
+
+      // Update UI
+      pdfToImagesFileName.textContent = file.name;
+      pdfToImagesPageCountBadge.textContent = `${pdfjsDoc.numPages} ${pdfjsDoc.numPages === 1 ? 'page' : 'pages'}`;
+      pdfToImagesFileSizeBadge.textContent = formatBytes(file.size);
+
+      const basePrefix = file.name.replace(/\.pdf$/i, '').replace(/[^a-zA-Z0-9_\-]/g, '_');
+      pdfToImagesOutputPrefix.value = basePrefix || 'page';
+
+      pdfToImagesDropzoneSection.classList.add('hidden');
+      pdfToImagesWorkspace.classList.remove('hidden');
+      pdfToImagesResultCard.classList.add('hidden');
+      pdfToImagesProgressContainer.classList.add('hidden');
+    } catch (err) {
+      console.error('Failed to load PDF for images conversion:', err);
+      alert('Failed to load PDF: ' + (err.message || 'Unknown error'));
+    }
+  }
+
+  async function convertPdfToImages() {
+    if (pdfToImagesExecuteBtn.disabled) return;
+    if (!pdfToImagesState.pdfjsDoc) {
+      alert('Please upload a PDF document first.');
+      return;
+    }
+
+    // Determine target pages
+    let targetPages = [];
+    if (pdfToImagesState.pageMode === 'all') {
+      for (let p = 1; p <= pdfToImagesState.totalPages; p++) targetPages.push(p);
+    } else {
+      const inputStr = pdfToImagesPageRangeInput.value.trim();
+      const pageSet = parsePageInput(inputStr, pdfToImagesState.totalPages);
+      targetPages = Array.from(pageSet).sort((a, b) => a - b);
+      if (targetPages.length === 0) {
+        alert('Please specify valid page numbers to convert (e.g. 1, 3, 5-8).');
+        return;
+      }
+    }
+
+    const mimeType = pdfToImagesState.format === 'png' ? 'image/png' : 'image/jpeg';
+    const ext = pdfToImagesState.format === 'png' ? 'png' : 'jpg';
+    const scale = pdfToImagesState.scale;
+    const prefix = pdfToImagesOutputPrefix.value.trim() || 'page';
+
+    pdfToImagesExecuteBtn.disabled = true;
+    pdfToImagesState.isCancelled = false;
+    pdfToImagesState.isConverting = true;
+    pdfToImagesProgressContainer.classList.remove('hidden');
+    pdfToImagesResultCard.classList.add('hidden');
+
+    const total = targetPages.length;
+    const generatedImages = [];
+
+    try {
+      for (let i = 0; i < total; i++) {
+        if (pdfToImagesState.isCancelled) throw new Error('OPERATION_CANCELLED');
+
+        const pageNum = targetPages[i];
+        setPdfToImagesProgress(
+          Math.round((i / total) * 100),
+          `Rendering page ${pageNum} (${i + 1} of ${total})...`
+        );
+
+        const page = await pdfToImagesState.pdfjsDoc.getPage(pageNum);
+        const viewport = page.getViewport({ scale: scale });
+
+        const canvas = document.createElement('canvas');
+        canvas.width = Math.floor(viewport.width);
+        canvas.height = Math.floor(viewport.height);
+        const ctx = canvas.getContext('2d');
+
+        if (mimeType === 'image/jpeg') {
+          ctx.fillStyle = '#ffffff';
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+        }
+
+        await page.render({ canvasContext: ctx, viewport }).promise;
+
+        if (pdfToImagesState.isCancelled) {
+          canvas.width = 0;
+          canvas.height = 0;
+          throw new Error('OPERATION_CANCELLED');
+        }
+
+        const blob = await new Promise((resolve) => {
+          canvas.toBlob(resolve, mimeType, mimeType === 'image/jpeg' ? 0.92 : undefined);
+        });
+
+        canvas.width = 0;
+        canvas.height = 0;
+
+        const dataUrl = URL.createObjectURL(blob);
+        const filename = `${prefix}_page_${String(pageNum).padStart(3, '0')}.${ext}`;
+
+        generatedImages.push({
+          pageNum,
+          name: filename,
+          blob,
+          dataUrl,
+          width: Math.floor(viewport.width),
+          height: Math.floor(viewport.height),
+          size: blob.size,
+        });
+
+        setPdfToImagesProgress(
+          Math.round(((i + 1) / total) * 100),
+          `Converted page ${pageNum} (${i + 1} of ${total})`
+        );
+      }
+
+      pdfToImagesState.images = generatedImages;
+      renderPdfToImagesGallery();
+
+      pdfToImagesProgressContainer.classList.add('hidden');
+      pdfToImagesResultCard.classList.remove('hidden');
+      pdfToImagesResultSummary.textContent = `Successfully converted ${generatedImages.length} ${generatedImages.length === 1 ? 'page' : 'pages'} to high-resolution ${ext.toUpperCase()} images!`;
+
+      if (pdfToImagesShareBtn && typeof navigator !== 'undefined' && navigator.share) {
+        pdfToImagesShareBtn.classList.remove('hidden');
+      }
+
+      trackToolUsage('pdftoimages');
+      pdfToImagesResultCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    } catch (err) {
+      if (err.message === 'OPERATION_CANCELLED') {
+        console.log('PDF to images conversion cancelled.');
+        pdfToImagesProgressContainer.classList.add('hidden');
+      } else {
+        console.error('Error converting PDF to images:', err);
+        alert('Failed to convert PDF to images: ' + (err.message || 'Unknown error'));
+        pdfToImagesProgressContainer.classList.add('hidden');
+      }
+    } finally {
+      pdfToImagesExecuteBtn.disabled = false;
+      pdfToImagesState.isConverting = false;
+    }
+  }
+
+  function renderPdfToImagesGallery() {
+    pdfToImagesGallery.innerHTML = '';
+
+    pdfToImagesState.images.forEach((img) => {
+      const card = document.createElement('div');
+      card.className = 'pdftoimages-card';
+
+      card.innerHTML = `
+        <div class="pdftoimages-thumb-wrapper" title="Click to preview full size">
+          <div class="pdftoimages-page-badge">Page ${img.pageNum}</div>
+          <img src="${img.dataUrl}" class="pdftoimages-thumb" alt="${escapeHtml(img.name)}" loading="lazy">
+        </div>
+        <div class="pdftoimages-card-meta">
+          <div class="pdftoimages-card-title" title="${escapeHtml(img.name)}">${escapeHtml(img.name)}</div>
+          <div class="pdftoimages-card-details">${img.width} × ${img.height} px &bull; ${formatBytes(img.size)}</div>
+        </div>
+        <div class="pdftoimages-card-actions">
+          <a href="${img.dataUrl}" download="${escapeHtml(img.name)}" class="btn btn-primary btn-sm">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="7 10 12 15 17 10"></polyline>
+              <line x1="12" y1="15" x2="12" y2="3"></line>
+            </svg>
+            Download
+          </a>
+        </div>
+      `;
+
+      const thumbWrapper = card.querySelector('.pdftoimages-thumb-wrapper');
+      thumbWrapper.addEventListener('click', () => {
+        showPdfImagePreviewModal(img);
+      });
+
+      pdfToImagesGallery.appendChild(card);
+    });
+  }
+
+  function showPdfImagePreviewModal(img) {
+    if (!previewModal || !previewContainer) return;
+    previewContainer.innerHTML = `
+      <div style="display:flex;flex-direction:column;align-items:center;padding:1rem;gap:0.75rem;">
+        <div style="font-weight:600;font-size:0.95rem;color:var(--text-main);">${escapeHtml(img.name)} (${img.width} × ${img.height} px &bull; ${formatBytes(img.size)})</div>
+        <img src="${img.dataUrl}" style="max-width:100%;max-height:80vh;object-fit:contain;border-radius:6px;box-shadow:0 4px 16px rgba(0,0,0,0.25);" alt="${escapeHtml(img.name)}">
+      </div>
+    `;
+    previewModal.classList.remove('hidden');
+  }
+
+  async function downloadAllPdfImagesZip() {
+    if (!pdfToImagesState.images || pdfToImagesState.images.length === 0) {
+      alert('No converted images available.');
+      return;
+    }
+
+    try {
+      pdfToImagesDownloadZipBtn.disabled = true;
+      pdfToImagesDownloadZipBtn.textContent = 'Generating ZIP...';
+
+      const zipFiles = [];
+      for (const img of pdfToImagesState.images) {
+        const arrayBuf = await img.blob.arrayBuffer();
+        zipFiles.push({
+          name: img.name,
+          data: new Uint8Array(arrayBuf),
+        });
+      }
+
+      const zipBlob = createZipArchive(zipFiles);
+      pdfToImagesState.zipBlob = zipBlob;
+
+      const prefix = pdfToImagesOutputPrefix.value.trim() || 'converted_images';
+      const zipFilename = `${prefix}_images.zip`;
+
+      const downloadUrl = URL.createObjectURL(zipBlob);
+      const a = document.createElement('a');
+      a.href = downloadUrl;
+      a.download = zipFilename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      setTimeout(() => URL.revokeObjectURL(downloadUrl), 10000);
+
+      trackToolUsage('pdftoimages_zip_downloaded');
+    } catch (err) {
+      console.error('Failed to create ZIP:', err);
+      alert('Failed to generate ZIP archive: ' + (err.message || 'Unknown error'));
+    } finally {
+      pdfToImagesDownloadZipBtn.disabled = false;
+      pdfToImagesDownloadZipBtn.innerHTML = `
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+          <polyline points="7 10 12 15 17 10"></polyline>
+          <line x1="12" y1="15" x2="12" y2="3"></line>
+        </svg>
+        📦 Download All as ZIP
+      `;
+    }
+  }
+
+  async function sharePdfImages() {
+    if (!navigator.share) {
+      alert('Sharing is not supported on this device. Please use the Download buttons.');
+      return;
+    }
+
+    if (!pdfToImagesState.images || pdfToImagesState.images.length === 0) {
+      alert('No converted images to share.');
+      return;
+    }
+
+    try {
+      const filesToShare = [];
+      const maxShare = Math.min(pdfToImagesState.images.length, 10);
+      for (let i = 0; i < maxShare; i++) {
+        const img = pdfToImagesState.images[i];
+        filesToShare.push(new File([img.blob], img.name, { type: img.blob.type }));
+      }
+
+      if (navigator.canShare && navigator.canShare({ files: filesToShare })) {
+        await navigator.share({
+          title: 'Converted PDF Images',
+          text: `Converted ${filesToShare.length} images using PDF Tools`,
+          files: filesToShare,
+        });
+      } else if (pdfToImagesState.zipBlob) {
+        const prefix = pdfToImagesOutputPrefix.value.trim() || 'converted_images';
+        const zipFile = new File([pdfToImagesState.zipBlob], `${prefix}_images.zip`, { type: 'application/zip' });
+        if (navigator.canShare && navigator.canShare({ files: [zipFile] })) {
+          await navigator.share({
+            title: 'Converted PDF Images (ZIP)',
+            text: 'Converted images ZIP archive from PDF Tools',
+            files: [zipFile],
+          });
+        }
+      } else {
+        alert('File sharing is not supported by your browser for these image files. Please use the Download buttons.');
+      }
+    } catch (err) {
+      if (err.name !== 'AbortError') {
+        console.warn('Share error:', err);
+      }
+    }
+  }
+
+  function resetPdfToImages() {
+    pdfToImagesState.file = null;
+    pdfToImagesState.arrayBuffer = null;
+    pdfToImagesState.pdfjsDoc = null;
+    pdfToImagesState.totalPages = 0;
+    pdfToImagesState.images.forEach((img) => {
+      if (img.dataUrl) URL.revokeObjectURL(img.dataUrl);
+    });
+    pdfToImagesState.images = [];
+    pdfToImagesState.zipBlob = null;
+    pdfToImagesGallery.innerHTML = '';
+    pdfToImagesFileInput.value = '';
+    pdfToImagesWorkspace.classList.add('hidden');
+    pdfToImagesResultCard.classList.add('hidden');
+    pdfToImagesProgressContainer.classList.add('hidden');
+    pdfToImagesDropzoneSection.classList.remove('hidden');
+  }
+
+  function setPdfToImagesProgress(percent, text) {
+    pdfToImagesProgressBar.style.width = `${percent}%`;
+    pdfToImagesProgressPercent.textContent = `${percent}%`;
+    pdfToImagesProgressText.textContent = text;
+  }
+
+  // ==========================================
   // EVENT BINDINGS
   // ==========================================
   function initEvents() {
@@ -4372,6 +4883,122 @@
         },
       });
     }
+
+    // --- Tab 7: PDF to Images Events ---
+    if (tabPdfToImagesBtn) {
+      tabPdfToImagesBtn.addEventListener('click', () => switchTab('pdftoimages'));
+    }
+
+    if (pdfToImagesDropzone) {
+      pdfToImagesDropzone.addEventListener('click', () => pdfToImagesFileInput.click());
+      pdfToImagesDropzone.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          pdfToImagesFileInput.click();
+        }
+      });
+      ['dragenter', 'dragover'].forEach((eventName) => {
+        pdfToImagesDropzone.addEventListener(eventName, (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          pdfToImagesDropzone.classList.add('drag-active');
+        });
+      });
+      ['dragleave', 'drop'].forEach((eventName) => {
+        pdfToImagesDropzone.addEventListener(eventName, (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          pdfToImagesDropzone.classList.remove('drag-active');
+        });
+      });
+      pdfToImagesDropzone.addEventListener('drop', (e) => {
+        if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+          handlePdfToImagesFileSelected(e.dataTransfer.files[0]);
+        }
+      });
+    }
+
+    if (pdfToImagesFileInput) {
+      pdfToImagesFileInput.addEventListener('change', (e) => {
+        if (e.target.files && e.target.files.length > 0) {
+          handlePdfToImagesFileSelected(e.target.files[0]);
+        }
+      });
+    }
+
+    if (pdfToImagesChangeFileBtn) {
+      pdfToImagesChangeFileBtn.addEventListener('click', resetPdfToImages);
+    }
+
+    // Tab 7 Format Selection Cards (JPG vs PNG)
+    pdfToImagesFormatCards.forEach((card) => {
+      card.addEventListener('click', () => {
+        const fmt = card.dataset.format;
+        if (!fmt) return;
+        pdfToImagesState.format = fmt;
+        pdfToImagesFormatCards.forEach((c) => c.classList.remove('active'));
+        card.classList.add('active');
+        const radio = card.querySelector('input[type="radio"]');
+        if (radio) radio.checked = true;
+      });
+    });
+
+    // Tab 7 Resolution / Scale Presets
+    pdfToImagesScaleCards.forEach((card) => {
+      card.addEventListener('click', () => {
+        const scaleVal = parseFloat(card.dataset.scale);
+        if (isNaN(scaleVal)) return;
+        pdfToImagesState.scale = scaleVal;
+        pdfToImagesScaleCards.forEach((c) => c.classList.remove('active'));
+        card.classList.add('active');
+        const radio = card.querySelector('input[type="radio"]');
+        if (radio) radio.checked = true;
+      });
+    });
+
+    // Tab 7 Page Range Mode (All vs Custom)
+    if (pdfToImagesPageModeAll) {
+      pdfToImagesPageModeAll.addEventListener('change', () => {
+        if (pdfToImagesPageModeAll.checked) {
+          pdfToImagesState.pageMode = 'all';
+          if (pdfToImagesCustomRangeContainer) pdfToImagesCustomRangeContainer.classList.add('hidden');
+        }
+      });
+    }
+    if (pdfToImagesPageModeCustom) {
+      pdfToImagesPageModeCustom.addEventListener('change', () => {
+        if (pdfToImagesPageModeCustom.checked) {
+          pdfToImagesState.pageMode = 'custom';
+          if (pdfToImagesCustomRangeContainer) {
+            pdfToImagesCustomRangeContainer.classList.remove('hidden');
+            if (pdfToImagesPageRangeInput) pdfToImagesPageRangeInput.focus();
+          }
+        }
+      });
+    }
+
+    if (pdfToImagesExecuteBtn) {
+      pdfToImagesExecuteBtn.addEventListener('click', convertPdfToImages);
+    }
+
+    if (pdfToImagesCancelBtn) {
+      pdfToImagesCancelBtn.addEventListener('click', () => {
+        pdfToImagesState.isCancelled = true;
+        setPdfToImagesProgress(0, 'Cancelling conversion...');
+      });
+    }
+
+    if (pdfToImagesDownloadZipBtn) {
+      pdfToImagesDownloadZipBtn.addEventListener('click', downloadAllPdfImagesZip);
+    }
+
+    if (pdfToImagesShareBtn) {
+      pdfToImagesShareBtn.addEventListener('click', sharePdfImages);
+    }
+
+    if (pdfToImagesResetBtn) {
+      pdfToImagesResetBtn.addEventListener('click', resetPdfToImages);
+    }
   }
 
   // ==========================================
@@ -4473,6 +5100,8 @@
       }
     } else if (tabParam === 'images') {
       switchTab('images');
+    } else if (tabParam === 'pdftoimages') {
+      switchTab('pdftoimages');
     }
   }
 

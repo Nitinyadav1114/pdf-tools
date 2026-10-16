@@ -140,6 +140,14 @@
         </svg>
         Image to PDF
       </button>
+      <button class="nav-tab" id="tabPdfToImagesBtn" data-tab="pdftoimages">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M5 3h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"></path>
+          <circle cx="9" cy="9" r="2"></circle>
+          <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"></path>
+        </svg>
+        PDF to Images
+      </button>
     </nav>
 
     <!-- Main Content -->
@@ -1371,6 +1379,209 @@
               <button type="button" id="imagesSendToCompressBtn" class="btn btn-secondary btn-lg btn-flow-jump" title="Compress this PDF to reduce file size">
                 🗜️ Compress PDF
               </button>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <!-- ============================================== -->
+      <!-- TAB 7: PDF TO IMAGES VIEW                      -->
+      <!-- ============================================== -->
+      <div id="pdfToImagesTabView" class="tab-view hidden">
+        <!-- Dropzone Section -->
+        <section id="pdfToImagesDropzoneSection" class="upload-section">
+          <div id="pdfToImagesDropzone" class="dropzone" role="button" tabindex="0" aria-label="Dropzone for PDF to Images. Drop a PDF here or press Enter to browse files.">
+            <div class="dropzone-icon">
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                <polyline points="14 2 14 8 20 8"></polyline>
+                <circle cx="10" cy="13" r="2"></circle>
+                <path d="m18 17-2.5-2.5a1.5 1.5 0 0 0-2.12 0L9 19"></path>
+              </svg>
+            </div>
+            <h2 class="dropzone-title">Drop your PDF document here</h2>
+            <p class="dropzone-subtitle">or <span class="browse-link">browse from your computer</span></p>
+            <p class="dropzone-hint">Convert each page into high-resolution JPG or PNG images &bull; 100% Private in Browser</p>
+            <input type="file" id="pdfToImagesFileInput" class="file-input" accept=".pdf,application/pdf">
+          </div>
+        </section>
+
+        <!-- Workspace Section -->
+        <section id="pdfToImagesWorkspace" class="workspace-section hidden">
+          <!-- Document Metadata Bar -->
+          <div class="file-info-header">
+            <div class="file-info-header-left">
+              <div class="file-icon-badge">📄</div>
+              <div>
+                <h3 id="pdfToImagesFileName" class="workspace-file-title">document.pdf</h3>
+                <div class="file-meta-row">
+                  <span id="pdfToImagesPageCountBadge" class="meta-badge">0 pages</span>
+                  <span id="pdfToImagesFileSizeBadge" class="meta-badge">0 KB</span>
+                </div>
+              </div>
+            </div>
+            <div>
+              <button type="button" id="pdfToImagesChangeFileBtn" class="btn btn-secondary btn-sm">
+                Change File
+              </button>
+            </div>
+          </div>
+
+          <!-- Conversion Controls -->
+          <div class="preset-choice-section">
+            <h4 class="preset-section-title">1. Select Image Format</h4>
+            <div class="preset-choices-grid" style="grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));">
+              <label class="preset-choice-card active" data-format="jpg">
+                <input type="radio" name="pdfToImagesFormatRadio" value="jpg" checked class="sr-only">
+                <div class="preset-choice-header">
+                  <span class="preset-choice-title">📸 JPG (JPEG)</span>
+                  <span class="preset-tag tag-recommended">Recommended</span>
+                </div>
+                <p class="preset-choice-desc">Best for sharing on WhatsApp, social media, and presentations. White background, lightweight file size.</p>
+                <div class="preset-choice-savings" style="color: #059669;">Compact size &bull; Universal compatibility</div>
+              </label>
+
+              <label class="preset-choice-card" data-format="png">
+                <input type="radio" name="pdfToImagesFormatRadio" value="png" class="sr-only">
+                <div class="preset-choice-header">
+                  <span class="preset-choice-title">🎨 PNG</span>
+                  <span class="preset-tag">Lossless</span>
+                </div>
+                <p class="preset-choice-desc">Pixel-perfect lossless fidelity. Maximum sharpness for technical diagrams, graphs, and tiny text.</p>
+                <div class="preset-choice-savings" style="color: #0284c7;">Lossless vector &amp; text clarity</div>
+              </label>
+            </div>
+          </div>
+
+          <!-- Resolution / DPI Presets -->
+          <div class="preset-choice-section">
+            <h4 class="preset-section-title">2. Select Resolution &amp; Quality</h4>
+            <div class="preset-choices-grid" style="grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));">
+              <label class="preset-choice-card active" data-scale="1.5">
+                <input type="radio" name="pdfToImagesScaleRadio" value="1.5" checked class="sr-only">
+                <div class="preset-choice-header">
+                  <span class="preset-choice-title">📱 Standard (150 DPI)</span>
+                  <span class="preset-tag tag-recommended">Fastest</span>
+                </div>
+                <p class="preset-choice-desc">Optimal balance of sharp clarity and swift conversion speed. ~1240 × 1754 px.</p>
+              </label>
+
+              <label class="preset-choice-card" data-scale="2.0">
+                <input type="radio" name="pdfToImagesScaleRadio" value="2.0" class="sr-only">
+                <div class="preset-choice-header">
+                  <span class="preset-choice-title">🖥️ High Def (200 DPI)</span>
+                </div>
+                <p class="preset-choice-desc">Ultra-sharp presentation quality for 4K and Retina monitors. ~1654 × 2338 px.</p>
+              </label>
+
+              <label class="preset-choice-card" data-scale="3.0">
+                <input type="radio" name="pdfToImagesScaleRadio" value="3.0" class="sr-only">
+                <div class="preset-choice-header">
+                  <span class="preset-choice-title">🖨️ Ultra Print (300 DPI)</span>
+                </div>
+                <p class="preset-choice-desc">Maximum publication detail. Ideal for printing, archives, and OCR. ~2480 × 3508 px.</p>
+              </label>
+            </div>
+          </div>
+
+          <!-- Page Selection Details -->
+          <details class="advanced-settings-details" id="pdfToImagesRangeDetails">
+            <summary class="advanced-settings-summary">
+              <span>📄 Page Selection: All Pages vs. Specific Range</span>
+              <span class="summary-arrow">▼</span>
+            </summary>
+            <div style="padding: 1rem 0;">
+              <div class="radio-group" style="display: flex; gap: 1.5rem; margin-bottom: 0.75rem; flex-wrap: wrap;">
+                <label style="display: flex; align-items: center; gap: 0.4rem; cursor: pointer;">
+                  <input type="radio" name="pdfToImagesPageMode" value="all" checked id="pdfToImagesPageModeAll">
+                  <strong>All Pages</strong>
+                </label>
+                <label style="display: flex; align-items: center; gap: 0.4rem; cursor: pointer;">
+                  <input type="radio" name="pdfToImagesPageMode" value="custom" id="pdfToImagesPageModeCustom">
+                  <strong>Specific Pages / Range</strong>
+                </label>
+              </div>
+              <div id="pdfToImagesCustomRangeContainer" class="hidden" style="margin-top: 0.5rem;">
+                <input type="text" id="pdfToImagesPageRangeInput" class="text-input" placeholder="e.g. 1, 3, 5-8" style="max-width: 350px;">
+                <p class="setting-desc" style="margin-top: 0.25rem;">Type page numbers and ranges separated by commas.</p>
+              </div>
+            </div>
+          </details>
+
+          <!-- Execution Action Bar -->
+          <div class="action-bar" style="margin-top: 1.5rem;">
+            <div class="action-bar-left">
+              <label for="pdfToImagesOutputPrefix" class="filename-label">Image Prefix:</label>
+              <input type="text" id="pdfToImagesOutputPrefix" class="filename-input" placeholder="page" value="page">
+            </div>
+            <div class="action-bar-right">
+              <button type="button" id="pdfToImagesExecuteBtn" class="btn btn-primary btn-lg">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                  <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                  <polyline points="21 15 16 10 5 21"></polyline>
+                </svg>
+                Convert to Images
+              </button>
+            </div>
+          </div>
+
+          <!-- Progress Container -->
+          <div id="pdfToImagesProgressContainer" class="progress-container hidden" style="margin-top: 1.5rem;">
+            <div class="progress-bar-wrapper">
+              <div id="pdfToImagesProgressBar" class="progress-bar-fill" style="width: 0%;"></div>
+            </div>
+            <div class="progress-status-row">
+              <span id="pdfToImagesProgressText" class="progress-text">Preparing conversion...</span>
+              <span id="pdfToImagesProgressPercent" class="progress-percent">0%</span>
+            </div>
+            <div style="text-align: right; margin-top: 0.5rem;">
+              <button type="button" id="pdfToImagesCancelBtn" class="btn btn-secondary btn-sm">Cancel</button>
+            </div>
+          </div>
+
+          <!-- Result Gallery Section -->
+          <div id="pdfToImagesResultCard" class="result-card hidden" style="margin-top: 2rem;">
+            <div class="result-header">
+              <div class="result-icon-success">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+              </div>
+              <div>
+                <h3 class="result-title">Conversion Complete!</h3>
+                <p id="pdfToImagesResultSummary" class="result-subtitle">Successfully converted pages to images.</p>
+              </div>
+            </div>
+
+            <!-- Master Download Actions -->
+            <div class="result-actions" style="margin-bottom: 1.5rem; justify-content: flex-start;">
+              <button type="button" id="pdfToImagesDownloadZipBtn" class="btn btn-success btn-lg">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                  <polyline points="7 10 12 15 17 10"></polyline>
+                  <line x1="12" y1="15" x2="12" y2="3"></line>
+                </svg>
+                📦 Download All as ZIP
+              </button>
+              <button type="button" id="pdfToImagesShareBtn" class="btn btn-secondary btn-lg btn-share-pdf hidden" title="Share images via WhatsApp, Slack, Gmail, AirDrop">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="18" cy="5" r="3"></circle>
+                  <circle cx="6" cy="12" r="3"></circle>
+                  <circle cx="18" cy="19" r="3"></circle>
+                  <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+                  <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+                </svg>
+                Share All
+              </button>
+              <button type="button" id="pdfToImagesResetBtn" class="btn btn-secondary btn-lg">
+                🔄 Convert Another PDF
+              </button>
+            </div>
+
+            <!-- Converted Images Grid -->
+            <div id="pdfToImagesGallery" class="pdftoimages-gallery">
+              <!-- Dynamically populated cards -->
             </div>
           </div>
         </section>
