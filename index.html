@@ -158,8 +158,8 @@
       <div id="mergeTabView" class="tab-view active">
         <!-- Upload Drop Zone -->
         <section class="dropzone-section">
-          <div id="dropzone" class="dropzone" tabindex="0" role="button" aria-label="Upload PDF files to merge">
-            <input type="file" id="fileInput" multiple accept=".pdf,application/pdf" class="file-input-hidden">
+          <div id="dropzone" class="dropzone" tabindex="0" role="button" aria-label="Drop PDF files here or browse to merge">
+            <input type="file" id="fileInput" multiple accept=".pdf,application/pdf" class="file-input-hidden" aria-label="Select PDF files to merge">
             <div class="dropzone-content">
               <div class="dropzone-icon-wrapper">
                 <svg class="dropzone-icon" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
@@ -349,8 +349,8 @@
       <div id="removeTabView" class="tab-view hidden">
         <!-- Single PDF Upload Dropzone -->
         <section class="dropzone-section" id="removeDropzoneSection">
-          <div id="removeDropzone" class="dropzone" tabindex="0" role="button" aria-label="Upload PDF to remove pages">
-            <input type="file" id="removeFileInput" accept=".pdf,application/pdf" class="file-input-hidden">
+          <div id="removeDropzone" class="dropzone" tabindex="0" role="button" aria-label="Drop a PDF file here or browse to remove pages">
+            <input type="file" id="removeFileInput" accept=".pdf,application/pdf" class="file-input-hidden" aria-label="Select PDF file to remove pages">
             <div class="dropzone-content">
               <div class="dropzone-icon-wrapper" style="background-color: var(--danger-light); color: var(--danger);">
                 <svg class="dropzone-icon" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
@@ -504,8 +504,8 @@
       <div id="slidesTabView" class="tab-view hidden">
         <!-- Presentation Upload Drop Zone -->
         <section class="dropzone-section" id="slidesDropzoneSection">
-          <div id="slidesDropzone" class="dropzone" tabindex="0" role="button" aria-label="Upload PDF presentation slides">
-            <input type="file" id="slidesFileInput" accept=".pdf,application/pdf" class="file-input-hidden">
+          <div id="slidesDropzone" class="dropzone" tabindex="0" role="button" aria-label="Drop a presentation PDF here or browse to generate handout">
+            <input type="file" id="slidesFileInput" accept=".pdf,application/pdf" class="file-input-hidden" aria-label="Select presentation PDF to format as A4 handout">
             <div class="dropzone-content">
               <div class="dropzone-icon-wrapper" style="background-color: rgba(37, 99, 235, 0.1); color: var(--tool-slides);">
                 <svg class="dropzone-icon" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
@@ -671,8 +671,8 @@
                 Download A4 PDF
               </a>
               <button id="slidesPreviewBtn" class="btn btn-secondary btn-lg">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8z"></path>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
                   <circle cx="12" cy="12" r="3"></circle>
                 </svg>
                 Preview
@@ -701,8 +701,8 @@
       <div id="invertTabView" class="tab-view hidden">
         <!-- Invert Upload Drop Zone -->
         <section class="dropzone-section" id="invertDropzoneSection">
-          <div id="invertDropzone" class="dropzone" tabindex="0" role="button" aria-label="Upload PDF to invert colors for printing">
-            <input type="file" id="invertFileInput" accept=".pdf,application/pdf" class="file-input-hidden">
+          <div id="invertDropzone" class="dropzone" tabindex="0" role="button" aria-label="Drop a PDF document here or browse to invert colors">
+            <input type="file" id="invertFileInput" accept=".pdf,application/pdf" class="file-input-hidden" aria-label="Select PDF file to invert colors">
             <div class="dropzone-content">
               <div class="dropzone-icon-wrapper" style="background-color: rgba(124, 58, 237, 0.1); color: var(--tool-invert);">
                 <svg class="dropzone-icon" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
@@ -910,8 +910,8 @@
                 Download Inverted PDF
               </a>
               <button id="invertPreviewBtn" class="btn btn-secondary btn-lg">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8z"></path>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
                   <circle cx="12" cy="12" r="3"></circle>
                 </svg>
                 Preview
@@ -937,8 +937,8 @@
       <div id="compressTabView" class="tab-view hidden">
         <!-- Upload Drop Zone -->
         <section class="dropzone-section">
-          <div id="compressDropzone" class="dropzone" tabindex="0" role="button" aria-label="Upload PDF to compress">
-            <input type="file" id="compressFileInput" accept=".pdf,application/pdf" class="file-input-hidden">
+          <div id="compressDropzone" class="dropzone" tabindex="0" role="button" aria-label="Drop a PDF document here or browse to compress">
+            <input type="file" id="compressFileInput" accept=".pdf,application/pdf" class="file-input-hidden" aria-label="Select PDF file to compress">
             <div class="dropzone-content">
               <div class="dropzone-icon-wrapper" style="background-color: rgba(5, 150, 105, 0.1); color: var(--tool-compress);">
                 <svg class="dropzone-icon" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
@@ -1153,8 +1153,8 @@
                 Download Compressed PDF
               </a>
               <button id="compressPreviewBtn" class="btn btn-secondary btn-lg">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8z"></path>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
                   <circle cx="12" cy="12" r="3"></circle>
                 </svg>
                 Preview
@@ -1180,8 +1180,8 @@
       <div id="imagesTabView" class="tab-view hidden">
         <!-- Upload Drop Zone -->
         <section class="dropzone-section" id="imagesDropzoneSection">
-          <div id="imagesDropzone" class="dropzone" tabindex="0" role="button" aria-label="Upload images to convert to PDF">
-            <input type="file" id="imagesFileInput" multiple accept="image/*,.jpg,.jpeg,.png,.webp,.gif,.bmp" class="file-input-hidden">
+          <div id="imagesDropzone" class="dropzone" tabindex="0" role="button" aria-label="Drop image files here or browse to convert to PDF">
+            <input type="file" id="imagesFileInput" multiple accept="image/*,.jpg,.jpeg,.png,.webp,.gif,.bmp" class="file-input-hidden" aria-label="Select image files to convert to PDF">
             <div class="dropzone-content">
               <div class="dropzone-icon-wrapper" style="background-color: rgba(13, 148, 136, 0.1); color: var(--tool-images);">
                 <svg class="dropzone-icon" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
@@ -1360,8 +1360,8 @@
                 Download PDF
               </a>
               <button id="imagesPreviewBtn" class="btn btn-secondary btn-lg">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8z"></path>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
                   <circle cx="12" cy="12" r="3"></circle>
                 </svg>
                 Preview
@@ -1390,49 +1390,61 @@
       <div id="pdfToImagesTabView" class="tab-view hidden">
         <!-- Dropzone Section -->
         <section id="pdfToImagesDropzoneSection" class="dropzone-section">
-          <div id="pdfToImagesDropzone" class="dropzone" role="button" tabindex="0" aria-label="Dropzone for PDF to Images. Drop a PDF here or press Enter to browse files.">
-            <input type="file" id="pdfToImagesFileInput" class="file-input-hidden" accept=".pdf,application/pdf">
+          <div id="pdfToImagesDropzone" class="dropzone" role="button" tabindex="0" aria-label="Drop a PDF document here or browse to convert to images">
+            <input type="file" id="pdfToImagesFileInput" class="file-input-hidden" accept=".pdf,application/pdf" aria-label="Select PDF document to convert to images">
             <div class="dropzone-content">
-              <div class="dropzone-icon-wrapper" style="background-color: rgba(2, 132, 199, 0.1); color: #0284c7;">
-                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <div class="dropzone-icon-wrapper" style="background-color: rgba(2, 132, 199, 0.1); color: var(--tool-pdftoimages);">
+                <svg class="dropzone-icon" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
                   <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
                   <polyline points="14 2 14 8 20 8"></polyline>
                   <circle cx="10" cy="13" r="2"></circle>
                   <path d="m18 17-2.5-2.5a1.5 1.5 0 0 0-2.12 0L9 19"></path>
                 </svg>
               </div>
-              <h2 class="dropzone-title"><span class="drop-text-desktop">Drop your PDF document here</span><span class="drop-text-mobile">Tap to select PDF Document</span></h2>
-              <p class="dropzone-desc"><span class="browse-link">Choose PDF document</span> from your device</p>
+              <h2 class="dropzone-title"><span class="drop-text-desktop">Select a PDF to Convert to Images</span><span class="drop-text-mobile">Tap to select PDF</span></h2>
+              <p class="dropzone-desc"><span class="browse-link" style="color: var(--tool-pdftoimages);">Choose PDF document</span> from your device</p>
               <p class="dropzone-hint">Convert each page into high-resolution JPG or PNG images &bull; 100% Private in Browser</p>
             </div>
           </div>
         </section>
 
         <!-- Workspace Section -->
-        <section id="pdfToImagesWorkspace" class="workspace-section hidden">
-          <!-- Document Metadata Bar -->
-          <div class="file-info-header">
-            <div class="file-info-header-left">
-              <div class="file-icon-badge">📄</div>
+        <section id="pdfToImagesWorkspace" class="manage-section hidden">
+          <!-- File info card & Change file -->
+          <div class="file-loaded-banner">
+            <div class="loaded-file-meta">
+              <span class="file-icon-badge">🖼️</span>
               <div>
-                <h3 id="pdfToImagesFileName" class="workspace-file-title">document.pdf</h3>
-                <div class="file-meta-row">
-                  <span id="pdfToImagesPageCountBadge" class="meta-badge">0 pages</span>
-                  <span id="pdfToImagesFileSizeBadge" class="meta-badge">0 KB</span>
-                </div>
+                <h3 id="pdfToImagesFileName" class="loaded-file-title">document.pdf</h3>
+                <p class="loaded-file-sub">
+                  <span id="pdfToImagesPageCountBadge">0 pages</span> &bull;
+                  <span id="pdfToImagesFileSizeBadge">0 KB</span>
+                </p>
               </div>
             </div>
-            <div>
-              <button type="button" id="pdfToImagesChangeFileBtn" class="btn btn-secondary btn-sm">
-                Change File
-              </button>
-            </div>
+            <button type="button" id="pdfToImagesChangeFileBtn" class="btn btn-secondary">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"></path>
+              </svg>
+              Change File
+            </button>
           </div>
 
-          <!-- Conversion Controls -->
-          <div class="preset-choice-section">
-            <h4 class="preset-section-title">1. Select Image Format</h4>
-            <div class="preset-choices-grid" style="grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));">
+          <!-- Format Choice Card -->
+          <div class="options-card">
+            <div class="options-card-header">
+              <h3 class="options-title">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                  <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                  <polyline points="21 15 16 10 5 21"></polyline>
+                </svg>
+                Select Image Format
+              </h3>
+              <span class="options-subtitle">Choose between lightweight JPEG or crystal-clear lossless PNG</span>
+            </div>
+
+            <div class="preset-choice-grid" style="grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));">
               <label class="preset-choice-card active" data-format="jpg">
                 <input type="radio" name="pdfToImagesFormatRadio" value="jpg" checked class="sr-only">
                 <div class="preset-choice-header">
@@ -1447,7 +1459,7 @@
                 <input type="radio" name="pdfToImagesFormatRadio" value="png" class="sr-only">
                 <div class="preset-choice-header">
                   <span class="preset-choice-title">🎨 PNG</span>
-                  <span class="preset-tag">Lossless</span>
+                  <span class="preset-tag tag-lossless">Lossless</span>
                 </div>
                 <p class="preset-choice-desc">Pixel-perfect lossless fidelity. Maximum sharpness for technical diagrams, graphs, and tiny text.</p>
                 <div class="preset-choice-savings" style="color: #0284c7;">Lossless vector &amp; text clarity</div>
@@ -1455,10 +1467,20 @@
             </div>
           </div>
 
-          <!-- Resolution / DPI Presets -->
-          <div class="preset-choice-section">
-            <h4 class="preset-section-title">2. Select Resolution &amp; Quality</h4>
-            <div class="preset-choices-grid" style="grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));">
+          <!-- Resolution / DPI Presets Card -->
+          <div class="options-card">
+            <div class="options-card-header">
+              <h3 class="options-title">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="3"></circle>
+                  <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                </svg>
+                Select Resolution &amp; DPI
+              </h3>
+              <span class="options-subtitle">Configure rendering scale and pixel density for your needs</span>
+            </div>
+
+            <div class="preset-choice-grid">
               <label class="preset-choice-card active" data-scale="1.5">
                 <input type="radio" name="pdfToImagesScaleRadio" value="1.5" checked class="sr-only">
                 <div class="preset-choice-header">
@@ -1504,20 +1526,26 @@
                 </label>
               </div>
               <div id="pdfToImagesCustomRangeContainer" class="hidden" style="margin-top: 0.5rem;">
-                <input type="text" id="pdfToImagesPageRangeInput" class="text-input" placeholder="e.g. 1, 3, 5-8" style="max-width: 350px;">
+                <input type="text" id="pdfToImagesPageRangeInput" class="input-text" placeholder="e.g. 1, 3, 5-8" style="max-width: 350px;">
                 <p class="setting-desc" style="margin-top: 0.25rem;">Type page numbers and ranges separated by commas.</p>
               </div>
             </div>
           </details>
 
-          <!-- Execution Action Bar -->
-          <div class="action-bar" style="margin-top: 1.5rem;">
-            <div class="action-bar-left">
-              <label for="pdfToImagesOutputPrefix" class="filename-label">Image Prefix:</label>
-              <input type="text" id="pdfToImagesOutputPrefix" class="filename-input" placeholder="page" value="page">
+          <!-- Action & Convert Card -->
+          <div class="merge-action-card">
+            <div class="merge-options">
+              <div class="output-filename-group">
+                <label for="pdfToImagesOutputPrefix" class="filename-label">Image Prefix:</label>
+                <div class="filename-input-wrapper">
+                  <input type="text" id="pdfToImagesOutputPrefix" class="input-text" placeholder="page" value="page">
+                  <span class="file-extension">_[1...N]</span>
+                </div>
+              </div>
             </div>
-            <div class="action-bar-right">
-              <button type="button" id="pdfToImagesExecuteBtn" class="btn btn-primary btn-lg">
+
+            <div class="merge-button-wrapper">
+              <button type="button" id="pdfToImagesExecuteBtn" class="btn btn-primary btn-lg" style="background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                   <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
                   <circle cx="8.5" cy="8.5" r="1.5"></circle>
@@ -1529,35 +1557,32 @@
           </div>
 
           <!-- Progress Container -->
-          <div id="pdfToImagesProgressContainer" class="progress-container hidden" style="margin-top: 1.5rem;">
-            <div class="progress-bar-wrapper">
-              <div id="pdfToImagesProgressBar" class="progress-bar-fill" style="width: 0%;"></div>
+          <div id="pdfToImagesProgressContainer" class="progress-container hidden">
+            <div class="progress-header">
+              <span id="pdfToImagesProgressText" class="progress-status">Preparing conversion...</span>
+              <div class="progress-right">
+                <span id="pdfToImagesProgressPercent" class="progress-percent">0%</span>
+                <button type="button" id="pdfToImagesCancelBtn" class="btn-cancel-task" title="Cancel operation">Cancel</button>
+              </div>
             </div>
-            <div class="progress-status-row">
-              <span id="pdfToImagesProgressText" class="progress-text">Preparing conversion...</span>
-              <span id="pdfToImagesProgressPercent" class="progress-percent">0%</span>
-            </div>
-            <div style="text-align: right; margin-top: 0.5rem;">
-              <button type="button" id="pdfToImagesCancelBtn" class="btn btn-secondary btn-sm">Cancel</button>
+            <div class="progress-bar-bg">
+              <div id="pdfToImagesProgressBar" class="progress-bar-fill" style="background: linear-gradient(90deg, #0284c7 0%, #38bdf8 100%); width: 0%;"></div>
             </div>
           </div>
 
           <!-- Result Gallery Section -->
-          <div id="pdfToImagesResultCard" class="result-card hidden" style="margin-top: 2rem;">
-            <div class="result-header">
-              <div class="result-icon-success">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                  <polyline points="20 6 9 17 4 12"></polyline>
-                </svg>
-              </div>
-              <div>
-                <h3 class="result-title">Conversion Complete!</h3>
-                <p id="pdfToImagesResultSummary" class="result-subtitle">Successfully converted pages to images.</p>
-              </div>
+          <div id="pdfToImagesResultCard" class="result-card hidden">
+            <div class="result-icon" style="background: rgba(2, 132, 199, 0.1); color: #0284c7;">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                <polyline points="22 4 12 14.01 9 11.01"></polyline>
+              </svg>
             </div>
-
-            <!-- Master Download Actions -->
-            <div class="result-actions" style="margin-bottom: 1.5rem; justify-content: flex-start;">
+            <div class="result-details">
+              <h3 class="result-title">Conversion Complete!</h3>
+              <p id="pdfToImagesResultSummary" class="result-summary">Successfully converted pages to images.</p>
+            </div>
+            <div class="result-actions">
               <button type="button" id="pdfToImagesDownloadZipBtn" class="btn btn-success btn-lg">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                   <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
@@ -1582,7 +1607,7 @@
             </div>
 
             <!-- Converted Images Grid -->
-            <div id="pdfToImagesGallery" class="pdftoimages-gallery">
+            <div id="pdfToImagesGallery" class="pdftoimages-gallery" style="width: 100%; margin-top: 1.25rem;">
               <!-- Dynamically populated cards -->
             </div>
           </div>
@@ -1611,7 +1636,7 @@
     </footer>
   </div>
 
-  <script src="assets/js/app.js?v=3"></script>
+  <script type="module" src="assets/js/app.js?v=4"></script>
   <script>
     // Register Service Worker for fast browser caching & offline access
     if ('serviceWorker' in navigator) {

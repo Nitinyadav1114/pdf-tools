@@ -1,4 +1,4 @@
-const CACHE_NAME = 'pdf-tools-v3';
+const CACHE_NAME = 'pdf-tools-v4';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
@@ -6,6 +6,20 @@ const ASSETS_TO_CACHE = [
   './assets/css/styles.css',
   './assets/js/app.js',
   './assets/js/worker.js',
+  './assets/js/core/worker-pool.js',
+  './assets/js/core/state.js',
+  './assets/js/core/dom.js',
+  './assets/js/core/utils.js',
+  './assets/js/core/validators.js',
+  './assets/js/core/zip-builder.js',
+  './assets/js/core/pwa.js',
+  './assets/js/tabs/tab-merge.js',
+  './assets/js/tabs/tab-remove.js',
+  './assets/js/tabs/tab-slides.js',
+  './assets/js/tabs/tab-invert.js',
+  './assets/js/tabs/tab-compress.js',
+  './assets/js/tabs/tab-images.js',
+  './assets/js/tabs/tab-pdftoimages.js',
   './assets/vendor/pdf-lib.min.js',
   './assets/vendor/pdf.min.js',
   './assets/vendor/pdf.worker.min.js',
