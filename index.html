@@ -1,0 +1,1319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+  <title>PDF Tools — Free, Fast &amp; 100% Private In-Browser PDF Suite</title>
+  <meta name="description" content="All-in-one free browser PDF tools. Merge PDFs, compress files up to 90%, remove pages, convert slides to A4 handouts, invert colors to save ink, and convert images to PDF. 100% private in browser — no downloads or accounts required.">
+  <meta name="keywords" content="PDF tools, merge PDF, compress PDF, PDF compressor, invert PDF colors, dark to light PDF, slides to A4 handout, remove PDF pages, image to PDF, JPG to PDF, private PDF editor, client-side PDF, in-browser PDF">
+  <meta name="author" content="PDF Tools">
+  <meta name="robots" content="index, follow">
+
+  <!-- Open Graph / WhatsApp / Facebook / Telegram -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="PDF Tools — All-in-One Private Browser PDF Suite">
+  <meta property="og:description" content="Merge, compress, remove pages, convert slides to A4, invert colors, and convert images to PDF. 100% private in your browser — zero file uploads, no app downloads required.">
+  <meta property="og:image" content="assets/og-preview.png">
+
+  <!-- Twitter / X -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="PDF Tools — All-in-One Private Browser PDF Suite">
+  <meta name="twitter:description" content="Merge, compress, remove pages, convert slides to A4, invert colors, and convert images to PDF. 100% private in your browser.">
+  <meta name="twitter:image" content="assets/og-preview.png">
+
+  <!-- Theme & Icons -->
+  <meta name="theme-color" content="#4f46e5" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0a0f1d" media="(prefers-color-scheme: dark)">
+  <link rel="icon" type="image/x-icon" href="assets/icon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/icon.png">
+  <link rel="apple-touch-icon" href="assets/icon.png">
+  <link rel="manifest" href="manifest.json">
+
+  <!-- Styles & Scripts -->
+  <link rel="stylesheet" href="assets/css/styles.css">
+  <script src="assets/vendor/pdf-lib.min.js"></script>
+  <script src="assets/vendor/pdf.min.js"></script>
+  <script src="assets/vendor/sortable.min.js"></script>
+</head>
+<body class="theme-light">
+  <div class="app-container">
+    <!-- Header -->
+    <header class="app-header">
+      <div class="header-left">
+        <div class="logo-icon">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+            <polyline points="14 2 14 8 20 8"></polyline>
+            <line x1="9" y1="13" x2="15" y2="13"></line>
+            <line x1="9" y1="17" x2="15" y2="17"></line>
+            <polyline points="9 9 10 9 11 9"></polyline>
+          </svg>
+        </div>
+        <div>
+          <h1 class="app-title" id="appMainTitle">PDF Tools</h1>
+          <p class="app-subtitle" id="appMainSubtitle">Sort by timestamp or drag &amp; drop to reorder</p>
+        </div>
+      </div>
+      <div class="header-right">
+        <span class="privacy-badge" title="All processing happens right in your browser. No files are ever uploaded to any server.">
+          <span class="privacy-dot"></span>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+          </svg>
+          100% In-Browser &amp; Private
+        </span>
+        <button id="themeToggleBtn" class="btn-icon" aria-label="Toggle dark/light mode" title="Toggle theme">
+          <span class="theme-icon light-icon">🌙</span>
+          <span class="theme-icon dark-icon">☀️</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Navigation Tabs -->
+    <nav class="nav-tabs" aria-label="Tool selection">
+      <button class="nav-tab active" id="tabMergeBtn" data-tab="merge">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+          <polyline points="14 2 14 8 20 8"></polyline>
+          <line x1="9" y1="13" x2="15" y2="13"></line>
+          <line x1="9" y1="17" x2="15" y2="17"></line>
+        </svg>
+        Merge PDFs
+      </button>
+      <button class="nav-tab" id="tabRemoveBtn" data-tab="remove">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="6" cy="6" r="3"></circle>
+          <circle cx="6" cy="18" r="3"></circle>
+          <line x1="20" y1="4" x2="8.12" y2="15.88"></line>
+          <line x1="14.47" y1="14.48" x2="20" y2="20"></line>
+          <line x1="8.12" y1="8.12" x2="12" y2="12"></line>
+        </svg>
+        Remove Pages
+      </button>
+      <button class="nav-tab" id="tabSlidesBtn" data-tab="slides">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+          <line x1="8" y1="21" x2="16" y2="21"></line>
+          <line x1="12" y1="17" x2="12" y2="21"></line>
+        </svg>
+        Slides to A4
+      </button>
+      <button class="nav-tab" id="tabInvertBtn" data-tab="invert">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"></circle>
+          <path d="M12 2a10 10 0 0 1 0 20z" fill="currentColor"></path>
+        </svg>
+        Invert Colors
+      </button>
+      <button class="nav-tab" id="tabCompressBtn" data-tab="compress">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="4 14 10 14 10 20"></polyline>
+          <polyline points="20 10 14 10 14 4"></polyline>
+          <line x1="14" y1="10" x2="21" y2="3"></line>
+          <line x1="3" y1="21" x2="10" y2="14"></line>
+        </svg>
+        Compress PDF
+      </button>
+      <button class="nav-tab" id="tabImagesBtn" data-tab="images">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+          <circle cx="8.5" cy="8.5" r="1.5"></circle>
+          <polyline points="21 15 16 10 5 21"></polyline>
+        </svg>
+        Image to PDF
+      </button>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <!-- ============================================== -->
+      <!-- TAB 1: MERGE PDFS VIEW                         -->
+      <!-- ============================================== -->
+      <div id="mergeTabView" class="tab-view active">
+        <!-- Upload Drop Zone -->
+        <section class="dropzone-section">
+          <div id="dropzone" class="dropzone" tabindex="0">
+            <input type="file" id="fileInput" multiple accept=".pdf,application/pdf" class="file-input-hidden">
+            <div class="dropzone-content">
+              <div class="dropzone-icon-wrapper">
+                <svg class="dropzone-icon" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                  <polyline points="17 8 12 3 7 8"></polyline>
+                  <line x1="12" y1="3" x2="12" y2="15"></line>
+                </svg>
+              </div>
+              <h2 class="dropzone-title">Drop your PDF files here</h2>
+              <p class="dropzone-desc">or <span class="browse-link">browse from your computer</span></p>
+              <p class="dropzone-hint">Supports multiple files &bull; Auto-sorts by timestamp &bull; Drag to reorder</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Manage & Reorder Section (Hidden when empty) -->
+        <section id="manageSection" class="manage-section hidden">
+          <!-- Controls & Sort Toolbar -->
+          <div class="toolbar">
+            <div class="toolbar-left">
+              <div class="stats-badge" id="statsBadge">
+                <span id="fileCountBadge">0 files</span>
+                <span class="dot-separator">•</span>
+                <span id="pageCountBadge">0 pages total</span>
+              </div>
+            </div>
+
+            <div class="toolbar-right">
+              <!-- Sort dropdown -->
+              <div class="sort-control-group">
+                <label for="sortSelect" class="sort-label">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="4" y1="6" x2="16" y2="6"></line>
+                    <line x1="4" y1="12" x2="11" y2="12"></line>
+                    <line x1="4" y1="18" x2="7" y2="18"></line>
+                    <polyline points="15 15 18 18 21 15"></polyline>
+                    <line x1="18" y1="9" x2="18" y2="18"></line>
+                  </svg>
+                  Sort:
+                </label>
+                <select id="sortSelect" class="select-dropdown">
+                  <option value="time-asc">⏱️ Timestamp (Oldest first)</option>
+                  <option value="time-desc">⏱️ Timestamp (Newest first)</option>
+                  <option value="name-asc">🔤 Name (A → Z)</option>
+                  <option value="name-desc">🔤 Name (Z → A)</option>
+                  <option value="size-asc">📏 Size (Smallest first)</option>
+                  <option value="size-desc">📏 Size (Largest first)</option>
+                  <option value="custom" disabled>✋ Custom (Drag reordered)</option>
+                </select>
+              </div>
+
+              <!-- Auto-sort toggle -->
+              <label class="toggle-control" title="Automatically sort files by timestamp when added">
+                <input type="checkbox" id="autoSortCheckbox" checked>
+                <span class="toggle-label">Auto-sort on upload</span>
+              </label>
+
+              <!-- Add More Button -->
+              <button id="addMoreBtn" class="btn btn-secondary">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="12" y1="5" x2="12" y2="19"></line>
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                </svg>
+                Add Files
+              </button>
+
+              <!-- Clear All Button -->
+              <button id="clearAllBtn" class="btn btn-danger-outline" title="Remove all files">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="3 6 5 6 21 6"></polyline>
+                  <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                </svg>
+                Clear
+              </button>
+            </div>
+          </div>
+
+          <div class="drag-hint-banner">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="5 9 2 12 5 15"></polyline>
+              <polyline points="9 5 12 2 15 5"></polyline>
+              <polyline points="15 19 12 22 9 19"></polyline>
+              <polyline points="19 9 22 12 19 15"></polyline>
+              <line x1="2" y1="12" x2="22" y2="12"></line>
+              <line x1="12" y1="2" x2="12" y2="22"></line>
+            </svg>
+            Drag any card using the grip handle or whole card to reorder your PDFs into your preferred sequence.
+          </div>
+
+          <!-- Draggable File Cards List -->
+          <div id="fileList" class="file-list"></div>
+
+          <!-- Action / Merge Card -->
+          <div class="merge-action-card">
+            <div class="merge-options">
+              <div class="output-filename-group">
+                <label for="outputFilename" class="filename-label">Output File Name:</label>
+                <div class="filename-input-wrapper">
+                  <input type="text" id="outputFilename" class="input-text" placeholder="merged-document" value="merged-document">
+                  <span class="file-extension">.pdf</span>
+                </div>
+              </div>
+              <div class="merge-compress-row">
+                <input type="checkbox" id="mergeCompressToggle" checked>
+                <label for="mergeCompressToggle" style="cursor: pointer;">
+                  <strong>Compress &amp; Optimize output</strong> (Lossless Object Streams &mdash; prevents large file bloat)
+                </label>
+              </div>
+            </div>
+
+            <div class="merge-button-wrapper">
+              <button id="mergeBtn" class="btn btn-primary btn-lg">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M8 3H5a2 2 0 0 0-2 2v14c0 1.1.9 2 2 2h14a2 2 0 0 0 2-2v-3"></path>
+                  <path d="M18 9l4-4-4-4"></path>
+                  <path d="M14 5h7v7"></path>
+                  <line x1="12" y1="12" x2="21" y2="3"></line>
+                </svg>
+                Merge PDFs Now
+              </button>
+            </div>
+          </div>
+
+          <!-- Progress Overlay / Bar -->
+          <div id="progressContainer" class="progress-container hidden">
+            <div class="progress-header">
+              <span id="progressText" class="progress-text">Merging PDF files...</span>
+              <div class="progress-right-controls">
+                <span id="progressPercent" class="progress-percent">0%</span>
+                <button type="button" id="mergeCancelBtn" class="btn-cancel-task" title="Cancel operation">Cancel</button>
+              </div>
+            </div>
+            <div class="progress-bar-bg">
+              <div id="progressBar" class="progress-bar-fill"></div>
+            </div>
+          </div>
+
+          <!-- Success Result Card -->
+          <div id="resultCard" class="result-card hidden">
+            <div class="result-icon">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                <polyline points="22 4 12 14.01 9 11.01"></polyline>
+              </svg>
+            </div>
+            <div class="result-details">
+              <h3 class="result-title">Merge Complete!</h3>
+              <p id="resultSummary" class="result-summary">Successfully combined into a single PDF.</p>
+            </div>
+            <div class="result-actions">
+              <a id="downloadBtn" class="btn btn-success btn-lg" download="merged-document.pdf">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                  <polyline points="7 10 12 15 17 10"></polyline>
+                  <line x1="12" y1="15" x2="12" y2="3"></line>
+                </svg>
+                Download PDF
+              </a>
+              <button id="previewBtn" class="btn btn-secondary btn-lg">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                  <circle cx="12" cy="12" r="3"></circle>
+                </svg>
+                Preview
+              </button>
+              <button type="button" id="mergeSendToCompressBtn" class="btn btn-secondary btn-lg btn-flow-jump" title="Send this merged PDF directly to Compress tool without re-uploading">
+                🗜️ Compress PDF
+              </button>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <!-- ============================================== -->
+      <!-- TAB 2: REMOVE PAGES VIEW                       -->
+      <!-- ============================================== -->
+      <div id="removeTabView" class="tab-view hidden">
+        <!-- Single PDF Upload Dropzone -->
+        <section class="dropzone-section" id="removeDropzoneSection">
+          <div id="removeDropzone" class="dropzone" tabindex="0">
+            <input type="file" id="removeFileInput" accept=".pdf,application/pdf" class="file-input-hidden">
+            <div class="dropzone-content">
+              <div class="dropzone-icon-wrapper" style="background-color: var(--danger-light); color: var(--danger);">
+                <svg class="dropzone-icon" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                  <polyline points="14 2 14 8 20 8"></polyline>
+                  <line x1="9" y1="15" x2="15" y2="15"></line>
+                </svg>
+              </div>
+              <h2 class="dropzone-title">Select a PDF to Remove Pages</h2>
+              <p class="dropzone-desc">Drop your PDF here or <span class="browse-link">browse from your computer</span></p>
+              <p class="dropzone-hint">Select pages by entering numbers (e.g. 1, 2, 7, 8) or click pages visually</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Remove Pages Workspace (Hidden until file selected) -->
+        <section id="removeWorkspace" class="manage-section hidden">
+          <!-- File info card & Change file -->
+          <div class="file-loaded-banner">
+            <div class="loaded-file-meta">
+              <span class="file-icon-badge">📄</span>
+              <div>
+                <h3 id="removeFileName" class="loaded-file-title">document.pdf</h3>
+                <p id="removeFileSubtext" class="loaded-file-sub">12 pages &bull; 1.4 MB</p>
+              </div>
+            </div>
+            <button id="removeChangeFileBtn" class="btn btn-secondary">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"></path>
+              </svg>
+              Change File
+            </button>
+          </div>
+
+          <!-- Selection Controls Bar -->
+          <div class="page-select-toolbar">
+            <div class="page-input-wrapper">
+              <label for="pagesToDeleteInput" class="page-input-label">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="3 6 5 6 21 6"></polyline>
+                  <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                </svg>
+                Pages to Delete:
+              </label>
+              <input type="text" id="pagesToDeleteInput" class="input-text page-numbers-input" placeholder="e.g. 1, 2, 7, 8 or 3-5">
+            </div>
+
+            <div class="quick-select-buttons">
+              <button id="btnSelectOdd" class="btn-chip" type="button" title="Select all odd pages (1, 3, 5...)">Odd</button>
+              <button id="btnSelectEven" class="btn-chip" type="button" title="Select all even pages (2, 4, 6...)">Even</button>
+              <button id="btnInvertSelect" class="btn-chip" type="button" title="Invert page selection">Invert</button>
+              <button id="btnClearSelect" class="btn-chip btn-chip-danger" type="button" title="Clear selection">Clear</button>
+            </div>
+          </div>
+
+          <!-- Live Summary Banner -->
+          <div id="removeSummaryBanner" class="page-summary-banner">
+            <span id="removeSummaryText">Click on any page thumbnail below or type page numbers above.</span>
+          </div>
+
+          <!-- Visual Page Grid -->
+          <div class="page-grid-header">
+            <h4 class="page-grid-title">Click pages below to mark for deletion:</h4>
+            <span class="page-grid-hint">Red cards with 🗑️ will be deleted</span>
+          </div>
+          <div id="pagesGrid" class="pages-grid"></div>
+
+          <!-- Action & Download Section -->
+          <div class="merge-action-card remove-action-card">
+            <div class="merge-options">
+              <div class="output-filename-group">
+                <label for="removeOutputFilename" class="filename-label">Output File Name:</label>
+                <div class="filename-input-wrapper">
+                  <input type="text" id="removeOutputFilename" class="input-text" placeholder="document_pages_removed" value="document_pages_removed">
+                  <span class="file-extension">.pdf</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="merge-button-wrapper">
+              <button id="executeRemoveBtn" class="btn btn-danger btn-lg">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="3 6 5 6 21 6"></polyline>
+                  <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                </svg>
+                Delete Selected Pages &amp; Save
+              </button>
+            </div>
+          </div>
+
+          <!-- Remove Progress -->
+          <div id="removeProgressContainer" class="progress-container hidden">
+            <div class="progress-header">
+              <span id="removeProgressText" class="progress-text">Processing pages...</span>
+              <div class="progress-right-controls">
+                <span id="removeProgressPercent" class="progress-percent">0%</span>
+                <button type="button" id="removeCancelBtn" class="btn-cancel-task" title="Cancel operation">Cancel</button>
+              </div>
+            </div>
+            <div class="progress-bar-bg">
+              <div id="removeProgressBar" class="progress-bar-fill" style="background: linear-gradient(90deg, var(--danger), #f87171);"></div>
+            </div>
+          </div>
+
+          <!-- Remove Result Card -->
+          <div id="removeResultCard" class="result-card hidden">
+            <div class="result-icon">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                <polyline points="22 4 12 14.01 9 11.01"></polyline>
+              </svg>
+            </div>
+            <div class="result-details">
+              <h3 class="result-title">Pages Removed Successfully!</h3>
+              <p id="removeResultSummary" class="result-summary">New PDF containing unselected pages is ready.</p>
+            </div>
+            <div class="result-actions">
+              <a id="removeDownloadBtn" class="btn btn-success btn-lg" download="document_pages_removed.pdf">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                  <polyline points="7 10 12 15 17 10"></polyline>
+                  <line x1="12" y1="15" x2="12" y2="3"></line>
+                </svg>
+                Download PDF
+              </a>
+              <button id="removePreviewBtn" class="btn btn-secondary btn-lg">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                  <circle cx="12" cy="12" r="3"></circle>
+                </svg>
+                Preview
+              </button>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <!-- ============================================== -->
+      <!-- TAB 3: SLIDES TO A4 HANDOUT VIEW               -->
+      <!-- ============================================== -->
+      <div id="slidesTabView" class="tab-view hidden">
+        <!-- Presentation Upload Drop Zone -->
+        <section class="dropzone-section" id="slidesDropzoneSection">
+          <div id="slidesDropzone" class="dropzone" tabindex="0">
+            <input type="file" id="slidesFileInput" accept=".pdf,application/pdf" class="file-input-hidden">
+            <div class="dropzone-content">
+              <div class="dropzone-icon-wrapper" style="background-color: rgba(37, 99, 235, 0.1); color: var(--tool-slides);">
+                <svg class="dropzone-icon" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                  <line x1="8" y1="21" x2="16" y2="21"></line>
+                  <line x1="12" y1="17" x2="12" y2="21"></line>
+                </svg>
+              </div>
+              <h2 class="dropzone-title">Upload Presentation PDF</h2>
+              <p class="dropzone-desc">Drop your PPT slides PDF here or <span class="browse-link">browse from your computer</span></p>
+              <p class="dropzone-hint">Fits 3 slides per A4 page &bull; Clean layout &bull; Optional note lines</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Slides to A4 Workspace (Hidden until file selected) -->
+        <section id="slidesWorkspace" class="manage-section hidden">
+          <!-- File info card & Change file -->
+          <div class="file-loaded-banner">
+            <div class="loaded-file-meta">
+              <span class="file-icon-badge">📊</span>
+              <div>
+                <h3 id="slidesFileName" class="loaded-file-title">presentation.pdf</h3>
+                <p id="slidesFileSubtext" class="loaded-file-sub">15 slides &bull; 2.5 MB</p>
+              </div>
+            </div>
+            <button id="slidesChangeFileBtn" class="btn btn-secondary">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"></path>
+              </svg>
+              Change File
+            </button>
+          </div>
+
+          <!-- Handout Settings & Controls -->
+          <div class="handout-settings-card">
+            <div class="settings-row">
+              <div class="setting-item">
+                <label for="slidesPerLayoutSelect" class="setting-label">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                    <line x1="3" y1="9" x2="21" y2="9"></line>
+                    <line x1="3" y1="15" x2="21" y2="15"></line>
+                  </svg>
+                  Layout:
+                </label>
+                <select id="slidesPerLayoutSelect" class="select-dropdown">
+                  <option value="3-centered" selected>3 Slides Centered (Large &amp; Clear)</option>
+                  <option value="3-notes">3 Slides + Note-Taking Lines (Handout)</option>
+                  <option value="2-centered">2 Slides per A4 Page</option>
+                  <option value="4-grid">4 Slides per A4 Page (2×2 Grid)</option>
+                  <option value="6-grid">6 Slides per A4 Page (2×3 Grid)</option>
+                </select>
+              </div>
+
+              <!-- Margin Presets (Like MS Word) -->
+              <div class="setting-item">
+                <label for="marginSelect" class="setting-label">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                    <rect x="7" y="7" width="10" height="10" rx="1" ry="1"></rect>
+                  </svg>
+                  Margins:
+                </label>
+                <select id="marginSelect" class="select-dropdown">
+                  <option value="narrow" selected>Narrow (0.25" &bull; Fills Page)</option>
+                  <option value="moderate">Moderate (0.5")</option>
+                  <option value="normal">Normal (0.75")</option>
+                  <option value="minimal">Minimal (0.15" &bull; Ultra Size)</option>
+                </select>
+              </div>
+
+              <div class="setting-item-options">
+                <label class="toggle-control" title="Draw clean border around each slide">
+                  <input type="checkbox" id="slideBorderCheckbox" checked>
+                  <span class="toggle-label">Slide borders</span>
+                </label>
+                <label class="toggle-control" title="Include small slide numbers (e.g. Slide 1)">
+                  <input type="checkbox" id="slideNumbersCheckbox" checked>
+                  <span class="toggle-label">Slide numbers</span>
+                </label>
+              </div>
+            </div>
+
+            <!-- Calculation Summary Banner -->
+            <div id="slidesCalcBanner" class="slides-calc-banner">
+              <span id="slidesCalcText">📊 15 slides will fit onto 5 A4 pages (3 slides per page).</span>
+            </div>
+          </div>
+
+          <!-- Live Mockup Preview Box -->
+          <div class="handout-preview-wrapper">
+            <div class="handout-preview-header">
+              <span class="preview-title">A4 Page 1 Preview</span>
+              <span id="previewPageIndicator" class="preview-badge">Shows first 3 slides</span>
+            </div>
+            <div class="a4-sheet-preview-container">
+              <div class="a4-sheet-preview" id="a4SheetPreview">
+                <!-- Rendered preview mockup -->
+              </div>
+            </div>
+          </div>
+
+          <!-- Action & Merge Card -->
+          <div class="merge-action-card">
+            <div class="merge-options">
+              <div class="output-filename-group">
+                <label for="slidesOutputFilename" class="filename-label">Output File Name:</label>
+                <div class="filename-input-wrapper">
+                  <input type="text" id="slidesOutputFilename" class="input-text" placeholder="presentation_A4_handout" value="presentation_A4_handout">
+                  <span class="file-extension">.pdf</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="merge-button-wrapper">
+              <button id="executeSlidesBtn" class="btn btn-primary btn-lg" style="background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                  <polyline points="14 2 14 8 20 8"></polyline>
+                  <line x1="16" y1="13" x2="8" y2="13"></line>
+                  <line x1="16" y1="17" x2="8" y2="17"></line>
+                  <polyline points="10 9 9 9 8 9"></polyline>
+                </svg>
+                Generate 3-Slide A4 PDF
+              </button>
+            </div>
+          </div>
+
+          <!-- Progress -->
+          <div id="slidesProgressContainer" class="progress-container hidden">
+            <div class="progress-header">
+              <span id="slidesProgressText" class="progress-text">Fitting slides into A4 pages...</span>
+              <div class="progress-right-controls">
+                <span id="slidesProgressPercent" class="progress-percent">0%</span>
+                <button type="button" id="slidesCancelBtn" class="btn-cancel-task" title="Cancel operation">Cancel</button>
+              </div>
+            </div>
+            <div class="progress-bar-bg">
+              <div id="slidesProgressBar" class="progress-bar-fill" style="background: linear-gradient(90deg, #2563eb, #60a5fa);"></div>
+            </div>
+          </div>
+
+          <!-- Result Card -->
+          <div id="slidesResultCard" class="result-card hidden">
+            <div class="result-icon" style="background: rgba(37, 99, 235, 0.1); color: #2563eb;">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                <polyline points="22 4 12 14.01 9 11.01"></polyline>
+              </svg>
+            </div>
+            <div class="result-details">
+              <h3 class="result-title">A4 Handout Generated!</h3>
+              <p id="slidesResultSummary" class="result-summary">Successfully formatted slides into A4 pages.</p>
+            </div>
+            <div class="result-actions">
+              <a id="slidesDownloadBtn" class="btn btn-success btn-lg" download="presentation_A4_handout.pdf">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                  <polyline points="7 10 12 15 17 10"></polyline>
+                  <line x1="12" y1="15" x2="12" y2="3"></line>
+                </svg>
+                Download A4 PDF
+              </a>
+              <button id="slidesPreviewBtn" class="btn btn-secondary btn-lg">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8z"></path>
+                  <circle cx="12" cy="12" r="3"></circle>
+                </svg>
+                Preview
+              </button>
+              <button type="button" id="slidesSendToInvertBtn" class="btn btn-secondary btn-lg btn-flow-jump" title="Send this handout PDF directly to Color Inverter to save ink before printing">
+                🌓 Invert for Printing
+              </button>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <!-- ============================================== -->
+      <!-- TAB 4: INVERT COLORS VIEW                      -->
+      <!-- ============================================== -->
+      <div id="invertTabView" class="tab-view hidden">
+        <!-- Invert Upload Drop Zone -->
+        <section class="dropzone-section" id="invertDropzoneSection">
+          <div id="invertDropzone" class="dropzone" tabindex="0">
+            <input type="file" id="invertFileInput" accept=".pdf,application/pdf" class="file-input-hidden">
+            <div class="dropzone-content">
+              <div class="dropzone-icon-wrapper" style="background-color: rgba(124, 58, 237, 0.1); color: var(--tool-invert);">
+                <svg class="dropzone-icon" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <path d="M12 2a10 10 0 0 1 0 20z" fill="currentColor"></path>
+                </svg>
+              </div>
+              <h2 class="dropzone-title">Select a PDF to Invert Colors</h2>
+              <p class="dropzone-desc">Drop your PDF here or <span class="browse-link">browse from your computer</span></p>
+              <p class="dropzone-hint">Invert dark backgrounds to clean white paper &bull; Save printer ink &bull; Crisp hardcopy printouts</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Invert Colors Workspace (Hidden until file selected) -->
+        <section id="invertWorkspace" class="manage-section hidden">
+          <!-- File info banner & Change file -->
+          <div class="file-loaded-banner">
+            <div class="loaded-file-meta">
+              <span class="file-icon-badge">🌓</span>
+              <div>
+                <h3 id="invertFileName" class="loaded-file-title">document.pdf</h3>
+                <p id="invertFileSubtext" class="loaded-file-sub">10 pages &bull; 2.1 MB</p>
+              </div>
+            </div>
+            <button id="invertChangeFileBtn" class="btn btn-secondary">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"></path>
+              </svg>
+              Change File
+            </button>
+          </div>
+
+          <!-- Inverter Settings Card -->
+          <div class="options-card">
+            <div class="options-card-header">
+              <h3 class="options-title">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <path d="M12 2a10 10 0 0 1 0 20z" fill="currentColor"></path>
+                </svg>
+                Select Ink Saver Style
+              </h3>
+              <span class="options-subtitle">Choose how dark presentation slides should be converted for printing</span>
+            </div>
+
+            <div class="preset-choice-grid">
+              <!-- Option 1: Clean White Paper (Default) -->
+              <label class="preset-choice-card active" id="invertModeNegativeCard" data-mode="negative">
+                <input type="radio" name="invertModeRadio" value="negative" checked>
+                <div class="preset-choice-header">
+                  <span class="preset-choice-title">📄 Clean White Paper</span>
+                  <span class="preset-tag tag-recommended">Recommended</span>
+                </div>
+                <p class="preset-choice-desc">Dark backgrounds turn into clean white paper with dark text. Saves ~90% toner.</p>
+                <div class="preset-choice-savings">
+                  Best for: <strong>Standard Desktop &amp; Office Printers</strong>
+                </div>
+              </label>
+
+              <!-- Option 2: Pure Monochrome -->
+              <label class="preset-choice-card" id="invertModeGrayscaleCard" data-mode="grayscale-invert">
+                <input type="radio" name="invertModeRadio" value="grayscale-invert">
+                <div class="preset-choice-header">
+                  <span class="preset-choice-title">🖨️ Pure Black &amp; White</span>
+                  <span class="preset-tag tag-lossless">Max Ink Saver</span>
+                </div>
+                <p class="preset-choice-desc">Converts all colored backgrounds, text, and graphics into crisp monochrome black ink.</p>
+                <div class="preset-choice-savings">
+                  Best for: <strong>B&amp;W Laser Printers &amp; Scanners</strong>
+                </div>
+              </label>
+
+              <!-- Option 3: Keep Colors -->
+              <label class="preset-choice-card" id="invertModeHueCard" data-mode="preserve-hue">
+                <input type="radio" name="invertModeRadio" value="preserve-hue">
+                <div class="preset-choice-header">
+                  <span class="preset-choice-title">🎨 Keep Theme Colors</span>
+                  <span class="preset-tag tag-balanced">Colors Retained</span>
+                </div>
+                <p class="preset-choice-desc">Flips dark slides to light paper while preserving slide theme colors (blues, greens, etc.).</p>
+                <div class="preset-choice-savings">
+                  Best for: <strong>Color Handouts &amp; Charts</strong>
+                </div>
+              </label>
+            </div>
+
+            <!-- Hidden Mode Select for backward compatibility with tests/scripts -->
+            <select id="invertModeSelect" style="display: none;">
+              <option value="negative" selected>Smart Invert</option>
+              <option value="grayscale-invert">Grayscale Invert</option>
+              <option value="preserve-hue">Preserve Color Hues</option>
+              <option value="dark-only">Auto Dark-to-Light</option>
+            </select>
+
+            <!-- Collapsible Advanced Settings (Quality & Custom Pages) -->
+            <details class="advanced-settings-details">
+              <summary class="advanced-settings-summary">
+                <span>⚙️ Advanced Options (Print Quality &amp; Custom Page Range)</span>
+                <span class="summary-arrow">▾</span>
+              </summary>
+              <div class="advanced-settings-grid">
+                <div class="setting-item">
+                  <label for="invertQualitySelect" class="setting-label">Print Quality:</label>
+                  <select id="invertQualitySelect" class="select-dropdown">
+                    <option value="high" selected>High Quality (150 DPI • Balanced size)</option>
+                    <option value="ultra">Ultra Sharp (220 DPI • Laser crisp)</option>
+                    <option value="standard">Standard Draft (110 DPI • Faster)</option>
+                  </select>
+                </div>
+                <div class="setting-item">
+                  <label for="invertPagesSelect" class="setting-label">Pages to Invert:</label>
+                  <select id="invertPagesSelect" class="select-dropdown">
+                    <option value="all" selected>All Pages</option>
+                    <option value="custom">Custom Page Range...</option>
+                  </select>
+                </div>
+                <div id="invertCustomRangeGroup" class="setting-item hidden full-width">
+                  <label for="invertCustomPagesInput" class="setting-label">Enter Custom Pages:</label>
+                  <input type="text" id="invertCustomPagesInput" class="custom-range-input" placeholder="e.g. 1, 3, 5-8 (blank inverts all)">
+                </div>
+              </div>
+            </details>
+          </div>
+
+          <!-- Sleek Interactive Single Preview Card with Instant Toggle -->
+          <div class="single-preview-card">
+            <div class="preview-toolbar">
+              <div class="preview-mode-toggle">
+                <button type="button" class="toggle-pill-btn" id="btnShowOriginal">💻 Original Screen</button>
+                <button type="button" class="toggle-pill-btn active" id="btnShowInverted">🖨️ Inverted Print-Ready</button>
+              </div>
+              <div class="preview-page-nav">
+                <button id="invertPrevPageBtn" class="btn btn-sm btn-secondary" title="Previous Page" disabled>&larr;</button>
+                <span id="invertPageNavText" class="preview-page-indicator">Page 1 of 1</span>
+                <button id="invertNextPageBtn" class="btn btn-sm btn-secondary" title="Next Page" disabled>&rarr;</button>
+              </div>
+            </div>
+
+            <div class="single-preview-canvas-wrap">
+              <canvas id="invertDisplayCanvas" class="single-preview-canvas"></canvas>
+              <canvas id="invertOriginalCanvas" style="display: none;"></canvas>
+              <canvas id="invertPreviewCanvas" style="display: none;"></canvas>
+              <div id="invertPreviewSpinner" class="comparison-spinner hidden">Rendering preview...</div>
+              <div id="invertOriginalSpinner" class="comparison-spinner hidden">Loading original...</div>
+            </div>
+            <div class="preview-status-caption">
+              <span id="invertDisplayCaption">Viewing: <strong>Hardcopy Print-Ready (White Paper)</strong></span>
+            </div>
+          </div>
+
+          <!-- Action Bar: Output name & Execute CTA -->
+          <div class="action-bar-card">
+            <div class="output-filename-wrapper">
+              <label for="invertOutputFilename" class="filename-label">Save As:</label>
+              <div class="input-with-extension">
+                <input type="text" id="invertOutputFilename" class="filename-input" value="document_inverted.pdf" placeholder="document_inverted">
+              </div>
+            </div>
+
+            <div class="merge-button-wrapper">
+              <button id="executeInvertBtn" class="btn btn-primary btn-lg" style="background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%);">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <path d="M12 2a10 10 0 0 1 0 20z" fill="currentColor"></path>
+                </svg>
+                Invert &amp; Export PDF
+              </button>
+            </div>
+          </div>
+
+          <!-- Invert Progress Bar -->
+          <div id="invertProgressContainer" class="progress-container hidden">
+            <div class="progress-header">
+              <span id="invertProgressText" class="progress-text">Inverting page colors...</span>
+              <div class="progress-right-controls">
+                <span id="invertProgressPercent" class="progress-percent">0%</span>
+                <button type="button" id="invertCancelBtn" class="btn-cancel-task" title="Cancel operation">Cancel</button>
+              </div>
+            </div>
+            <div class="progress-bar-bg">
+              <div id="invertProgressBar" class="progress-bar-fill" style="background: linear-gradient(90deg, #7c3aed 0%, #a855f7 100%);"></div>
+            </div>
+          </div>
+
+          <!-- Invert Success Card -->
+          <div id="invertResultCard" class="result-card hidden">
+            <div class="result-icon" style="background: rgba(124, 58, 237, 0.1); color: #7c3aed;">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                <polyline points="22 4 12 14.01 9 11.01"></polyline>
+              </svg>
+            </div>
+            <div class="result-details">
+              <h3 class="result-title">Inversion Complete!</h3>
+              <p id="invertResultSummary" class="result-summary">Successfully inverted pages for clean hardcopy printing.</p>
+            </div>
+            <div class="result-actions">
+              <a id="invertDownloadBtn" class="btn btn-success btn-lg" download="document_inverted.pdf">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                  <polyline points="7 10 12 15 17 10"></polyline>
+                  <line x1="12" y1="15" x2="12" y2="3"></line>
+                </svg>
+                Download Inverted PDF
+              </a>
+              <button id="invertPreviewBtn" class="btn btn-secondary btn-lg">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8z"></path>
+                  <circle cx="12" cy="12" r="3"></circle>
+                </svg>
+                Preview
+              </button>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <!-- ============================================== -->
+      <!-- TAB 5: COMPRESS PDF VIEW                       -->
+      <!-- ============================================== -->
+      <div id="compressTabView" class="tab-view hidden">
+        <!-- Upload Drop Zone -->
+        <section class="dropzone-section">
+          <div id="compressDropzone" class="dropzone" tabindex="0">
+            <input type="file" id="compressFileInput" accept=".pdf,application/pdf" class="file-input-hidden">
+            <div class="dropzone-content">
+              <div class="dropzone-icon-wrapper" style="background-color: rgba(5, 150, 105, 0.1); color: var(--tool-compress);">
+                <svg class="dropzone-icon" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="4 14 10 14 10 20"></polyline>
+                  <polyline points="20 10 14 10 14 4"></polyline>
+                  <line x1="14" y1="10" x2="21" y2="3"></line>
+                  <line x1="3" y1="21" x2="10" y2="14"></line>
+                </svg>
+              </div>
+              <h2 class="dropzone-title">Drop PDF to Compress</h2>
+              <p class="dropzone-desc">Drop your PDF here or <span class="browse-link">browse from your computer</span></p>
+              <p class="dropzone-hint">Smart lossless &amp; visual compression &bull; Up to 90% size reduction &bull; 100% private</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Workspace Section (Hidden until file selected) -->
+        <section id="compressWorkspaceSection" class="workspace-section hidden">
+          <!-- File Info Header Card -->
+          <div class="file-loaded-banner">
+            <div class="loaded-file-meta">
+              <span class="file-icon-badge">🗜️</span>
+              <div>
+                <h3 id="compressFileName" class="loaded-file-title">document.pdf</h3>
+                <p id="compressFileSubtext" class="loaded-file-sub">
+                  <span id="compressPageCount">0 pages</span> &bull;
+                  <span id="compressOriginalSize">0 MB</span> (Original)
+                </p>
+              </div>
+            </div>
+            <button id="compressChangeFileBtn" class="btn btn-secondary">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"></path>
+              </svg>
+              Change File
+            </button>
+          </div>
+
+          <!-- Compression Mode Preset Cards -->
+          <div class="options-card">
+            <div class="options-card-header">
+              <h3 class="options-title">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="4 14 10 14 10 20"></polyline>
+                  <polyline points="20 10 14 10 14 4"></polyline>
+                  <line x1="14" y1="10" x2="21" y2="3"></line>
+                  <line x1="3" y1="21" x2="10" y2="14"></line>
+                </svg>
+                Select Compression Level
+              </h3>
+              <span class="options-subtitle">Choose how aggressively you want to reduce the file size</span>
+            </div>
+
+            <div class="preset-choice-grid">
+              <!-- Tier 1: Recommended (Smart Compress) -->
+              <label class="preset-choice-card active" id="presetRecommendedCard" data-preset="recommended">
+                <input type="radio" name="compressPreset" value="recommended" checked>
+                <div class="preset-choice-header">
+                  <span class="preset-choice-title">🎯 Smart Compress</span>
+                  <span class="preset-tag tag-recommended">Recommended</span>
+                </div>
+                <p class="preset-choice-desc">Visually identical quality. Shrinks large scans, slide backgrounds, and photos dramatically.</p>
+                <div class="preset-choice-savings">
+                  Estimated: <strong>~75% smaller</strong>
+                </div>
+              </label>
+
+              <!-- Tier 2: Lossless -->
+              <label class="preset-choice-card" id="presetLosslessCard" data-preset="lossless">
+                <input type="radio" name="compressPreset" value="lossless">
+                <div class="preset-choice-header">
+                  <span class="preset-choice-title">💎 Pure Lossless</span>
+                  <span class="preset-tag tag-lossless">100% Bit-Exact</span>
+                </div>
+                <p class="preset-choice-desc">Packs object streams &amp; cleans redundant metadata. Zero change to any image or text pixel.</p>
+                <div class="preset-choice-savings">
+                  Estimated: <strong>~20% smaller</strong>
+                </div>
+              </label>
+
+              <!-- Tier 3: Extreme (Email Friendly) -->
+              <label class="preset-choice-card" id="presetExtremeCard" data-preset="extreme">
+                <input type="radio" name="compressPreset" value="extreme">
+                <div class="preset-choice-header">
+                  <span class="preset-choice-title">📧 Smallest File</span>
+                  <span class="preset-tag tag-extreme">Fits in Email</span>
+                </div>
+                <p class="preset-choice-desc">Maximum reduction to fit strict email attachment limits (&lt;25 MB) and job application portals.</p>
+                <div class="preset-choice-savings">
+                  Estimated: <strong>Up to 90% smaller</strong>
+                </div>
+              </label>
+            </div>
+
+            <!-- Live Dynamic Savings Meter -->
+            <div class="savings-meter-card">
+              <div class="savings-meter-item">
+                <span class="meter-label">Original File</span>
+                <span id="meterOrigSize" class="meter-val">0 MB</span>
+              </div>
+              <div class="savings-meter-arrow">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                  <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
+              </div>
+              <div class="savings-meter-item highlight">
+                <span class="meter-label">Estimated Output</span>
+                <span id="meterEstSize" class="meter-val">~0 MB</span>
+              </div>
+              <div class="savings-meter-badge" id="meterEstSaved">
+                🎯 Estimated savings: ~75%
+              </div>
+            </div>
+          </div>
+
+          <!-- Optional Quick Quality Preview (Collapsible) -->
+          <details class="advanced-settings-details" id="compressPreviewDetails">
+            <summary class="advanced-settings-summary">
+              <span>👁️ Optional: Inspect Sample Page Before Compressing</span>
+              <span class="summary-arrow">▾</span>
+            </summary>
+            <div class="single-preview-card" style="margin-top: 0.75rem;">
+              <div class="preview-toolbar">
+                <span class="preview-title" id="compressPreviewBadgeText">Simulated Output Quality</span>
+                <div class="preview-page-nav">
+                  <button id="compressPrevPageBtn" class="btn btn-sm btn-secondary" title="Previous Page" disabled>&larr;</button>
+                  <span id="compressPageNavText" class="preview-page-indicator">Page 1 of 1</span>
+                  <button id="compressNextPageBtn" class="btn btn-sm btn-secondary" title="Next Page" disabled>&rarr;</button>
+                </div>
+              </div>
+              <div class="single-preview-canvas-wrap">
+                <canvas id="compressPreviewCanvas" class="single-preview-canvas"></canvas>
+                <canvas id="compressOriginalCanvas" style="display: none;"></canvas>
+                <span id="compressOriginalBadgeText" style="display: none;">Native Vector</span>
+                <div id="compressPreviewSpinner" class="comparison-spinner hidden">Simulating output...</div>
+                <div id="compressOriginalSpinner" class="comparison-spinner hidden">Loading original...</div>
+              </div>
+            </div>
+          </details>
+
+          <!-- Action Bar: Output name & Execute CTA -->
+          <div class="action-bar-card">
+            <div class="output-filename-wrapper">
+              <label for="compressOutputFilename" class="filename-label">Save As:</label>
+              <div class="input-with-extension">
+                <input type="text" id="compressOutputFilename" class="filename-input" value="document_compressed.pdf" placeholder="document_compressed">
+              </div>
+            </div>
+
+            <div class="merge-button-wrapper">
+              <button id="executeCompressBtn" class="btn btn-primary btn-lg" style="background: linear-gradient(135deg, #059669 0%, #047857 100%);">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="4 14 10 14 10 20"></polyline>
+                  <polyline points="20 10 14 10 14 4"></polyline>
+                  <line x1="14" y1="10" x2="21" y2="3"></line>
+                  <line x1="3" y1="21" x2="10" y2="14"></line>
+                </svg>
+                Compress PDF Now
+              </button>
+            </div>
+          </div>
+
+          <!-- Compress Progress Bar -->
+          <div id="compressProgressContainer" class="progress-container hidden">
+            <div class="progress-header">
+              <span id="compressProgressText" class="progress-text">Compressing PDF...</span>
+              <div class="progress-right-controls">
+                <span id="compressProgressPercent" class="progress-percent">0%</span>
+                <button type="button" id="compressCancelBtn" class="btn-cancel-task" title="Cancel operation">Cancel</button>
+              </div>
+            </div>
+            <div class="progress-bar-bg">
+              <div id="compressProgressBar" class="progress-bar-fill" style="background: linear-gradient(90deg, #059669 0%, #34d399 100%);"></div>
+            </div>
+          </div>
+
+          <!-- Compress Success Card -->
+          <div id="compressResultCard" class="result-card hidden">
+            <div class="result-icon" style="background: rgba(5, 150, 105, 0.1); color: #059669;">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                <polyline points="22 4 12 14.01 9 11.01"></polyline>
+              </svg>
+            </div>
+            <div class="result-details">
+              <h3 class="result-title">Compression Complete!</h3>
+              <p id="compressResultSummary" class="result-summary">Reduced file size successfully.</p>
+              <div class="compress-stats-row">
+                <div class="stat-box">
+                  <span class="stat-label">Original</span>
+                  <span id="statOriginalSize" class="stat-val">0 MB</span>
+                </div>
+                <div class="stat-arrow">&rarr;</div>
+                <div class="stat-box">
+                  <span class="stat-label">Compressed</span>
+                  <span id="statCompressedSize" class="stat-val">0 MB</span>
+                </div>
+                <div class="stat-box stat-highlight">
+                  <span class="stat-label">Saved</span>
+                  <span id="statPercentSaved" class="stat-val">-0%</span>
+                </div>
+              </div>
+            </div>
+            <div class="result-actions">
+              <a id="compressDownloadBtn" class="btn btn-success btn-lg" download="document_compressed.pdf">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                  <polyline points="7 10 12 15 17 10"></polyline>
+                  <line x1="12" y1="15" x2="12" y2="3"></line>
+                </svg>
+                Download Compressed PDF
+              </a>
+              <button id="compressPreviewBtn" class="btn btn-secondary btn-lg">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8z"></path>
+                  <circle cx="12" cy="12" r="3"></circle>
+                </svg>
+                Preview
+              </button>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <!-- ============================================== -->
+      <!-- TAB 6: IMAGE TO PDF VIEW                       -->
+      <!-- ============================================== -->
+      <div id="imagesTabView" class="tab-view hidden">
+        <!-- Upload Drop Zone -->
+        <section class="dropzone-section" id="imagesDropzoneSection">
+          <div id="imagesDropzone" class="dropzone" tabindex="0">
+            <input type="file" id="imagesFileInput" multiple accept="image/*,.jpg,.jpeg,.png,.webp,.gif,.bmp" class="file-input-hidden">
+            <div class="dropzone-content">
+              <div class="dropzone-icon-wrapper" style="background-color: rgba(13, 148, 136, 0.1); color: var(--tool-images);">
+                <svg class="dropzone-icon" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                  <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                  <polyline points="21 15 16 10 5 21"></polyline>
+                </svg>
+              </div>
+              <h2 class="dropzone-title">Drop your image files here</h2>
+              <p class="dropzone-desc">or <span class="browse-link">browse from your computer</span></p>
+              <p class="dropzone-hint">Supports JPG, PNG, WebP, GIF, BMP &bull; Drag to reorder &bull; Rotate &amp; convert to PDF</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Images Manage & Convert Section (Hidden when empty) -->
+        <section id="imagesManageSection" class="manage-section hidden">
+          <!-- Toolbar -->
+          <div class="toolbar">
+            <div class="toolbar-left">
+              <div class="stats-badge">
+                <span id="imagesCountBadge">0 images</span>
+                <span class="dot-separator">•</span>
+                <span id="imagesSizeBadge">0 MB total</span>
+              </div>
+            </div>
+            <div class="toolbar-right">
+              <button id="imagesRotateAllBtn" class="btn btn-secondary" title="Rotate all images 90° clockwise">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="23 4 23 10 17 10"></polyline>
+                  <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path>
+                </svg>
+                Rotate All 90°
+              </button>
+              <button id="imagesAddMoreBtn" class="btn btn-secondary">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="12" y1="5" x2="12" y2="19"></line>
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                </svg>
+                Add Images
+              </button>
+              <button id="imagesClearAllBtn" class="btn btn-danger-outline" title="Clear all images">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="3 6 5 6 21 6"></polyline>
+                  <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                </svg>
+                Clear
+              </button>
+            </div>
+          </div>
+
+          <!-- 3 Choice Cards for Page Size -->
+          <div class="preset-choice-grid" id="imagesPageSizeGrid">
+            <label class="preset-choice-card active" data-page-size="fit">
+              <input type="radio" name="imagesPageSizeRadio" value="fit" checked class="sr-only">
+              <div class="preset-choice-header">
+                <span class="preset-choice-title">🖼️ Fit to Image Size</span>
+                <span class="preset-tag tag-recommended">Recommended</span>
+              </div>
+              <p class="preset-choice-desc">Each PDF page matches the exact image resolution &amp; aspect ratio. Zero white borders or cropping.</p>
+              <div class="preset-choice-savings" style="color: #059669;">Zero border • 100% native image dimensions</div>
+            </label>
+
+            <label class="preset-choice-card" data-page-size="a4">
+              <input type="radio" name="imagesPageSizeRadio" value="a4" class="sr-only">
+              <div class="preset-choice-header">
+                <span class="preset-choice-title">📄 Standard A4</span>
+              </div>
+              <p class="preset-choice-desc">Formats into standard international A4 sheets (210 × 297 mm) ready for desktop printing.</p>
+              <div class="preset-choice-savings" style="color: #0284c7;">Standard office &amp; school printouts</div>
+            </label>
+
+            <label class="preset-choice-card" data-page-size="letter">
+              <input type="radio" name="imagesPageSizeRadio" value="letter" class="sr-only">
+              <div class="preset-choice-header">
+                <span class="preset-choice-title">📑 US Letter</span>
+              </div>
+              <p class="preset-choice-desc">Standard North American paper size (8.5 × 11 in). Auto-centers each picture.</p>
+              <div class="preset-choice-savings" style="color: #6366f1;">Standard US/Canada document size</div>
+            </label>
+          </div>
+
+          <!-- Collapsible Layout Options -->
+          <details class="advanced-settings-details" id="imagesLayoutDetails">
+            <summary class="advanced-settings-summary">
+              <span>⚙️ Page Orientation, Margins &amp; Scaling</span>
+              <span class="summary-arrow">▼</span>
+            </summary>
+            <div class="advanced-settings-grid">
+              <div class="setting-item">
+                <label for="imagesOrientationSelect">Page Orientation</label>
+                <select id="imagesOrientationSelect" class="select-dropdown">
+                  <option value="auto" selected>✨ Auto (Detect per image)</option>
+                  <option value="portrait">📱 Portrait (Vertical)</option>
+                  <option value="landscape">🖥️ Landscape (Horizontal)</option>
+                </select>
+              </div>
+              <div class="setting-item">
+                <label for="imagesMarginSelect">Page Margins</label>
+                <select id="imagesMarginSelect" class="select-dropdown">
+                  <option value="none" selected>None (Full Bleed - 0mm)</option>
+                  <option value="small">Small Border (10mm)</option>
+                  <option value="normal">Normal Border (20mm)</option>
+                </select>
+              </div>
+              <div class="setting-item">
+                <label for="imagesFitSelect">Image Placement</label>
+                <select id="imagesFitSelect" class="select-dropdown">
+                  <option value="contain" selected>Fit Entire Image (No Cropping)</option>
+                  <option value="cover">Fill Entire Page (Crop if Needed)</option>
+                </select>
+              </div>
+            </div>
+          </details>
+
+          <!-- Images Grid (Reorderable via Drag & Drop) -->
+          <div id="imagesGrid" class="images-grid">
+            <!-- Image cards populated dynamically -->
+          </div>
+
+          <!-- Action Bar -->
+          <div class="action-bar">
+            <div class="action-bar-left">
+              <label for="imagesOutputFilename" class="filename-label">Output filename:</label>
+              <div class="filename-input-wrapper">
+                <input type="text" id="imagesOutputFilename" class="filename-input" value="converted_images.pdf">
+                <span class="filename-ext">.pdf</span>
+              </div>
+            </div>
+            <div class="action-bar-right">
+              <button id="executeImagesBtn" class="btn btn-primary btn-lg" style="background: linear-gradient(135deg, #0d9488 0%, #0f766e 100%);">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                  <polyline points="14 2 14 8 20 8"></polyline>
+                  <line x1="12" y1="18" x2="12" y2="12"></line>
+                  <line x1="9" y1="15" x2="15" y2="15"></line>
+                </svg>
+                Convert to PDF
+              </button>
+            </div>
+          </div>
+
+          <!-- Progress Bar -->
+          <div id="imagesProgressContainer" class="progress-container hidden">
+            <div class="progress-header">
+              <span id="imagesProgressText" class="progress-text">Converting images to PDF...</span>
+              <div class="progress-right-controls">
+                <span id="imagesProgressPercent" class="progress-percent">0%</span>
+                <button type="button" id="imagesCancelBtn" class="btn-cancel-task" title="Cancel operation">Cancel</button>
+              </div>
+            </div>
+            <div class="progress-bar-bg">
+              <div id="imagesProgressBar" class="progress-bar-fill" style="background: linear-gradient(90deg, #0d9488 0%, #2dd4bf 100%);"></div>
+            </div>
+          </div>
+
+          <!-- Result Card -->
+          <div id="imagesResultCard" class="result-card hidden">
+            <div class="result-icon" style="background: rgba(13, 148, 136, 0.1); color: #0d9488;">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                <polyline points="22 4 12 14.01 9 11.01"></polyline>
+              </svg>
+            </div>
+            <div class="result-details">
+              <h3 class="result-title">PDF Created Successfully!</h3>
+              <p id="imagesResultSummary" class="result-summary">Converted images into a clean PDF document.</p>
+            </div>
+            <div class="result-actions">
+              <a id="imagesDownloadBtn" class="btn btn-success btn-lg" download="converted_images.pdf">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                  <polyline points="7 10 12 15 17 10"></polyline>
+                  <line x1="12" y1="15" x2="12" y2="3"></line>
+                </svg>
+                Download PDF
+              </a>
+              <button id="imagesPreviewBtn" class="btn btn-secondary btn-lg">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8z"></path>
+                  <circle cx="12" cy="12" r="3"></circle>
+                </svg>
+                Preview
+              </button>
+              <button type="button" id="imagesSendToCompressBtn" class="btn btn-secondary btn-lg btn-flow-jump" title="Compress this PDF to reduce file size">
+                🗜️ Compress PDF
+              </button>
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="app-footer">
+      <p>PDF Tools &bull; 100% Free &amp; Private in Browser &bull; No downloads or accounts required &bull; Files never leave your device</p>
+    </footer>
+  </div>
+
+  <script src="assets/js/app.js"></script>
+  <script>
+    // Register Service Worker for fast browser caching & offline access
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js').catch(() => {});
+      });
+    }
+  </script>
+</body>
+</html>
