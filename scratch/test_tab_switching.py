@@ -235,7 +235,8 @@ async def test_ui_and_tab_switching(browser_path, port, debug_port, tmp_dir):
             dz_results = await eval_js(dropzones_check)
             print("\n--- Dropzone and Floating Orb Verification ---")
             for dz in dz_results:
-                print(f"Dropzone #{dz['id']}: exists={dz['exists']}, hasOrb={dz['hasOrb']}")
+                has_dz_cls = 'dropzone' in dz['classes']
+                print(f"Dropzone #{dz['id']}: exists={dz['exists']}, hasOrb={dz['hasOrb']}, hasDropzoneClass={has_dz_cls}")
 
             # Zero server uploads check
             print("\n--- Zero Server Uploads / Client Privacy Verification ---")
@@ -261,7 +262,7 @@ async def test_ui_and_tab_switching(browser_path, port, debug_port, tmp_dir):
                 s['btnActive'] and s['viewVisible'] and s['othersHidden']
                 for theme, s in results
             )
-            all_dz_passed = all(dz['exists'] and dz['hasOrb'] for dz in dz_results)
+            all_dz_passed = all(dz['exists'] and dz['hasOrb'] and 'dropzone' in dz['classes'] for dz in dz_results)
             privacy_passed = sec['inputsWithFormSubmissionNames'] == 0
 
             return all_tabs_passed and all_dz_passed and privacy_passed

@@ -127,7 +127,7 @@
     <!-- Navigation Tabs Pill Bar -->
     <div class="w-full overflow-x-auto pb-2 mb-6">
       <nav class="nav-tabs inline-flex items-center gap-1.5 p-1.5 rounded-full bg-slate-200/60 dark:bg-slate-900/80 backdrop-blur-xl border border-slate-300/50 dark:border-slate-800/70 max-w-full shadow-inner" aria-label="Tool selection">
-        <button class="nav-tab active px-4 py-2 rounded-full font-medium text-xs transition-all whitespace-nowrap flex items-center gap-1.5" id="tabMergeBtn" data-tab="merge">
+        <button class="nav-tab active px-4 py-2 rounded-full text-on-surface-variant dark:text-slate-400 hover:text-on-surface dark:hover:text-slate-200 font-medium text-xs transition-all whitespace-nowrap flex items-center gap-1.5" id="tabMergeBtn" data-tab="merge">
           <span class="material-symbols-outlined text-[16px]">merge</span>
           Merge PDFs
         </button>
@@ -189,24 +189,24 @@
       <div id="mergeTabView" class="tab-view active">
         <!-- Upload Drop Zone -->
         <section class="dropzone-section mb-6">
-          <div id="dropzone" class="w-full bg-surface-container-lowest/80 dark:bg-[#131b2e]/80 backdrop-blur-xl rounded-3xl p-8 sm:p-14 text-center shadow-sm relative overflow-hidden group border-2 border-dashed border-slate-300/80 dark:border-slate-800 hover:border-primary-container dark:hover:border-indigo-400 transition-all duration-300 cursor-pointer hover:shadow-xl hover:shadow-indigo-500/5 hover:-translate-y-0.5" tabindex="0" role="button" aria-label="Drop your PDF files here or browse to merge">
+          <div id="dropzone" class="dropzone w-full bg-surface-container-lowest/80 dark:bg-[#131b2e]/80 backdrop-blur-xl rounded-3xl p-8 sm:p-14 text-center shadow-sm relative overflow-hidden group border-2 border-dashed border-slate-300/80 dark:border-slate-800 hover:border-primary-container dark:hover:border-indigo-400 transition-all duration-300 cursor-pointer hover:shadow-xl hover:shadow-indigo-500/5 hover:-translate-y-0.5" tabindex="0" role="button" aria-label="Drop your PDF files here or browse to merge">
             <!-- Ambient subtle Indigo Glow Backdrop -->
             <div class="absolute -top-24 left-1/2 -translate-x-1/2 w-96 h-96 bg-primary-container/10 dark:bg-indigo-500/10 rounded-full blur-3xl pointer-events-none transition-all duration-500 group-hover:scale-125"></div>
-            <input type="file" id="fileInput" multiple accept=".pdf,application/pdf" class="hidden" aria-label="Select PDF files to merge">
-            <div class="relative z-10 flex flex-col items-center justify-center">
+            <input type="file" id="fileInput" multiple accept=".pdf,application/pdf" class="file-input-hidden hidden" aria-label="Select PDF files to merge">
+            <div class="relative z-10 flex flex-col items-center justify-center dropzone-content">
               <!-- Floating Upload Orb -->
-              <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-indigo-50 dark:bg-indigo-950/70 text-primary-container dark:text-indigo-400 flex items-center justify-center shadow-sm group-hover:scale-110 group-hover:bg-primary-container group-hover:text-white group-hover:shadow-lg group-hover:shadow-indigo-500/30 transition-all duration-300 mb-4 sm:mb-5 border border-indigo-100/80 dark:border-indigo-900/40">
+              <div class="dropzone-icon-wrapper w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-indigo-50 dark:bg-indigo-950/70 text-primary-container dark:text-indigo-400 flex items-center justify-center shadow-sm group-hover:scale-110 group-hover:bg-primary-container group-hover:text-white group-hover:shadow-lg group-hover:shadow-indigo-500/30 transition-all duration-300 mb-4 sm:mb-5 border border-indigo-100/80 dark:border-indigo-900/40">
                 <span class="material-symbols-outlined text-[32px] sm:text-[38px] transition-transform duration-300 group-hover:-translate-y-1">upload_file</span>
               </div>
-              <h2 class="text-2xl sm:text-3xl font-bold tracking-tight text-on-surface dark:text-white mb-1.5">
+              <h2 class="text-2xl sm:text-3xl font-bold tracking-tight text-on-surface dark:text-white mb-1.5 dropzone-title">
                 <span class="drop-text-desktop">Drop your PDF files here</span>
                 <span class="drop-text-mobile sm:hidden">Tap to select PDF files</span>
               </h2>
-              <p class="text-sm sm:text-base text-slate-muted dark:text-slate-400 mb-5">
+              <p class="text-sm sm:text-base text-slate-muted dark:text-slate-400 mb-5 dropzone-desc">
                 or <span class="text-primary-container dark:text-indigo-400 font-semibold underline underline-offset-4 cursor-pointer hover:text-primary transition-colors browse-link">browse from your device</span>
               </p>
               <!-- Helper Metadata Pill -->
-              <div class="inline-flex items-center flex-wrap justify-center gap-2 sm:gap-3 px-4 sm:px-5 py-2 rounded-full bg-slate-100/80 dark:bg-slate-900/70 border border-slate-200/60 dark:border-slate-800 text-slate-muted dark:text-slate-400 text-xs shadow-sm">
+              <div class="dropzone-hint inline-flex items-center flex-wrap justify-center gap-2 sm:gap-3 px-4 sm:px-5 py-2 rounded-full bg-slate-100/80 dark:bg-slate-900/70 border border-slate-200/60 dark:border-slate-800 text-slate-muted dark:text-slate-400 text-xs shadow-sm">
                 <span class="flex items-center gap-1 font-medium"><span class="w-1.5 h-1.5 rounded-full bg-indigo-500"></span>Supports multiple files</span>
                 <span>•</span>
                 <span class="flex items-center gap-1 font-medium"><span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>Auto-sorts by timestamp</span>
@@ -307,7 +307,7 @@
 
             <!-- Execution Primary CTA Button -->
             <div class="merge-button-wrapper flex items-center justify-end shrink-0">
-              <button id="mergeBtn" class="btn btn-primary w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-7 py-3.5 rounded-full bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-500 hover:to-indigo-600 text-white text-sm font-bold shadow-lg shadow-indigo-500/25 hover:shadow-indigo-500/40 hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200" type="button">
+              <button id="mergeBtn" class="btn btn-primary btn-lg w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-7 py-3.5 rounded-full bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-500 hover:to-indigo-600 text-white text-sm font-bold shadow-lg shadow-indigo-500/25 hover:shadow-indigo-500/40 hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200" type="button">
                 <span class="material-symbols-outlined text-[20px]">auto_fix_high</span>
                 <span>Merge PDFs Now</span>
                 <span class="px-2 py-0.5 rounded-md bg-white/20 text-white text-[11px] ml-1 font-mono tracking-tight font-medium">⌘↵</span>
