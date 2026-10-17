@@ -1,4 +1,4 @@
-const CACHE_NAME = 'pdf-tools-v12';
+const CACHE_NAME = 'pdf-tools-v13';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',

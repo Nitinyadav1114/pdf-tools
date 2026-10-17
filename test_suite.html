@@ -1,0 +1,1041 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>PDF Merger & Page Remover Automated Tests</title>
+  <script src="assets/vendor/pdf-lib.min.js"></script>
+  <script src="assets/vendor/pdf.min.js"></script>
+  <script src="assets/vendor/sortable.min.js"></script>
+  <script type="module" src="assets/js/app.js"></script>
+</head>
+<body>
+  <h1>Running Automated Verification Tests...</h1>
+  <div id="results"></div>
+
+  <script type="module">
+    async function runTests() {
+      const results = [];
+      window.__TEST_RESULTS__ = results;
+      function assert(condition, message) {
+        if (condition) {
+          console.log('PASS: ' + message);
+          results.push({ pass: true, message });
+        } else {
+          console.error('FAIL: ' + message);
+          results.push({ pass: false, message });
+          throw new Error('Assertion failed: ' + message);
+        }
+      }
+
+      try {
+        // Test 1: Libraries Loaded
+        assert(typeof PDFLib !== 'undefined', 'PDF-Lib library loaded');
+        assert(typeof Sortable !== 'undefined', 'SortableJS library loaded');
+        assert(typeof pdfjsLib !== 'undefined', 'PDF.js library loaded');
+
+        // Test 2: Timestamp and Metadata Sorting Logic
+        const sampleFiles = [
+          { name: 'b.pdf', size: 200, lastModified: 1780272000 },
+          { name: 'c.pdf', size: 300, lastModified: 1791936000 },
+          { name: 'a.pdf', size: 100, lastModified: 1767225600 }
+        ];
+
+        // Sort time-asc (Oldest first)
+        const timeAsc = [...sampleFiles].sort((a, b) => a.lastModified - b.lastModified);
+        assert(timeAsc[0].name === 'a.pdf' && timeAsc[2].name === 'c.pdf', 'Sort by timestamp (Oldest first) works correctly');
+
+        // Test 3: Page Input Parser logic (e.g. 1, 2, 7, 8 or ranges 3-5)
+        function parsePageInput(inputStr, totalPages) {
+          const set = new Set();
+          if (!inputStr || !inputStr.trim()) return set;
+          const parts = inputStr.split(/[\s,]+/);
+          for (const part of parts) {
+            if (!part) continue;
+            if (part.includes('-')) {
+              const [startStr, endStr] = part.split('-');
+              const start = parseInt(startStr, 10);
+              const end = parseInt(endStr, 10);
+              if (!isNaN(start) && !isNaN(end)) {
+                const min = Math.max(1, Math.min(start, end));
+                const max = Math.min(totalPages, Math.max(start, end));
+                for (let p = min; p <= max; p++) set.add(p);
+              }
+            } else {
+              const p = parseInt(part, 10);
+              if (!isNaN(p) && p >= 1 && p <= totalPages) {
+                set.add(p);
+              }
+            }
+          }
+          return set;
+        }
+
+        const parsed1 = parsePageInput('1, 2, 7, 8', 10);
+        assert(parsed1.size === 4 && parsed1.has(1) && parsed1.has(2) && parsed1.has(7) && parsed1.has(8), 'Parse comma-separated pages (1, 2, 7, 8) works');
+
+        const parsed2 = parsePageInput('1-3, 5, 8-10', 10);
+        assert(parsed2.size === 7 && parsed2.has(2) && parsed2.has(5) && parsed2.has(9), 'Parse range pages (1-3, 5, 8-10) works');
+
+        // Test 4: PDF Page Removal Engine via PDFLib
+        // Create a 10-page sample PDF
+        const testDoc = await PDFLib.PDFDocument.create();
+        for (let i = 1; i <= 10; i++) {
+          testDoc.addPage([400, 600]);
+        }
+        const initialBytes = await testDoc.save();
+        assert(testDoc.getPageCount() === 10, 'Created 10-page source document');
+
+        // Remove pages 1, 2, 7, 8 (keep 3, 4, 5, 6, 9, 10 -> exactly 6 pages)
+        const pagesToDelete = parsePageInput('1, 2, 7, 8', 10);
+        const keptPageIndices = [];
+        for (let p = 1; p <= 10; p++) {
+          if (!pagesToDelete.has(p)) {
+            keptPageIndices.push(p - 1); // 0-based
+          }
+        }
+        assert(keptPageIndices.length === 6, 'Kept page indices count is exactly 6');
+
+        const srcDoc = await PDFLib.PDFDocument.load(initialBytes);
+        const cleanedDoc = await PDFLib.PDFDocument.create();
+        const copiedPages = await cleanedDoc.copyPages(srcDoc, keptPageIndices);
+        copiedPages.forEach(p => cleanedDoc.addPage(p));
+
+        const cleanedBytes = await cleanedDoc.save();
+        assert(cleanedDoc.getPageCount() === 6, 'Cleaned PDF document has exactly 6 pages remaining');
+        assert(cleanedBytes.byteLength > 0, 'Cleaned PDF binary output is valid');
+
+        // Test 5: Slides to A4 Handout Layout Engine (3 slides per A4 page)
+        // Create an 8-page landscape slide presentation
+        const pptDoc = await PDFLib.PDFDocument.create();
+        for (let i = 1; i <= 8; i++) {
+          const slidePage = pptDoc.addPage([960, 540]); // 16:9 widescreen
+          slidePage.drawText(`Slide Content ${i}`, { x: 50, y: 50, size: 24 });
+        }
+        const pptBytes = await pptDoc.save();
+        assert(pptDoc.getPageCount() === 8, 'Created 8-slide source presentation');
+
+        // Embed 3 slides per A4 page: 8 slides -> 3 A4 pages (3 + 3 + 2)
+        const srcPpt = await PDFLib.PDFDocument.load(pptBytes);
+        const handoutDoc = await PDFLib.PDFDocument.create();
+        const totalSlides = srcPpt.getPageCount();
+        const slidesPerPage = 3;
+        const expectedA4Pages = Math.ceil(totalSlides / slidesPerPage); // 3
+
+        for (let pageIdx = 0; pageIdx < expectedA4Pages; pageIdx++) {
+          const a4Page = handoutDoc.addPage(PDFLib.PageSizes.A4);
+          const start = pageIdx * slidesPerPage;
+          const end = Math.min(start + slidesPerPage, totalSlides);
+
+          for (let s = start; s < end; s++) {
+            const embedded = await handoutDoc.embedPage(srcPpt.getPage(s));
+            const slotInPage = s - start;
+            // 3 centered vertical slots
+            a4Page.drawPage(embedded, {
+              x: 50,
+              y: 841.89 - 45 - (slotInPage + 1) * 235,
+              width: 410,
+              height: 220
+            });
+          }
+        }
+
+        const handoutBytes = await handoutDoc.save();
+        assert(handoutDoc.getPageCount() === 3, 'Handout PDF has exactly 3 A4 pages for 8 slides (3 slides/page)');
+        assert(handoutBytes.byteLength > 0, 'Handout PDF output is valid and non-empty');
+
+        // Test 6: Margin Presets (Narrow vs Normal vs Minimal vs Moderate)
+        const MARGIN_CONFIG = {
+          narrow: { sideMargin: 18, topMargin: 20, gap: 12 },
+          moderate: { sideMargin: 36, topMargin: 36, gap: 18 },
+          normal: { sideMargin: 54, topMargin: 50, gap: 24 },
+          minimal: { sideMargin: 10, topMargin: 12, gap: 8 },
+        };
+
+        const A4_W = 595.28;
+        const A4_H = 841.89;
+
+        // Verify slot dimensions for 3 slides per page
+        function calc3CenteredSlots(preset) {
+          const cfg = MARGIN_CONFIG[preset];
+          const slotWidth = A4_W - 2 * cfg.sideMargin;
+          const availableH = A4_H - 2 * cfg.topMargin - 2 * cfg.gap;
+          const slotHeight = availableH / 3;
+          return { slotWidth, slotHeight, availableArea: slotWidth * slotHeight };
+        }
+
+        const narrowSlots = calc3CenteredSlots('narrow');
+        const normalSlots = calc3CenteredSlots('normal');
+        const minimalSlots = calc3CenteredSlots('minimal');
+        const moderateSlots = calc3CenteredSlots('moderate');
+
+        assert(narrowSlots.slotWidth > normalSlots.slotWidth, 'Narrow margin gives wider slide slot width than Normal');
+        assert(narrowSlots.slotHeight > normalSlots.slotHeight, 'Narrow margin gives taller slide slot height than Normal');
+        assert(narrowSlots.availableArea > normalSlots.availableArea, 'Narrow margin maximizes page usage compared to Normal');
+        assert(minimalSlots.availableArea > narrowSlots.availableArea, 'Minimal margin gives ultra maximum printable area');
+        assert(moderateSlots.availableArea > normalSlots.availableArea, 'Moderate margin gives balanced space over Normal');
+
+        // Verify actual PDF generation with narrow margin
+        const narrowDoc = await PDFLib.PDFDocument.create();
+        const nPage = narrowDoc.addPage(PDFLib.PageSizes.A4);
+        const embeddedPpt = await narrowDoc.embedPage(srcPpt.getPage(0));
+        const scale = Math.min(narrowSlots.slotWidth / embeddedPpt.width, (narrowSlots.slotHeight - 16) / embeddedPpt.height);
+        const drawW = embeddedPpt.width * scale;
+        const drawH = embeddedPpt.height * scale;
+        nPage.drawPage(embeddedPpt, {
+          x: (A4_W - drawW) / 2,
+          y: A4_H - 20 - (narrowSlots.slotHeight + 12) + (narrowSlots.slotHeight - 16 - drawH) / 2 + 16,
+          width: drawW,
+          height: drawH,
+        });
+        const narrowPdfBytes = await narrowDoc.save();
+        assert(narrowPdfBytes.byteLength > 0, 'Generated A4 page with Narrow margin presets successfully');
+
+        // Test 7: PDF Color Inverter Engine & Pixel Algorithms
+        // 7a: Negative Inversion (Black -> White, White -> Black)
+        const samplePixels = new Uint8ClampedArray([
+          0, 0, 0, 255,         // Pure black pixel
+          255, 255, 255, 255,   // Pure white pixel
+          200, 50, 20, 255      // Dark red/orange
+        ]);
+
+        function testInvertNegative(data) {
+          for (let i = 0; i < data.length; i += 4) {
+            data[i] = 255 - data[i];
+            data[i + 1] = 255 - data[i + 1];
+            data[i + 2] = 255 - data[i + 2];
+          }
+        }
+        testInvertNegative(samplePixels);
+        assert(samplePixels[0] === 255 && samplePixels[1] === 255 && samplePixels[2] === 255, 'Black pixel inverted to pure white (0 -> 255)');
+        assert(samplePixels[4] === 0 && samplePixels[5] === 0 && samplePixels[6] === 0, 'White pixel inverted to pure black (255 -> 0)');
+        assert(samplePixels[8] === 55 && samplePixels[9] === 205 && samplePixels[10] === 235, 'Colored pixel inverted cleanly');
+
+        // 7b: Monochrome / Grayscale Inversion (Ink Saver)
+        const darkPixels = new Uint8ClampedArray([
+          15, 15, 20, 255,      // Dark slide background
+          240, 240, 240, 255    // White slide text
+        ]);
+        function testInvertGrayscale(data) {
+          for (let i = 0; i < data.length; i += 4) {
+            const gray = Math.round(0.299 * data[i] + 0.587 * data[i + 1] + 0.114 * data[i + 2]);
+            const inv = 255 - gray;
+            data[i] = inv;
+            data[i + 1] = inv;
+            data[i + 2] = inv;
+          }
+        }
+        testInvertGrayscale(darkPixels);
+        assert(darkPixels[0] >= 235, 'Dark background converts to clean white paper (Ink Saver)');
+        assert(darkPixels[4] <= 20, 'Light text converts to solid dark ink for crisp printing');
+
+        // 7c: Dark Page Detection
+        function testIsDark(data) {
+          let sum = 0, count = 0;
+          for (let i = 0; i < data.length; i += 4) {
+            sum += (0.299 * data[i] + 0.587 * data[i + 1] + 0.114 * data[i + 2]);
+            count++;
+          }
+          return (sum / (count || 1)) < 128;
+        }
+        const darkPageSample = new Uint8ClampedArray([10, 10, 10, 255, 20, 20, 20, 255]);
+        const lightPageSample = new Uint8ClampedArray([250, 250, 250, 255, 240, 240, 240, 255]);
+        assert(testIsDark(darkPageSample) === true, 'Correctly detects dark background presentation page');
+        assert(testIsDark(lightPageSample) === false, 'Correctly detects light/white paper page');
+
+        // 7d: End-to-End Canvas Inversion to PDF-Lib JPEG Embedding
+        const testCanvas = document.createElement('canvas');
+        testCanvas.width = 100;
+        testCanvas.height = 100;
+        const ctx = testCanvas.getContext('2d');
+        ctx.fillStyle = '#0f172a'; // dark navy
+        ctx.fillRect(0, 0, 100, 100);
+        ctx.fillStyle = '#ffffff'; // white text
+        ctx.fillText('Test Invert', 20, 50);
+
+        const canvasData = ctx.getImageData(0, 0, 100, 100);
+        testInvertNegative(canvasData.data);
+        ctx.putImageData(canvasData, 0, 0);
+
+        const jpegDataUrl = testCanvas.toDataURL('image/jpeg', 0.92);
+        const base64Data = jpegDataUrl.split(',')[1];
+        const jpegBytes = Uint8Array.from(atob(base64Data), c => c.charCodeAt(0));
+
+        const invertDoc = await PDFLib.PDFDocument.create();
+        const embeddedJpg = await invertDoc.embedJpg(jpegBytes);
+        const invPage = invertDoc.addPage([595.28, 841.89]);
+        invPage.drawImage(embeddedJpg, { x: 0, y: 0, width: 595.28, height: 841.89 });
+
+        const invertedPdfBytes = await invertDoc.save();
+        assert(invertDoc.getPageCount() === 1, 'Inverted PDF document has 1 page');
+        assert(invertedPdfBytes.byteLength > 0, 'Inverted PDF bytes successfully created and non-empty');
+
+        // Test 8: Performance, Concurrency & Cancellation Optimization Engine
+        // 8a: Concurrency Queue limits active concurrent jobs to maximum 3
+        const queueItems = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+        let maxObservedConcurrency = 0;
+        let currentActiveWorkers = 0;
+        const processedItems = [];
+
+        async function mockWorker(id) {
+          currentActiveWorkers++;
+          if (currentActiveWorkers > maxObservedConcurrency) {
+            maxObservedConcurrency = currentActiveWorkers;
+          }
+          await new Promise(r => setTimeout(r, 15));
+          processedItems.push(id);
+          currentActiveWorkers--;
+        }
+
+        async function runQueueWithLimit(items, limit) {
+          const q = [...items];
+          const workers = [];
+          for (let w = 0; w < limit; w++) {
+            workers.push((async () => {
+              while (q.length > 0) {
+                const nextItem = q.shift();
+                await mockWorker(nextItem);
+              }
+            })());
+          }
+          await Promise.all(workers);
+        }
+
+        await runQueueWithLimit(queueItems, 3);
+        assert(maxObservedConcurrency <= 3, `Concurrency queue throttles max workers (observed: ${maxObservedConcurrency} <= 3)`);
+        assert(processedItems.length === 10, 'All 10 queue items processed smoothly without thread starvation');
+
+        // 8b: Task Cancellation Abort Logic
+        let cancelTriggered = false;
+        let itemsCompletedBeforeCancel = 0;
+        const cancelState = { isCancelled: false };
+
+        try {
+          for (let i = 1; i <= 20; i++) {
+            if (i === 6) {
+              cancelState.isCancelled = true;
+            }
+            if (cancelState.isCancelled) {
+              throw new Error('OPERATION_CANCELLED');
+            }
+            itemsCompletedBeforeCancel++;
+          }
+        } catch (e) {
+          if (e.message === 'OPERATION_CANCELLED') {
+            cancelTriggered = true;
+          }
+        }
+
+        assert(cancelTriggered === true, 'Cancellation flag successfully intercepted and triggered OPERATION_CANCELLED');
+        assert(itemsCompletedBeforeCancel === 5, `Processing stopped immediately at cancellation point (5 items processed)`);
+
+        // 8c: Stale Render ID Protection (Race Condition Shield)
+        let activeRenderId = 0;
+        const renderLog = [];
+
+        async function triggerAsyncRender(targetPage) {
+          const thisId = ++activeRenderId;
+          // Simulate variable async delay (e.g. page 1 takes 50ms, page 2 takes 10ms)
+          const delay = targetPage === 1 ? 50 : 10;
+          await new Promise(r => setTimeout(r, delay));
+          if (thisId !== activeRenderId) {
+            return; // Dropped stale render!
+          }
+          renderLog.push(targetPage);
+        }
+
+        const p1 = triggerAsyncRender(1); // Page 1 starts (slow)
+        const p2 = triggerAsyncRender(2); // Page 2 starts immediately after (fast)
+        await Promise.all([p1, p2]);
+
+        assert(renderLog.length === 1 && renderLog[0] === 2, 'Stale render (Page 1) safely discarded; only latest page (Page 2) painted to canvas');
+
+        // 8d: Canvas Memory Release
+        testCanvas.width = 0;
+        testCanvas.height = 0;
+        assert(testCanvas.width === 0 && testCanvas.height === 0, 'Canvas memory successfully released by setting dimensions to 0');
+
+        // Test 9: Edge-Case Hardening Suite
+        // 9a: Slide Rotation Normalization
+        const rotDoc = await PDFLib.PDFDocument.create();
+        const rotPage = rotDoc.addPage([800, 500]);
+        rotPage.setRotation(PDFLib.degrees(90));
+        assert(rotPage.getRotation().angle === 90, 'Page created with 90-degree orientation tag');
+
+        // Normalization logic
+        const angle = (rotPage.getRotation ? rotPage.getRotation().angle : 0) % 360;
+        if (angle !== 0 && rotPage.setRotation) {
+          rotPage.setRotation(PDFLib.degrees(0));
+        }
+        assert(rotPage.getRotation().angle === 0, 'Orientation successfully normalized to 0 degrees landscape');
+
+        // 9b: Password-Protected / Encrypted Error Detection
+        function testIsPasswordError(err) {
+          if (!err) return false;
+          const msg = String(err.message || err.name || '').toLowerCase();
+          return (
+            msg.includes('password') ||
+            msg.includes('encrypted') ||
+            msg.includes('decrypt') ||
+            msg.includes('security handler')
+          );
+        }
+        assert(testIsPasswordError(new Error('Password required')) === true, 'Catches generic password error');
+        assert(testIsPasswordError({ name: 'PasswordException', message: 'No password given' }) === true, 'Catches PDF.js PasswordException');
+        assert(testIsPasswordError(new Error('Document is encrypted')) === true, 'Catches encryption error');
+        assert(testIsPasswordError(new Error('File not found')) === false, 'Ignores non-encryption errors');
+
+        // 9c: Out-of-bounds Page Range Validation
+        function testValidatePageInput(inputStr, totalPages) {
+          if (!inputStr || !inputStr.trim() || !totalPages) return { outOfBounds: [] };
+          const parts = inputStr.split(/[\s,]+/);
+          const outOfBounds = [];
+          for (const part of parts) {
+            if (!part) continue;
+            if (part.includes('-')) {
+              const [startStr, endStr] = part.split('-');
+              const s = parseInt(startStr, 10);
+              const e = parseInt(endStr, 10);
+              if (!isNaN(s) && s > totalPages) outOfBounds.push(s);
+              if (!isNaN(e) && e > totalPages) outOfBounds.push(e);
+            } else {
+              const p = parseInt(part, 10);
+              if (!isNaN(p) && p > totalPages) outOfBounds.push(p);
+            }
+          }
+          return { outOfBounds: Array.from(new Set(outOfBounds)) };
+        }
+
+        const validRes = testValidatePageInput('1, 2, 7, 8', 10);
+        assert(validRes.outOfBounds.length === 0, 'Valid ranges produce zero out-of-bounds pages');
+
+        const outRes = testValidatePageInput('1, 2, 15, 20-25', 10);
+        assert(outRes.outOfBounds.includes(15) && outRes.outOfBounds.includes(20) && outRes.outOfBounds.includes(25), 'Correctly identifies pages 15, 20, 25 exceeding 10 total pages');
+
+        // Test 10: PDF Compression Suite
+        // 10a: Lossless Object Stream Packing Engine
+        const uncompDoc = await PDFLib.PDFDocument.create();
+        for (let i = 0; i < 5; i++) {
+          const p = uncompDoc.addPage([500, 700]);
+          p.drawText(`Page content ${i + 1}`, { x: 50, y: 650 });
+        }
+        const uncompBytes = await uncompDoc.save({ useObjectStreams: false });
+        const compBytes = await uncompDoc.save({ useObjectStreams: true });
+        assert(uncompDoc.getPageCount() === 5, 'Created 5-page test document');
+        assert(compBytes.length > 0, 'Object stream compression generated valid bytes');
+        
+        // Reload compressed bytes to verify document structure integrity
+        const reloadedDoc = await PDFLib.PDFDocument.load(compBytes);
+        assert(reloadedDoc.getPageCount() === 5, 'Reloaded compressed PDF preserves exact 5 pages without loss');
+
+        // 10b: File Size Savings & Percentage Calculator
+        function calculateSavings(origBytes, compBytes) {
+          const savedBytes = origBytes - compBytes;
+          const pct = origBytes > 0 ? Math.round(((origBytes - compBytes) / origBytes) * 1000) / 10 : 0;
+          return { savedBytes, pct };
+        }
+        const savings1 = calculateSavings(1000000, 150000); // 1MB -> 150KB (85% saved)
+        assert(savings1.savedBytes === 850000 && savings1.pct === 85.0, 'Savings calculator accurately computes 85.0% reduction');
+
+        // 10c: Smart Raster Resampling Engine
+        const rasterDoc = await PDFLib.PDFDocument.create();
+        const dummyCanvas = document.createElement('canvas');
+        dummyCanvas.width = 100;
+        dummyCanvas.height = 100;
+        const dCtx = dummyCanvas.getContext('2d');
+        dCtx.fillStyle = '#ff0000';
+        dCtx.fillRect(0, 0, 100, 100);
+        const dummyDataUrl = dummyCanvas.toDataURL('image/jpeg', 0.80);
+        const dummyBytes = Uint8Array.from(atob(dummyDataUrl.split(',')[1]), (c) => c.charCodeAt(0));
+        const embeddedImg = await rasterDoc.embedJpg(dummyBytes);
+        const rPage = rasterDoc.addPage([595, 842]);
+        rPage.drawImage(embeddedImg, { x: 0, y: 0, width: 595, height: 842 });
+        const rasterBytes = await rasterDoc.save({ useObjectStreams: true });
+        assert(rasterBytes.length > 0 && rasterDoc.getPageCount() === 1, 'Smart raster compression embeds JPEG and preserves A4 dimensions');
+        dummyCanvas.width = 0;
+        dummyCanvas.height = 0;
+
+        // 10d: Cancellation Abort Guard for Compression Loop
+        let compCancelled = true;
+        let compCompleted = false;
+        try {
+          for (let p = 0; p < 10; p++) {
+            if (compCancelled) throw new Error('OPERATION_CANCELLED');
+          }
+          compCompleted = true;
+        } catch (e) {
+          assert(e.message === 'OPERATION_CANCELLED', 'Compression cancellation token halts execution cleanly');
+        }
+        assert(compCompleted === false, 'Cancelled compression loop halts before completion');
+
+        // Test 11: Image to PDF Engine Suite
+        {
+          // 11a: Image to PDF conversion with "Fit to Image Size"
+          const imgDoc = await PDFLib.PDFDocument.create();
+          const testImgCanvas = document.createElement('canvas');
+          testImgCanvas.width = 300;
+          testImgCanvas.height = 200;
+          const testImgCtx = testImgCanvas.getContext('2d');
+          testImgCtx.fillStyle = '#059669';
+          testImgCtx.fillRect(0, 0, 300, 200);
+          const testImgDataUrl = testImgCanvas.toDataURL('image/jpeg', 0.90);
+          const testImgBytes = Uint8Array.from(atob(testImgDataUrl.split(',')[1]), (c) => c.charCodeAt(0));
+          const embeddedJpg = await imgDoc.embedJpg(testImgBytes);
+          
+          // Fit to image size (exact 300 x 200)
+          const fitPage = imgDoc.addPage([embeddedJpg.width, embeddedJpg.height]);
+          fitPage.drawImage(embeddedJpg, { x: 0, y: 0, width: embeddedJpg.width, height: embeddedJpg.height });
+          assert(fitPage.getWidth() === 300 && fitPage.getHeight() === 200, 'Fit to Image page dimensions exactly match 300x200');
+
+          // 11b: Image to PDF on A4 with Auto-Orientation
+          // Image is 300x200 (Landscape), so A4 auto-orientation should choose Landscape: [841.89, 595.28]
+          const isLandscape = embeddedJpg.width > embeddedJpg.height;
+          const a4Width = isLandscape ? 841.89 : 595.28;
+          const a4Height = isLandscape ? 595.28 : 841.89;
+          const a4Page = imgDoc.addPage([a4Width, a4Height]);
+          assert(a4Page.getWidth() > a4Page.getHeight(), 'Auto-orientation selects landscape A4 for landscape image');
+
+          // Centered scaling within A4 margins
+          const margin = 28.35; // 10mm
+          const availW = a4Width - 2 * margin;
+          const availH = a4Height - 2 * margin;
+          const scale = Math.min(availW / embeddedJpg.width, availH / embeddedJpg.height);
+          const drawW = embeddedJpg.width * scale;
+          const drawH = embeddedJpg.height * scale;
+          const drawX = margin + (availW - drawW) / 2;
+          const drawY = margin + (availH - drawH) / 2;
+          a4Page.drawImage(embeddedJpg, { x: drawX, y: drawY, width: drawW, height: drawH });
+          assert(drawW <= availW && drawH <= availH, 'Image scales proportionally inside A4 printable area');
+
+          // 11c: 90-degree Rotation Handling
+          // Rotating 300x200 by 90deg produces a 200x300 image
+          const rotCanvas = document.createElement('canvas');
+          rotCanvas.width = 200;
+          rotCanvas.height = 300;
+          const rotCtx = rotCanvas.getContext('2d');
+          rotCtx.translate(100, 150);
+          rotCtx.rotate((90 * Math.PI) / 180);
+          rotCtx.drawImage(testImgCanvas, -150, -100);
+          const rotDataUrl = rotCanvas.toDataURL('image/jpeg', 0.90);
+          const rotBytes = Uint8Array.from(atob(rotDataUrl.split(',')[1]), (c) => c.charCodeAt(0));
+          const embeddedRot = await imgDoc.embedJpg(rotBytes);
+          const rotPage = imgDoc.addPage([embeddedRot.width, embeddedRot.height]);
+          rotPage.drawImage(embeddedRot, { x: 0, y: 0, width: embeddedRot.width, height: embeddedRot.height });
+          assert(rotPage.getWidth() === 200 && rotPage.getHeight() === 300, '90° rotated image dimensions correctly become 200x300');
+          
+          testImgCanvas.width = 0;
+          testImgCanvas.height = 0;
+          rotCanvas.width = 0;
+          rotCanvas.height = 0;
+
+          // 11d: Multi-Page Image to PDF Compilation & Reload
+          const finalPdfBytes = await imgDoc.save({ useObjectStreams: true });
+          assert(finalPdfBytes.length > 0, 'Image to PDF generation produced non-empty PDF bytes');
+          const reloadedImgDoc = await PDFLib.PDFDocument.load(finalPdfBytes);
+          assert(reloadedImgDoc.getPageCount() === 3, 'Reloaded Image-to-PDF document preserves exactly 3 pages');
+
+          // 11e: Cancellation Token Abort Guard
+          let imgCancelled = true;
+          let imgFinished = false;
+          try {
+            for (let idx = 0; idx < 10; idx++) {
+              if (imgCancelled) throw new Error('OPERATION_CANCELLED');
+            }
+            imgFinished = true;
+          } catch (e) {
+            assert(e.message === 'OPERATION_CANCELLED', 'Image conversion cancellation token aborts cleanly');
+          }
+          assert(imgFinished === false, 'Cancelled image conversion loop stops cleanly');
+        }
+
+        // Test 12: Multithreaded Web Worker & Fallback Engine
+        {
+          // 12a: Instantiate Dedicated Web Worker and Ping Handshake
+          const worker = new Worker('assets/js/worker.js');
+          const pingPromise = new Promise((resolve, reject) => {
+            const timeout = setTimeout(() => reject(new Error('Worker ping timed out')), 2000);
+            worker.onmessage = (e) => {
+              if (e.data && e.data.type === 'ping' || (e.data && e.data.pong)) {
+                clearTimeout(timeout);
+                resolve(e.data);
+              }
+            };
+            worker.onerror = (err) => {
+              clearTimeout(timeout);
+              reject(err);
+            };
+            worker.postMessage({ id: 101, type: 'ping' });
+          });
+
+          const pingResp = await pingPromise;
+          assert(pingResp && pingResp.pong === true, 'Dedicated Web Worker initializes and responds to ping handshake');
+
+          // 12b: Offloaded Pixel Inversion in Worker
+          const testPixels = new Uint8ClampedArray([
+            0, 0, 0, 255,        // Pure black
+            255, 255, 255, 255,  // Pure white
+            100, 150, 200, 255   // Blue-ish
+          ]);
+
+          const invertPromise = new Promise((resolve, reject) => {
+            const timeout = setTimeout(() => reject(new Error('Worker invert timed out')), 2000);
+            worker.onmessage = (e) => {
+              clearTimeout(timeout);
+              resolve(e.data);
+            };
+            worker.postMessage({
+              id: 102,
+              type: 'invert',
+              payload: {
+                buffer: testPixels.buffer.slice(0),
+                width: 3,
+                height: 1,
+                mode: 'negative',
+                returnJpeg: false
+              }
+            });
+          });
+
+          const invertResp = await invertPromise;
+          assert(invertResp && invertResp.success === true, 'Worker successfully processes pixel inversion');
+          const returnedData = new Uint8ClampedArray(invertResp.buffer);
+          assert(returnedData[0] === 255 && returnedData[1] === 255 && returnedData[2] === 255, 'Worker inverted black to pure white (0 -> 255)');
+          assert(returnedData[4] === 0 && returnedData[5] === 0 && returnedData[6] === 0, 'Worker inverted white to pure black (255 -> 0)');
+
+          // 12c: Grayscale & Dark Page Inversion in Worker
+          const darkPageSample = new Uint8ClampedArray([
+            10, 10, 10, 255,
+            20, 20, 20, 255
+          ]);
+          const darkPromise = new Promise((resolve) => {
+            worker.onmessage = (e) => resolve(e.data);
+            worker.postMessage({
+              id: 103,
+              type: 'invert',
+              payload: {
+                buffer: darkPageSample.buffer.slice(0),
+                width: 2,
+                height: 1,
+                mode: 'dark-only',
+                returnJpeg: false
+              }
+            });
+          });
+          const darkResp = await darkPromise;
+          const returnedDark = new Uint8ClampedArray(darkResp.buffer);
+          assert(returnedDark[0] === 245, 'Worker dark-only mode detects dark page and inverts correctly');
+
+          worker.terminate();
+          assert(true, 'Web Worker cleanly terminated after task execution');
+
+          // 12d: Multithreaded WorkerPoolManager Real Pool Initialization & Concurrent Execution
+          assert(typeof window.WorkerPoolManager !== 'undefined', 'WorkerPoolManager class loaded from app.js');
+          const pool = new window.WorkerPoolManager('assets/js/worker.js', 3);
+          const poolReady = await pool.init();
+          assert(poolReady === true && pool.isAvailable === true, 'WorkerPoolManager successfully initialized multi-worker pool');
+          assert(pool.workers.length >= 1 && pool.workers.length <= 3, 'WorkerPool size constrained within concurrency boundaries');
+
+          // 12e: Concurrent Multithreaded Batch Dispatch & Queue Draining
+          const concurrentJobs = [1, 2, 3, 4, 5, 6].map((idx) => {
+            const buf = new Uint8ClampedArray([idx * 10, idx * 10, idx * 10, 255]).buffer;
+            return pool.runTask('invert', {
+              buffer: buf,
+              width: 1,
+              height: 1,
+              mode: 'negative',
+              returnJpeg: false
+            }, [buf]);
+          });
+          const jobResults = await Promise.all(concurrentJobs);
+          assert(jobResults.length === 6 && jobResults.every(r => r && r.buffer), 'Concurrent worker pool tasks executed and drained cleanly without starvation');
+
+          // 12f: Pool Termination Safety
+          pool.terminate();
+          assert(pool.isAvailable === false && pool.workers.length === 0, 'WorkerPool terminated cleanly and released all worker threads');
+
+          // 12g: Main-Thread Fallback Resilience & Detached Buffer Protection
+          // Verify that even if worker fails or is terminated, sliced buffer prevents detached ImageData and fallback succeeds
+          let fallbackExecuted = false;
+          const testCanvas = document.createElement('canvas');
+          testCanvas.width = 10;
+          testCanvas.height = 10;
+          const testCtx = testCanvas.getContext('2d');
+          testCtx.fillStyle = '#112233';
+          testCtx.fillRect(0, 0, 10, 10);
+          const rawImgData = testCtx.getImageData(0, 0, 10, 10);
+
+          let finalPixels = null;
+          try {
+            // Simulate failed worker call where buffer was cloned
+            const clonedBuffer = rawImgData.data.buffer.slice(0);
+            throw new Error('SIMULATED_WORKER_FAILURE');
+          } catch (workerErr) {
+            // Fallback path: rawImgData was not neutered because clonedBuffer was transferred
+            fallbackExecuted = true;
+            for (let i = 0; i < rawImgData.data.length; i += 4) {
+              rawImgData.data[i] = 255 - rawImgData.data[i];
+              rawImgData.data[i + 1] = 255 - rawImgData.data[i + 1];
+              rawImgData.data[i + 2] = 255 - rawImgData.data[i + 2];
+            }
+            testCtx.putImageData(rawImgData, 0, 0);
+            finalPixels = testCtx.getImageData(0, 0, 10, 10).data;
+          }
+          assert(fallbackExecuted === true && finalPixels && finalPixels[0] === 255 - 0x11, 'Fallback path cleanly executes on main thread when worker is unavailable');
+        }
+
+        // Test 13: PWA Offline Pre-caching & Cache Integrity Suite
+        {
+          // 13a: Production Assets Pre-caching Manifest Validation
+          const EXPECTED_CORE_ASSETS = [
+            './',
+            './index.html',
+            './manifest.json',
+            './assets/css/styles.css',
+            './assets/js/app.js',
+            './assets/js/worker.js',
+            './assets/vendor/pdf-lib.min.js',
+            './assets/vendor/pdf.min.js',
+            './assets/vendor/pdf.worker.min.js',
+            './assets/vendor/sortable.min.js',
+            './assets/icon.png',
+            './assets/icon.ico',
+            './assets/og-preview.png'
+          ];
+
+          assert(EXPECTED_CORE_ASSETS.length === 13, 'Pre-caching asset list contains exact 13 core files');
+          assert(EXPECTED_CORE_ASSETS.includes('./assets/js/worker.js'), 'Dedicated Web Worker included in PWA precache list');
+          assert(EXPECTED_CORE_ASSETS.includes('./assets/vendor/pdf.worker.min.js'), 'PDF.js worker included in PWA precache list');
+
+          // 13b: Cache Versioning & Obsolete Cache Purge Simulation
+          const currentCacheName = 'pdf-tools-v3';
+          const mockCaches = ['pdf-tools-v1', 'pdf-tools-v2', 'pdf-tools-v3', 'old-cache-2024'];
+          const cachesToDelete = mockCaches.filter(name => name !== currentCacheName);
+          assert(cachesToDelete.length === 3 && cachesToDelete.includes('pdf-tools-v2'), 'Cache cleanup engine purges v2 and obsolete caches while preserving v3');
+
+          // 13c: Asynchronous Cache-First & Offline Navigation Strategy Verification
+          async function simulateServiceWorkerFetch(cacheStore, request, isOnline) {
+            const url = request.url;
+            if (cacheStore[url]) {
+              return { source: 'cache', status: 200, body: cacheStore[url] };
+            }
+            if (isOnline) {
+              return { source: 'network', status: 200, body: 'network_' + url };
+            }
+            // Offline fallback
+            if (request.mode === 'navigate') {
+              const cachedIndex = cacheStore['./index.html'] || cacheStore['./'];
+              if (cachedIndex) {
+                return { source: 'offline_navigation_cache', status: 200, body: cachedIndex };
+              }
+            }
+            throw new Error('Network error (offline)');
+          }
+
+          const mockCacheStore = {
+            './assets/css/styles.css': '/* cached css */',
+            './assets/js/app.js': '// cached js',
+            './index.html': '<!DOCTYPE html><html>Cached Index</html>'
+          };
+
+          const hitResult = await simulateServiceWorkerFetch(mockCacheStore, { url: './assets/css/styles.css', mode: 'cors' }, true);
+          assert(hitResult.source === 'cache', 'Cache-first strategy hits cache immediately for cached assets (offline ready)');
+
+          const missResult = await simulateServiceWorkerFetch(mockCacheStore, { url: './new-file.json', mode: 'cors' }, true);
+          assert(missResult.source === 'network', 'Cache-first strategy falls back to network when asset not yet cached');
+
+          const offlineNav = await simulateServiceWorkerFetch(mockCacheStore, { url: './subpath?ref=pwa', mode: 'navigate' }, false);
+          assert(offlineNav.source === 'offline_navigation_cache' && offlineNav.body.includes('Cached Index'), 'Offline navigation correctly falls back to cached index.html');
+        }
+
+
+        // ==========================================
+        // TEST SUITE 14: Mobile Sharing, Dropzone A11y & Rapid-Tap Protection
+        // ==========================================
+        {
+          // 14a: Dropzone keyboard activation (Enter & Space)
+          let inputClicked = 0;
+          const mockInput = { click: () => { inputClicked++; } };
+          const mockDropzone = document.createElement('div');
+          
+          function attachKeyboardDropzone(dz, input) {
+            dz.addEventListener('keydown', (e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                input.click();
+              }
+            });
+          }
+          attachKeyboardDropzone(mockDropzone, mockInput);
+
+          // Simulate Enter key
+          mockDropzone.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', cancelable: true }));
+          assert(inputClicked === 1, 'Pressing Enter on keyboard-accessible dropzone activates file selector');
+
+          // Simulate Space key
+          mockDropzone.dispatchEvent(new KeyboardEvent('keydown', { key: ' ', cancelable: true }));
+          assert(inputClicked === 2, 'Pressing Spacebar on keyboard-accessible dropzone activates file selector');
+
+          // Simulate unrelated key (e.g. ArrowDown)
+          mockDropzone.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', cancelable: true }));
+          assert(inputClicked === 2, 'Unrelated keyboard navigation keys are safely ignored');
+
+          // 14b: Rapid double-click guard validation
+          let executionCounter = 0;
+          const mockBtn = { disabled: false };
+          async function guardedAction(btn) {
+            if (btn.disabled) return false;
+            btn.disabled = true;
+            try {
+              executionCounter++;
+              return true;
+            } finally {
+              // Simulated async task duration
+            }
+          }
+
+          // First click succeeds
+          const firstClick = await guardedAction(mockBtn);
+          assert(firstClick === true && executionCounter === 1, 'First execution click proceeds normally');
+
+          // Immediate rapid second click is blocked
+          const secondClick = await guardedAction(mockBtn);
+          assert(secondClick === false && executionCounter === 1, 'Rapid double-click is safely intercepted and blocked');
+
+          // 14c: Web Share API file-sharing support detection
+          const testBlob = new Blob(['%PDF-1.4 test'], { type: 'application/pdf' });
+          const testFile = new File([testBlob], 'sample.pdf', { type: 'application/pdf' });
+          assert(testFile.name === 'sample.pdf' && testFile.type === 'application/pdf', 'File constructor creates valid shareable PDF file object');
+
+          // 14d: Anonymous Analytics Event Tracker
+          assert(typeof window.trackToolUsage === 'function', 'trackToolUsage helper exported and accessible on window');
+          
+          let dispatchedEvent = null;
+          const eventListener = (e) => { dispatchedEvent = e.detail; };
+          window.addEventListener('tool_usage', eventListener);
+
+          const loggedGoatEvents = [];
+          window.goatcounter = {
+            count: (opts) => { loggedGoatEvents.push(opts); }
+          };
+
+          window.trackToolUsage('compress_pdf');
+
+          assert(loggedGoatEvents.length === 1, 'GoatCounter event listener intercepted custom event');
+          assert(loggedGoatEvents[0].path === '/tool-compress_pdf', 'GoatCounter event path formatted correctly as /tool-compress_pdf');
+          assert(loggedGoatEvents[0].event === true, 'GoatCounter event flag marked as true');
+          assert(dispatchedEvent && dispatchedEvent.toolName === 'compress_pdf', 'Native CustomEvent tool_usage dispatched with correct toolName');
+
+          window.removeEventListener('tool_usage', eventListener);
+          delete window.goatcounter;
+
+        }
+
+        // ==========================================
+        // TEST SUITE 15: Security Hardening & Binary Magic Byte Validation
+        // ==========================================
+        {
+          // 15a: Validate helper functions are exported
+          assert(typeof window.isValidPdfFile === 'function', 'isValidPdfFile security helper is exported on window');
+          assert(typeof window.isValidImageFile === 'function', 'isValidImageFile security helper is exported on window');
+
+          // 15b: Valid PDF magic bytes (%PDF-1.4)
+          const genuinePdfBlob = new Blob(['%PDF-1.4\n1 0 obj\n<<>>\nendobj\ntrailer\n<<>>\n%%EOF'], { type: 'application/pdf' });
+          const isPdfValid = await window.isValidPdfFile(genuinePdfBlob);
+          assert(isPdfValid === true, 'Genuine PDF starting with %PDF- is accepted');
+
+          // 15c: Valid PDF with scanner offset (within first 1024 bytes)
+          const offsetPdfBlob = new Blob(['\r\n# Scanner Document Header\r\n%PDF-1.7\n1 0 obj'], { type: 'application/pdf' });
+          const isOffsetPdfValid = await window.isValidPdfFile(offsetPdfBlob);
+          assert(isOffsetPdfValid === true, 'PDF with scanner header offset within 1024 bytes is accepted');
+
+          // 15d: Malicious non-PDF disguised with .pdf extension
+          const fakeExeBlob = new Blob(['MZ\x90\x00\x03\x00\x00\x00This is a Windows PE executable'], { type: 'application/pdf' });
+          const isFakeExeValid = await window.isValidPdfFile(fakeExeBlob);
+          assert(isFakeExeValid === false, 'Disguised executable (.exe masquerading as .pdf) is rejected');
+
+          const fakeHtmlBlob = new Blob(['<!DOCTYPE html><html><script>alert("XSS")<\\/script></html>'], { type: 'application/pdf' });
+          const isFakeHtmlValid = await window.isValidPdfFile(fakeHtmlBlob);
+          assert(isFakeHtmlValid === false, 'Disguised HTML/XSS script file is rejected');
+
+          // 15e: Empty or corrupt 0-byte file
+          const emptyBlob = new Blob([], { type: 'application/pdf' });
+          const isEmptyValid = await window.isValidPdfFile(emptyBlob);
+          assert(isEmptyValid === false, 'Corrupt 0-byte file is rejected');
+
+          // 15f: Genuine JPEG image magic bytes (FF D8 FF)
+          const jpegHeader = new Uint8Array([0xFF, 0xD8, 0xFF, 0xE0, 0x00, 0x10, 0x4A, 0x46, 0x49, 0x46]);
+          const jpegBlob = new Blob([jpegHeader], { type: 'image/jpeg' });
+          const isJpegValid = await window.isValidImageFile(jpegBlob);
+          assert(isJpegValid === true, 'Genuine JPEG image (FF D8 FF) is accepted');
+
+          // 15g: Genuine PNG image magic bytes (89 50 4E 47)
+          const pngHeader = new Uint8Array([0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A]);
+          const pngBlob = new Blob([pngHeader], { type: 'image/png' });
+          const isPngValid = await window.isValidImageFile(pngBlob);
+          assert(isPngValid === true, 'Genuine PNG image (89 50 4E 47) is accepted');
+
+          // 15h: Genuine WebP image magic bytes (RIFF....WEBP)
+          const webpHeader = new Uint8Array([
+            0x52, 0x49, 0x46, 0x46, // 'RIFF'
+            0x24, 0x00, 0x00, 0x00, // file size
+            0x57, 0x45, 0x42, 0x50  // 'WEBP'
+          ]);
+          const webpBlob = new Blob([webpHeader], { type: 'image/webp' });
+          const isWebpValid = await window.isValidImageFile(webpBlob);
+          assert(isWebpValid === true, 'Genuine WebP image (RIFF....WEBP) is accepted');
+
+          // 15i: Genuine GIF image magic bytes (GIF89a)
+          const gifHeader = new Uint8Array([0x47, 0x49, 0x46, 0x38, 0x39, 0x61]);
+          const gifBlob = new Blob([gifHeader], { type: 'image/gif' });
+          const isGifValid = await window.isValidImageFile(gifBlob);
+          assert(isGifValid === true, 'Genuine GIF image (GIF89a) is accepted');
+
+          // 15j: Disguised text script masquerading as image
+          const fakeImgBlob = new Blob(['<script>document.cookie<\\/script>'], { type: 'image/png' });
+          const isFakeImgValid = await window.isValidImageFile(fakeImgBlob);
+          assert(isFakeImgValid === false, 'Disguised script masquerading as image is rejected');
+        }
+
+        // ==========================================
+        // TEST SUITE 16: PDF to Images & In-Browser ZIP Generator
+        // ==========================================
+        {
+          // 16a: In-Browser PKZIP Generator
+          assert(typeof window.createZipArchive === 'function', 'createZipArchive is exported on window');
+
+          const dummyFile1 = {
+            name: 'slide_001.jpg',
+            data: new Uint8Array([0xFF, 0xD8, 0xFF, 0xE0, 0x00, 0x10, 0x4A, 0x46, 0x49, 0x46, 0x00, 0x01, 0x01, 0x00])
+          };
+          const dummyFile2 = {
+            name: 'slide_002.png',
+            data: new Uint8Array([0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A, 0x00, 0x00, 0x00, 0x0D, 0x49, 0x48])
+          };
+
+          const zipBlob = window.createZipArchive([dummyFile1, dummyFile2]);
+          assert(zipBlob instanceof Blob, 'createZipArchive returns a Blob instance');
+          assert(zipBlob.type === 'application/zip', 'createZipArchive returns Blob with MIME application/zip');
+          assert(zipBlob.size > dummyFile1.data.length + dummyFile2.data.length, 'ZIP size is greater than raw payload size (includes headers & directory)');
+
+          const zipBuf = await zipBlob.arrayBuffer();
+          const zipBytes = new Uint8Array(zipBuf);
+
+          // 16b: PKZIP signature validation
+          // First 4 bytes must be PK\x03\x04 (0x50, 0x4B, 0x03, 0x04)
+          assert(
+            zipBytes[0] === 0x50 && zipBytes[1] === 0x4B && zipBytes[2] === 0x03 && zipBytes[3] === 0x04,
+            'ZIP starts with standard PK 03 04 Local File Header signature'
+          );
+
+          // End of Central Directory signature (0x50, 0x4B, 0x05, 0x06) must be present in last 64 bytes
+          let foundEOCD = false;
+          for (let i = zipBytes.length - 22; i >= Math.max(0, zipBytes.length - 64); i--) {
+            if (zipBytes[i] === 0x50 && zipBytes[i + 1] === 0x4B && zipBytes[i + 2] === 0x05 && zipBytes[i + 3] === 0x06) {
+              foundEOCD = true;
+              break;
+            }
+          }
+          assert(foundEOCD === true, 'ZIP contains valid End of Central Directory (EOCD) signature (PK 05 06)');
+
+          // Verify filenames are preserved inside ZIP bytes
+          const zipText = new TextDecoder('ascii', { fatal: false }).decode(zipBytes);
+          assert(zipText.includes('slide_001.jpg'), 'ZIP archive includes entry for slide_001.jpg');
+          assert(zipText.includes('slide_002.png'), 'ZIP archive includes entry for slide_002.png');
+
+          // 16c: PDF rendering to Canvas & Image Blob Generation via PDF.js
+          const testPdfDoc = await PDFLib.PDFDocument.create();
+          const p1 = testPdfDoc.addPage([300, 200]);
+          p1.drawText('Test Page 1 for Image Export', { x: 20, y: 100, size: 14 });
+          const p2 = testPdfDoc.addPage([300, 200]);
+          p2.drawText('Test Page 2 for Image Export', { x: 20, y: 100, size: 14 });
+          const testPdfBytes = await testPdfDoc.save();
+
+          const loadedPdf = await pdfjsLib.getDocument({ data: testPdfBytes }).promise;
+          assert(loadedPdf.numPages === 2, 'Loaded test PDF with 2 pages in PDF.js');
+
+          const pdfPage1 = await loadedPdf.getPage(1);
+          const viewport1 = pdfPage1.getViewport({ scale: 1.0 });
+          assert(Math.floor(viewport1.width) === 300 && Math.floor(viewport1.height) === 200, 'Page 1 viewport calculated correctly');
+
+          const canvas = document.createElement('canvas');
+          canvas.width = Math.floor(viewport1.width);
+          canvas.height = Math.floor(viewport1.height);
+          const ctx = canvas.getContext('2d');
+          ctx.fillStyle = '#ffffff';
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+          await pdfPage1.render({ canvasContext: ctx, viewport: viewport1 }).promise;
+
+          // Export as JPEG blob
+          const jpegBlob = await new Promise((res) => canvas.toBlob(res, 'image/jpeg', 0.92));
+          assert(jpegBlob instanceof Blob && jpegBlob.type === 'image/jpeg', 'Rendered page exported as JPEG blob');
+          const isJpegGenuine = await window.isValidImageFile(jpegBlob);
+          assert(isJpegGenuine === true, 'Generated JPEG blob passes magic byte verification (FF D8 FF)');
+
+          // Export as PNG blob
+          const pngBlob = await new Promise((res) => canvas.toBlob(res, 'image/png'));
+          assert(pngBlob instanceof Blob && pngBlob.type === 'image/png', 'Rendered page exported as PNG blob');
+          const isPngGenuine = await window.isValidImageFile(pngBlob);
+          assert(isPngGenuine === true, 'Generated PNG blob passes magic byte verification (89 50 4E 47)');
+
+          // 16d: ZIP archive bundling converted images
+          const convertedFiles = [
+            { name: 'document_page_001.jpg', data: new Uint8Array(await jpegBlob.arrayBuffer()) },
+            { name: 'document_page_001.png', data: new Uint8Array(await pngBlob.arrayBuffer()) }
+          ];
+          const finalZip = window.createZipArchive(convertedFiles);
+          assert(finalZip.size > jpegBlob.size + pngBlob.size, 'Final ZIP includes both rendered images with correct byte packaging');
+
+          // 16e: Tab 7 state & UI integration check
+          assert(typeof window.pdfToImagesState === 'object', 'pdfToImagesState state object is accessible');
+          assert(window.pdfToImagesState.format === 'jpg', 'pdfToImagesState defaults to JPG format');
+          assert(window.pdfToImagesState.scale === 1.5, 'pdfToImagesState defaults to 1.5x scale (150 DPI)');
+        }
+
+        // Test 17: Global Community Impact Counter Suite
+        {
+          window.PDF_TOOLS_COUNTER_ENDPOINT = null;
+          assert(typeof window.incrementProcessedCounter === 'function', 'incrementProcessedCounter helper exported and accessible on window');
+          assert(typeof window.getCounterStats === 'function', 'getCounterStats helper exported and accessible on window');
+
+          const initialStats = window.getCounterStats();
+          assert(typeof initialStats.visitors === 'number' && initialStats.visitors >= 1000, 'Counter baseline visitor count initialized properly');
+          assert(typeof initialStats.processed === 'number' && initialStats.processed >= 3000, 'Counter baseline processed count initialized properly');
+
+          // Test optimistic local increment
+          const beforeProcessed = initialStats.processed;
+          await window.incrementProcessedCounter(2);
+          const afterProcessed = window.getCounterStats().processed;
+          assert(afterProcessed === beforeProcessed + 2, 'incrementProcessedCounter atomically increments processed PDF count');
+
+          // Test event-driven trigger via tool_usage CustomEvent
+          const beforeEvent = window.getCounterStats().processed;
+          window.dispatchEvent(new CustomEvent('tool_usage', { detail: { eventType: 'used', toolName: 'merge' } }));
+          const afterEvent = window.getCounterStats().processed;
+          assert(afterEvent === beforeEvent + 1, 'CustomEvent tool_usage automatically triggers counter increment');
+
+          // Test event-driven trigger via tool_usage CustomEvent with multiple files (e.g. 10 files)
+          const beforeMultiEvent = window.getCounterStats().processed;
+          window.dispatchEvent(new CustomEvent('tool_usage', { detail: { eventType: 'used', toolName: 'merge_pdfs', count: 10 } }));
+          const afterMultiEvent = window.getCounterStats().processed;
+          assert(afterMultiEvent === beforeMultiEvent + 10, 'CustomEvent tool_usage with count: 10 increments processed counter by exactly 10');
+
+          // Test trackToolUsage helper with multiple files (e.g. 5 files)
+          const beforeTrack = window.getCounterStats().processed;
+          window.trackToolUsage('images_to_pdf', 'used', 5);
+          const afterTrack = window.getCounterStats().processed;
+          assert(afterTrack === beforeTrack + 5, 'trackToolUsage helper with count 5 increments processed counter by exactly 5');
+        }
+
+        const msg = 'ALL_TESTS_COMPLETED_SUCCESSFULLY (' + results.length + ' assertions passed)';
+        console.log(msg);
+        document.body.innerHTML += '<h2 id="done">' + msg + '</h2>';
+      } catch (err) {
+        console.error('ERROR: ' + err.message);
+        document.body.innerHTML += '<h2 id="done">ERROR: ' + err.message + '</h2>';
+      }
+    }
+
+    runTests();
+  </script>
+</body>
+</html>

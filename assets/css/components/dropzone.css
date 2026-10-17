@@ -37,24 +37,62 @@ html.dark .dropzone.drag-active {
 
 #mergeTabView .dropzone:hover, #mergeTabView .dropzone.drag-active {
   border-color: var(--tool-merge);
+  box-shadow: 0 20px 40px -8px var(--tool-merge-glow);
 }
 #removeTabView .dropzone:hover, #removeTabView .dropzone.drag-active {
   border-color: var(--tool-remove);
+  box-shadow: 0 20px 40px -8px var(--tool-remove-glow);
 }
 #slidesTabView .dropzone:hover, #slidesTabView .dropzone.drag-active {
   border-color: var(--tool-slides);
+  box-shadow: 0 20px 40px -8px var(--tool-slides-glow);
 }
 #invertTabView .dropzone:hover, #invertTabView .dropzone.drag-active {
   border-color: var(--tool-invert);
+  box-shadow: 0 20px 40px -8px var(--tool-invert-glow);
 }
 #compressTabView .dropzone:hover, #compressTabView .dropzone.drag-active {
   border-color: var(--tool-compress);
+  box-shadow: 0 20px 40px -8px var(--tool-compress-glow);
 }
 #imagesTabView .dropzone:hover, #imagesTabView .dropzone.drag-active {
   border-color: var(--tool-images);
+  box-shadow: 0 20px 40px -8px var(--tool-images-glow);
 }
 #pdfToImagesTabView .dropzone:hover, #pdfToImagesTabView .dropzone.drag-active {
   border-color: var(--tool-pdftoimages);
+  box-shadow: 0 20px 40px -8px var(--tool-pdftoimages-glow);
+}
+
+#removeTabView .dropzone:hover .dropzone-icon-wrapper, #removeTabView .dropzone.drag-active .dropzone-icon-wrapper {
+  background-color: var(--tool-remove);
+  color: #ffffff;
+  box-shadow: 0 8px 24px var(--tool-remove-glow);
+}
+#slidesTabView .dropzone:hover .dropzone-icon-wrapper, #slidesTabView .dropzone.drag-active .dropzone-icon-wrapper {
+  background-color: var(--tool-slides);
+  color: #ffffff;
+  box-shadow: 0 8px 24px var(--tool-slides-glow);
+}
+#invertTabView .dropzone:hover .dropzone-icon-wrapper, #invertTabView .dropzone.drag-active .dropzone-icon-wrapper {
+  background-color: var(--tool-invert);
+  color: #ffffff;
+  box-shadow: 0 8px 24px var(--tool-invert-glow);
+}
+#compressTabView .dropzone:hover .dropzone-icon-wrapper, #compressTabView .dropzone.drag-active .dropzone-icon-wrapper {
+  background-color: var(--tool-compress);
+  color: #ffffff;
+  box-shadow: 0 8px 24px var(--tool-compress-glow);
+}
+#imagesTabView .dropzone:hover .dropzone-icon-wrapper, #imagesTabView .dropzone.drag-active .dropzone-icon-wrapper {
+  background-color: var(--tool-images);
+  color: #ffffff;
+  box-shadow: 0 8px 24px var(--tool-images-glow);
+}
+#pdfToImagesTabView .dropzone:hover .dropzone-icon-wrapper, #pdfToImagesTabView .dropzone.drag-active .dropzone-icon-wrapper {
+  background-color: var(--tool-pdftoimages);
+  color: #ffffff;
+  box-shadow: 0 8px 24px var(--tool-pdftoimages-glow);
 }
 
 .dropzone:focus-visible {

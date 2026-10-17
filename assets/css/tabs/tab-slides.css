@@ -220,3 +220,24 @@ body.theme-dark .slides-calc-banner {
 .mockup-grid-6 .mockup-slide-box {
   width: 100%;
 }
+
+#executeSlidesBtn {
+  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+  box-shadow: 0 4px 14px rgba(37, 99, 235, 0.35);
+}
+#executeSlidesBtn:hover {
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+  box-shadow: 0 6px 20px rgba(37, 99, 235, 0.45);
+  transform: translateY(-1px);
+}
+
+html.dark .slides-calc-banner {
+  background: rgba(30, 58, 138, 0.25);
+  border-color: rgba(30, 58, 138, 0.5);
+  color: #93c5fd;
+}
+html.dark .a4-sheet-preview-container {
+  background: rgba(15, 23, 42, 0.6);
+  border-color: rgba(30, 41, 59, 0.8);
+}
+

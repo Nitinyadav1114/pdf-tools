@@ -129,3 +129,26 @@ body.theme-dark .pdftoimages-card:hover {
     gap: 0.75rem;
   }
 }
+
+#pdfToImagesExecuteBtn {
+  background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+  box-shadow: 0 4px 14px rgba(2, 132, 199, 0.35);
+}
+#pdfToImagesExecuteBtn:hover {
+  background: linear-gradient(135deg, #38bdf8 0%, #0284c7 100%);
+  box-shadow: 0 6px 20px rgba(2, 132, 199, 0.45);
+  transform: translateY(-1px);
+}
+
+html.dark .pdftoimages-card {
+  background: rgba(19, 27, 46, 0.85);
+  border-color: rgba(30, 41, 59, 0.85);
+}
+html.dark .pdftoimages-card-meta {
+  background: rgba(15, 23, 42, 0.9);
+  border-color: rgba(30, 41, 59, 0.85);
+}
+html.dark .pdftoimages-thumb-wrapper {
+  background: rgba(15, 23, 42, 0.6);
+}
+

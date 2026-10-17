@@ -158,3 +158,24 @@ body.theme-dark .comparison-spinner {
   border-color: #7c3aed;
   box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.15);
 }
+
+#executeInvertBtn {
+  background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%);
+  box-shadow: 0 4px 14px rgba(124, 58, 237, 0.35);
+}
+#executeInvertBtn:hover {
+  background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+  box-shadow: 0 6px 20px rgba(124, 58, 237, 0.45);
+  transform: translateY(-1px);
+}
+
+html.dark #invertWorkspace .preset-choice-card.active {
+  border-color: #a78bfa;
+  background: rgba(167, 139, 250, 0.1);
+  box-shadow: 0 0 0 3px rgba(167, 139, 250, 0.25);
+}
+html.dark .comparison-spinner {
+  background: rgba(15, 23, 42, 0.9);
+  color: #cbd5e1;
+}
+

@@ -27,7 +27,7 @@
 }
 
 
-/* --- Bundled: assets/css/core/variables.css --- */
+/* --- Bundled: assets/css/core/variables.css ---
 
 :root {
   --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Inter", "Helvetica Neue", Arial, sans-serif;
@@ -61,8 +61,9 @@
 
 body.theme-light {
   --bg-app: #f8fafc;
+  --bg-mesh: radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.08) 0px, transparent 50%), radial-gradient(at 100% 100%, rgba(16, 185, 129, 0.05) 0px, transparent 50%);
   --bg-main: #f8fafc;
-  --bg-card: #ffffff;
+  --bg-card: rgba(255, 255, 255, 0.85);
   --bg-card-secondary: #f1f5f9;
   --bg-secondary: #f1f5f9;
   --border-color: #e2e8f0;
@@ -70,10 +71,10 @@ body.theme-light {
   --text-main: #0f172a;
   --text-sub: #475569;
   --text-muted: #94a3b8;
-  --card-shadow: 0 4px 12px -2px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.03);
-  --card-shadow-hover: 0 12px 24px -4px rgba(0, 0, 0, 0.08), 0 4px 8px -2px rgba(0, 0, 0, 0.04);
-  --dropzone-bg: #ffffff;
-  --dropzone-hover: #f8faff;
+  --card-shadow: 0 4px 16px -2px rgba(15, 23, 42, 0.05), 0 2px 4px -2px rgba(15, 23, 42, 0.03);
+  --card-shadow-hover: 0 16px 32px -4px rgba(79, 70, 229, 0.1), 0 4px 12px -2px rgba(15, 23, 42, 0.05);
+  --dropzone-bg: rgba(255, 255, 255, 0.8);
+  --dropzone-hover: rgba(238, 242, 255, 0.6);
   --dropzone-border: #cbd5e1;
 }
 
@@ -82,8 +83,9 @@ html.dark {
   --primary: #818cf8;
   --primary-hover: #a5b4fc;
   --bg-app: #0a0f1d;
+  --bg-mesh: radial-gradient(at 50% 0%, rgba(79, 70, 229, 0.18) 0px, transparent 65%), radial-gradient(at 100% 100%, rgba(16, 185, 129, 0.06) 0px, transparent 50%);
   --bg-main: #0a0f1d;
-  --bg-card: #12192b;
+  --bg-card: rgba(19, 27, 46, 0.85);
   --bg-card-secondary: #1a233a;
   --bg-secondary: #1a233a;
   --border-color: #23304d;
@@ -91,17 +93,17 @@ html.dark {
   --text-main: #f8fafc;
   --text-sub: #cbd5e1;
   --text-muted: #94a3b8;
-  --card-shadow: 0 4px 14px -2px rgba(0, 0, 0, 0.4), 0 2px 4px -2px rgba(0, 0, 0, 0.25);
-  --card-shadow-hover: 0 14px 28px -4px rgba(0, 0, 0, 0.6);
-  --dropzone-bg: #12192b;
-  --dropzone-hover: #172138;
+  --card-shadow: 0 4px 18px -2px rgba(0, 0, 0, 0.45), 0 2px 6px -2px rgba(0, 0, 0, 0.25);
+  --card-shadow-hover: 0 18px 36px -4px rgba(0, 0, 0, 0.65), 0 0 20px 2px rgba(99, 102, 241, 0.15);
+  --dropzone-bg: rgba(19, 27, 46, 0.75);
+  --dropzone-hover: rgba(30, 27, 75, 0.4);
   --dropzone-border: #314269;
   --primary-light: rgba(129, 140, 248, 0.18);
   --danger-light: rgba(239, 68, 68, 0.18);
 }
 
 
-/* --- Bundled: assets/css/core/base.css --- */
+/* --- Bundled: assets/css/core/base.css ---
 
 * {
   box-sizing: border-box;
@@ -112,6 +114,8 @@ html.dark {
 body {
   font-family: var(--font-sans);
   background-color: var(--bg-app);
+  background-image: var(--bg-mesh);
+  background-attachment: fixed;
   color: var(--text-main);
   line-height: 1.5;
   transition: background-color 0.3s ease, color 0.3s ease;
@@ -120,7 +124,7 @@ body {
 }
 
 .app-container {
-  max-width: 960px;
+  max-width: 1140px;
   margin: 0 auto;
   padding: 1.75rem 1.5rem 3.5rem 1.5rem;
   padding-top: max(1.75rem, env(safe-area-inset-top));
@@ -248,7 +252,7 @@ body.theme-dark .dark-icon { display: inline-block; }
 
 /* Utilities */
 .hidden {
-  display: none !important;
+  display: none;
 }
 
 /* Footer & Community Stats Card */
@@ -414,8 +418,13 @@ body.theme-dark .footer-stats-badge {
   }
 }
 
+/* Global utility classes */
+.hidden {
+  display: none !important;
+}
 
-/* --- Bundled: assets/css/components/nav.css --- */
+
+/* --- Bundled: assets/css/components/nav.css ---
 
 /* ========================================= */
 /* Modern Segmented Navigation Tabs          */
@@ -424,15 +433,24 @@ body.theme-dark .footer-stats-badge {
   display: flex;
   align-items: center;
   gap: 0.35rem;
-  background-color: var(--bg-card-secondary);
-  padding: 0.35rem;
-  border-radius: 14px;
+  background-color: rgba(241, 245, 249, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  padding: 0.375rem;
+  border-radius: 9999px;
   border: 1px solid var(--border-color);
   margin-bottom: 1.5rem;
   width: 100%;
-  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.03);
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.04);
   overflow-x: auto;
   scrollbar-width: none;
+}
+
+body.theme-dark .nav-tabs,
+html.dark .nav-tabs {
+  background-color: rgba(15, 23, 42, 0.85);
+  border-color: rgba(30, 41, 59, 0.9);
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.3);
 }
 
 .nav-tabs::-webkit-scrollbar {
@@ -445,14 +463,14 @@ body.theme-dark .footer-stats-badge {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem;
-  padding: 0.625rem 0.85rem;
-  font-size: 0.85rem;
+  gap: 0.45rem;
+  padding: 0.55rem 1rem;
+  font-size: 0.8125rem;
   font-weight: 600;
   color: var(--text-sub);
   background: transparent;
   border: none;
-  border-radius: 10px;
+  border-radius: 9999px;
   cursor: pointer;
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   user-select: none;
@@ -465,24 +483,28 @@ body.theme-dark .footer-stats-badge {
 
 .nav-tab:hover {
   color: var(--text-main);
-  background: rgba(0, 0, 0, 0.03);
+  background: rgba(0, 0, 0, 0.04);
 }
 
-body.theme-dark .nav-tab:hover {
-  background: rgba(255, 255, 255, 0.04);
+body.theme-dark .nav-tab:hover,
+html.dark .nav-tab:hover {
+  background: rgba(255, 255, 255, 0.06);
+  color: #f8fafc;
 }
 
 .nav-tab.active {
   background: var(--bg-card);
-  color: var(--text-main);
+  color: var(--primary);
   font-weight: 700;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.04);
+  box-shadow: 0 4px 14px -1px rgba(15, 23, 42, 0.08), 0 2px 4px -1px rgba(15, 23, 42, 0.04);
+  transform: translateY(-0.5px);
 }
 
-body.theme-dark .nav-tab.active {
-  background: var(--bg-card);
-  color: #f8fafc;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+body.theme-dark .nav-tab.active,
+html.dark .nav-tab.active {
+  background: #1e293b;
+  color: #818cf8;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
 }
 
 /* Tool-specific active tab icons and accents */
@@ -544,7 +566,7 @@ body.theme-dark .nav-tab[data-tab="pdftoimages"].active {
 }
 
 
-/* --- Bundled: assets/css/components/dropzone.css --- */
+/* --- Bundled: assets/css/components/dropzone.css ---
 
 /* ========================================= */
 /* Dropzone Styles                           */
@@ -555,43 +577,92 @@ body.theme-dark .nav-tab[data-tab="pdftoimages"].active {
 
 .dropzone {
   background-color: var(--dropzone-bg);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   border: 2px dashed var(--dropzone-border);
-  border-radius: 18px;
-  padding: 2.25rem 1.75rem;
+  border-radius: 24px;
+  padding: 2.75rem 2rem;
   text-align: center;
   cursor: pointer;
-  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
   box-shadow: var(--card-shadow);
+  overflow: hidden;
 }
 
 .dropzone:hover, .dropzone.drag-active {
   background-color: var(--dropzone-hover);
   border-color: var(--primary);
   transform: translateY(-2px);
-  box-shadow: 0 12px 28px -4px rgba(79, 70, 229, 0.12);
+  box-shadow: 0 20px 40px -8px rgba(79, 70, 229, 0.16);
+}
+
+body.theme-dark .dropzone:hover,
+html.dark .dropzone:hover,
+body.theme-dark .dropzone.drag-active,
+html.dark .dropzone.drag-active {
+  border-color: #818cf8;
+  box-shadow: 0 20px 40px -8px rgba(99, 102, 241, 0.25);
 }
 
 #mergeTabView .dropzone:hover, #mergeTabView .dropzone.drag-active {
   border-color: var(--tool-merge);
+  box-shadow: 0 20px 40px -8px var(--tool-merge-glow);
 }
 #removeTabView .dropzone:hover, #removeTabView .dropzone.drag-active {
   border-color: var(--tool-remove);
+  box-shadow: 0 20px 40px -8px var(--tool-remove-glow);
 }
 #slidesTabView .dropzone:hover, #slidesTabView .dropzone.drag-active {
   border-color: var(--tool-slides);
+  box-shadow: 0 20px 40px -8px var(--tool-slides-glow);
 }
 #invertTabView .dropzone:hover, #invertTabView .dropzone.drag-active {
   border-color: var(--tool-invert);
+  box-shadow: 0 20px 40px -8px var(--tool-invert-glow);
 }
 #compressTabView .dropzone:hover, #compressTabView .dropzone.drag-active {
   border-color: var(--tool-compress);
+  box-shadow: 0 20px 40px -8px var(--tool-compress-glow);
 }
 #imagesTabView .dropzone:hover, #imagesTabView .dropzone.drag-active {
   border-color: var(--tool-images);
+  box-shadow: 0 20px 40px -8px var(--tool-images-glow);
 }
 #pdfToImagesTabView .dropzone:hover, #pdfToImagesTabView .dropzone.drag-active {
   border-color: var(--tool-pdftoimages);
+  box-shadow: 0 20px 40px -8px var(--tool-pdftoimages-glow);
+}
+
+#removeTabView .dropzone:hover .dropzone-icon-wrapper, #removeTabView .dropzone.drag-active .dropzone-icon-wrapper {
+  background-color: var(--tool-remove);
+  color: #ffffff;
+  box-shadow: 0 8px 24px var(--tool-remove-glow);
+}
+#slidesTabView .dropzone:hover .dropzone-icon-wrapper, #slidesTabView .dropzone.drag-active .dropzone-icon-wrapper {
+  background-color: var(--tool-slides);
+  color: #ffffff;
+  box-shadow: 0 8px 24px var(--tool-slides-glow);
+}
+#invertTabView .dropzone:hover .dropzone-icon-wrapper, #invertTabView .dropzone.drag-active .dropzone-icon-wrapper {
+  background-color: var(--tool-invert);
+  color: #ffffff;
+  box-shadow: 0 8px 24px var(--tool-invert-glow);
+}
+#compressTabView .dropzone:hover .dropzone-icon-wrapper, #compressTabView .dropzone.drag-active .dropzone-icon-wrapper {
+  background-color: var(--tool-compress);
+  color: #ffffff;
+  box-shadow: 0 8px 24px var(--tool-compress-glow);
+}
+#imagesTabView .dropzone:hover .dropzone-icon-wrapper, #imagesTabView .dropzone.drag-active .dropzone-icon-wrapper {
+  background-color: var(--tool-images);
+  color: #ffffff;
+  box-shadow: 0 8px 24px var(--tool-images-glow);
+}
+#pdfToImagesTabView .dropzone:hover .dropzone-icon-wrapper, #pdfToImagesTabView .dropzone.drag-active .dropzone-icon-wrapper {
+  background-color: var(--tool-pdftoimages);
+  color: #ffffff;
+  box-shadow: 0 8px 24px var(--tool-pdftoimages-glow);
 }
 
 .dropzone:focus-visible {
@@ -612,17 +683,21 @@ body.theme-dark .nav-tab[data-tab="pdftoimages"].active {
 
 .dropzone-icon-wrapper {
   color: var(--primary);
-  margin-bottom: 0.85rem;
+  margin-bottom: 1rem;
   display: inline-flex;
-  padding: 1rem;
+  padding: 1.15rem;
   background-color: var(--primary-light);
-  border-radius: 50%;
-  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+  border-radius: 20px;
+  box-shadow: 0 4px 12px rgba(79, 70, 229, 0.1);
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), background-color 0.3s ease, color 0.3s ease;
 }
 
 .dropzone:hover .dropzone-icon-wrapper,
 .dropzone.drag-active .dropzone-icon-wrapper {
-  transform: scale(1.12) translateY(-2px);
+  transform: scale(1.1) translateY(-3px);
+  background-color: var(--primary);
+  color: #ffffff;
+  box-shadow: 0 8px 24px rgba(79, 70, 229, 0.35);
 }
 
 .dropzone-title {
@@ -651,7 +726,7 @@ body.theme-dark .nav-tab[data-tab="pdftoimages"].active {
 }
 
 
-/* --- Bundled: assets/css/components/cards.css --- */
+/* --- Bundled: assets/css/components/cards.css ---
 
 /* ========================================= */
 /* Reusable Cards, Buttons & Interactive UI  */
@@ -854,45 +929,72 @@ body.theme-dark .nav-tab[data-tab="pdftoimages"].active {
 
 /* File List & Cards */
 .file-list {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
+  display: grid;
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+  gap: 1rem;
   margin-bottom: 1.5rem;
   min-height: 20px;
 }
 
+@media (min-width: 640px) {
+  .file-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .file-list {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
 .file-card {
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  justify-content: space-between;
   background: var(--bg-card);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   border: 1px solid var(--border-color);
-  border-radius: var(--border-radius);
-  padding: 0.85rem 1rem;
+  border-radius: 20px;
+  padding: 1.1rem 1.15rem;
   gap: 0.85rem;
   box-shadow: var(--card-shadow);
-  transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.2s ease;
   user-select: none;
+  position: relative;
 }
 
 .file-card:hover {
   border-color: var(--border-hover);
   box-shadow: var(--card-shadow-hover);
+  transform: translateY(-2px);
+}
+
+body.theme-dark .file-card {
+  background: rgba(19, 27, 46, 0.85);
+  border-color: rgba(30, 41, 59, 0.85);
+}
+
+body.theme-dark .file-card:hover {
+  border-color: rgba(99, 102, 241, 0.4);
+  box-shadow: 0 16px 32px -4px rgba(0, 0, 0, 0.65), 0 0 16px 1px rgba(99, 102, 241, 0.15);
 }
 
 .drag-handle {
   color: var(--text-muted);
   cursor: grab;
-  padding: 0.4rem;
+  padding: 0.35rem;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 6px;
+  border-radius: 8px;
   transition: color 0.15s ease, background-color 0.15s ease;
 }
 
 .drag-handle:hover {
-  color: var(--text-main);
-  background-color: var(--bg-card-secondary);
+  color: var(--primary);
+  background-color: var(--primary-light);
 }
 
 .drag-handle:active {
@@ -902,21 +1004,27 @@ body.theme-dark .nav-tab[data-tab="pdftoimages"].active {
 .index-pill {
   font-size: 0.75rem;
   font-weight: 700;
-  background: var(--bg-card-secondary);
-  color: var(--text-sub);
-  min-width: 26px;
-  height: 26px;
+  background: var(--primary-light);
+  color: var(--primary);
+  min-width: 24px;
+  height: 24px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 6px;
-  border: 1px solid var(--border-color);
+  border-radius: 9999px;
+  border: 1px solid rgba(79, 70, 229, 0.15);
+}
+
+body.theme-dark .index-pill {
+  background: rgba(30, 27, 75, 0.8);
+  color: #a5b4fc;
+  border-color: rgba(99, 102, 241, 0.3);
 }
 
 .file-thumb-container {
-  width: 52px;
-  height: 68px;
-  border-radius: 6px;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
   border: 1px solid var(--border-color);
   background: var(--bg-card-secondary);
   display: flex;
@@ -924,6 +1032,7 @@ body.theme-dark .nav-tab[data-tab="pdftoimages"].active {
   justify-content: center;
   overflow: hidden;
   flex-shrink: 0;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.05);
 }
 
 .file-thumb-canvas {
@@ -943,11 +1052,11 @@ body.theme-dark .nav-tab[data-tab="pdftoimages"].active {
   min-width: 0;
   display: flex;
   flex-direction: column;
-  gap: 0.3rem;
+  gap: 0.2rem;
 }
 
 .file-name {
-  font-size: 0.95rem;
+  font-size: 0.925rem;
   font-weight: 600;
   color: var(--text-main);
   white-space: nowrap;
@@ -994,9 +1103,9 @@ body.theme-dark .timestamp-badge {
   background: transparent;
   border: 1px solid var(--border-color);
   color: var(--text-sub);
-  width: 32px;
-  height: 32px;
-  border-radius: 6px;
+  width: 30px;
+  height: 30px;
+  border-radius: 9999px;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -1008,6 +1117,11 @@ body.theme-dark .timestamp-badge {
   background: var(--bg-card-secondary);
   color: var(--text-main);
   border-color: var(--border-hover);
+}
+
+body.theme-dark .btn-card-action:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #f8fafc;
 }
 
 .btn-card-action.btn-delete:hover {
@@ -1032,8 +1146,10 @@ body.theme-dark .timestamp-badge {
 /* Unified Action Cards */
 .merge-action-card, .action-bar-card, .action-bar {
   background: var(--bg-card);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   border: 1px solid var(--border-color);
-  border-radius: var(--border-radius);
+  border-radius: 20px;
   padding: 1.25rem 1.5rem;
   display: flex;
   align-items: center;
@@ -1043,6 +1159,13 @@ body.theme-dark .timestamp-badge {
   box-shadow: var(--card-shadow);
   margin-bottom: 1.25rem;
   transition: var(--transition);
+}
+
+body.theme-dark .merge-action-card,
+body.theme-dark .action-bar-card,
+body.theme-dark .action-bar {
+  background: rgba(19, 27, 46, 0.85);
+  border-color: rgba(30, 41, 59, 0.85);
 }
 
 .output-filename-group, .output-filename-wrapper, .action-bar-left {
@@ -1304,7 +1427,8 @@ body.theme-dark .timestamp-badge {
   box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.18);
 }
 
-body.theme-dark .preset-choice-card.active {
+body.theme-dark .preset-choice-card.active,
+html.dark .preset-choice-card.active {
   border-color: #818cf8;
   background: rgba(99, 102, 241, 0.1);
   box-shadow: 0 0 0 3px rgba(129, 140, 248, 0.25);
@@ -1321,7 +1445,8 @@ body.theme-dark .preset-choice-card.active {
   box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.18);
 }
 
-body.theme-dark #invertWorkspace .preset-choice-card.active {
+body.theme-dark #invertWorkspace .preset-choice-card.active,
+html.dark #invertWorkspace .preset-choice-card.active {
   border-color: #a78bfa;
   background: rgba(167, 139, 250, 0.1);
   box-shadow: 0 0 0 3px rgba(167, 139, 250, 0.25);
@@ -1338,7 +1463,8 @@ body.theme-dark #invertWorkspace .preset-choice-card.active {
   box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.18);
 }
 
-body.theme-dark #compressWorkspaceSection .preset-choice-card.active {
+body.theme-dark #compressWorkspaceSection .preset-choice-card.active,
+html.dark #compressWorkspaceSection .preset-choice-card.active {
   border-color: #34d399;
   background: rgba(52, 211, 153, 0.1);
   box-shadow: 0 0 0 3px rgba(52, 211, 153, 0.25);
@@ -1355,7 +1481,8 @@ body.theme-dark #compressWorkspaceSection .preset-choice-card.active {
   box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.18);
 }
 
-body.theme-dark #imagesManageSection .preset-choice-card.active {
+body.theme-dark #imagesManageSection .preset-choice-card.active,
+html.dark #imagesManageSection .preset-choice-card.active {
   border-color: #2dd4bf;
   background: rgba(45, 212, 191, 0.1);
   box-shadow: 0 0 0 3px rgba(45, 212, 191, 0.25);
@@ -1372,7 +1499,8 @@ body.theme-dark #imagesManageSection .preset-choice-card.active {
   box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.18);
 }
 
-body.theme-dark #pdfToImagesWorkspace .preset-choice-card.active {
+body.theme-dark #pdfToImagesWorkspace .preset-choice-card.active,
+html.dark #pdfToImagesWorkspace .preset-choice-card.active {
   border-color: #38bdf8;
   background: rgba(56, 189, 248, 0.1);
   box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.25);
@@ -1780,7 +1908,7 @@ body.theme-dark #compressWorkspaceSection .toggle-pill-btn.active {
 }
 
 
-/* --- Bundled: assets/css/tabs/tab-remove.css --- */
+/* --- Bundled: assets/css/tabs/tab-remove.css ---
 
 /* ========================================= */
 /* TAB 2: REMOVE PAGES SPECIFIC STYLES       */
@@ -2089,13 +2217,37 @@ body.theme-dark .page-canvas-wrapper {
   transition: var(--transition);
 }
 
-body.theme-dark .remove-action-card {
+body.theme-dark .remove-action-card,
+html.dark .remove-action-card {
   background: rgba(19, 27, 46, 0.94);
   box-shadow: 0 10px 25px -3px rgba(0, 0, 0, 0.5);
+  border-color: rgba(30, 41, 59, 0.85);
+}
+
+#executeRemoveBtn {
+  background: linear-gradient(135deg, #e11d48 0%, #be123c 100%);
+  box-shadow: 0 4px 14px rgba(225, 29, 72, 0.35);
+}
+#executeRemoveBtn:hover {
+  background: linear-gradient(135deg, #f43f5e 0%, #e11d48 100%);
+  box-shadow: 0 6px 20px rgba(225, 29, 72, 0.45);
+  transform: translateY(-1px);
+}
+
+html.dark .page-card {
+  background: rgba(19, 27, 46, 0.85);
+  border-color: rgba(30, 41, 59, 0.85);
+}
+html.dark .page-card-header {
+  background: rgba(15, 23, 42, 0.85);
+  border-color: rgba(30, 41, 59, 0.85);
+}
+html.dark .page-canvas-wrapper {
+  background: #0f172a;
 }
 
 
-/* --- Bundled: assets/css/tabs/tab-slides.css --- */
+/* --- Bundled: assets/css/tabs/tab-slides.css ---
 
 /* ========================================= */
 /* TAB 3: SLIDES TO A4 HANDOUT SPECIFIC      */
@@ -2320,8 +2472,28 @@ body.theme-dark .slides-calc-banner {
   width: 100%;
 }
 
+#executeSlidesBtn {
+  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+  box-shadow: 0 4px 14px rgba(37, 99, 235, 0.35);
+}
+#executeSlidesBtn:hover {
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+  box-shadow: 0 6px 20px rgba(37, 99, 235, 0.45);
+  transform: translateY(-1px);
+}
 
-/* --- Bundled: assets/css/tabs/tab-invert.css --- */
+html.dark .slides-calc-banner {
+  background: rgba(30, 58, 138, 0.25);
+  border-color: rgba(30, 58, 138, 0.5);
+  color: #93c5fd;
+}
+html.dark .a4-sheet-preview-container {
+  background: rgba(15, 23, 42, 0.6);
+  border-color: rgba(30, 41, 59, 0.8);
+}
+
+
+/* --- Bundled: assets/css/tabs/tab-invert.css ---
 
 /* ============================================== */
 /* TAB 4: INVERT COLORS COMPARISON PREVIEW STYLES  */
@@ -2484,8 +2656,28 @@ body.theme-dark .comparison-spinner {
   box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.15);
 }
 
+#executeInvertBtn {
+  background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%);
+  box-shadow: 0 4px 14px rgba(124, 58, 237, 0.35);
+}
+#executeInvertBtn:hover {
+  background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+  box-shadow: 0 6px 20px rgba(124, 58, 237, 0.45);
+  transform: translateY(-1px);
+}
 
-/* --- Bundled: assets/css/tabs/tab-compress.css --- */
+html.dark #invertWorkspace .preset-choice-card.active {
+  border-color: #a78bfa;
+  background: rgba(167, 139, 250, 0.1);
+  box-shadow: 0 0 0 3px rgba(167, 139, 250, 0.25);
+}
+html.dark .comparison-spinner {
+  background: rgba(15, 23, 42, 0.9);
+  color: #cbd5e1;
+}
+
+
+/* --- Bundled: assets/css/tabs/tab-compress.css ---
 
 /* ========================================== */
 /* TAB 5: COMPRESS PDF STYLES                 */
@@ -2682,8 +2874,28 @@ body.theme-dark .stat-highlight .stat-val {
   cursor: pointer;
 }
 
+#executeCompressBtn {
+  background: linear-gradient(135deg, #059669 0%, #047857 100%);
+  box-shadow: 0 4px 14px rgba(5, 150, 105, 0.35);
+}
+#executeCompressBtn:hover {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  box-shadow: 0 6px 20px rgba(5, 150, 105, 0.45);
+  transform: translateY(-1px);
+}
 
-/* --- Bundled: assets/css/tabs/tab-images.css --- */
+html.dark #compressWorkspaceSection .preset-choice-card.active {
+  border-color: #34d399;
+  background: rgba(52, 211, 153, 0.1);
+  box-shadow: 0 0 0 3px rgba(52, 211, 153, 0.25);
+}
+html.dark .savings-meter-card {
+  background: rgba(15, 23, 42, 0.8);
+  border-color: rgba(30, 41, 59, 0.85);
+}
+
+
+/* --- Bundled: assets/css/tabs/tab-images.css ---
 
 /* ============================================== */
 /* TAB 6: IMAGE TO PDF STYLES                    */
@@ -2823,13 +3035,36 @@ body.theme-dark .stat-highlight .stat-val {
   background: #fee2e2;
 }
 
-body.theme-dark .btn-image-action.btn-image-delete:hover {
+body.theme-dark .btn-image-action.btn-image-delete:hover,
+html.dark .btn-image-action.btn-image-delete:hover {
   background: rgba(239, 68, 68, 0.2);
   color: #fca5a5;
 }
 
+#executeImagesBtn {
+  background: linear-gradient(135deg, #0d9488 0%, #0f766e 100%);
+  box-shadow: 0 4px 14px rgba(13, 148, 136, 0.35);
+}
+#executeImagesBtn:hover {
+  background: linear-gradient(135deg, #14b8a6 0%, #0d9488 100%);
+  box-shadow: 0 6px 20px rgba(13, 148, 136, 0.45);
+  transform: translateY(-1px);
+}
 
-/* --- Bundled: assets/css/tabs/tab-pdftoimages.css --- */
+html.dark .image-card {
+  background: rgba(19, 27, 46, 0.85);
+  border-color: rgba(30, 41, 59, 0.85);
+}
+html.dark .image-card-meta {
+  background: rgba(15, 23, 42, 0.9);
+  border-color: rgba(30, 41, 59, 0.85);
+}
+html.dark .image-thumb-wrapper {
+  background: rgba(15, 23, 42, 0.6);
+}
+
+
+/* --- Bundled: assets/css/tabs/tab-pdftoimages.css ---
 
 /* ============================================== */
 /* TAB 7: PDF TO IMAGES GALLERY & CARDS           */
@@ -2963,8 +3198,30 @@ body.theme-dark .pdftoimages-card:hover {
   }
 }
 
+#pdfToImagesExecuteBtn {
+  background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+  box-shadow: 0 4px 14px rgba(2, 132, 199, 0.35);
+}
+#pdfToImagesExecuteBtn:hover {
+  background: linear-gradient(135deg, #38bdf8 0%, #0284c7 100%);
+  box-shadow: 0 6px 20px rgba(2, 132, 199, 0.45);
+  transform: translateY(-1px);
+}
 
-/* --- Bundled: assets/css/core/responsive.css --- */
+html.dark .pdftoimages-card {
+  background: rgba(19, 27, 46, 0.85);
+  border-color: rgba(30, 41, 59, 0.85);
+}
+html.dark .pdftoimages-card-meta {
+  background: rgba(15, 23, 42, 0.9);
+  border-color: rgba(30, 41, 59, 0.85);
+}
+html.dark .pdftoimages-thumb-wrapper {
+  background: rgba(15, 23, 42, 0.6);
+}
+
+
+/* --- Bundled: assets/css/core/responsive.css ---
 
 /* ============================================== */
 /* COMPREHENSIVE RESPONSIVE DESIGN (MOBILE-FIRST) */

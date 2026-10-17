@@ -305,7 +305,32 @@ body.theme-dark .page-canvas-wrapper {
   transition: var(--transition);
 }
 
-body.theme-dark .remove-action-card {
+body.theme-dark .remove-action-card,
+html.dark .remove-action-card {
   background: rgba(19, 27, 46, 0.94);
   box-shadow: 0 10px 25px -3px rgba(0, 0, 0, 0.5);
+  border-color: rgba(30, 41, 59, 0.85);
 }
+
+#executeRemoveBtn {
+  background: linear-gradient(135deg, #e11d48 0%, #be123c 100%);
+  box-shadow: 0 4px 14px rgba(225, 29, 72, 0.35);
+}
+#executeRemoveBtn:hover {
+  background: linear-gradient(135deg, #f43f5e 0%, #e11d48 100%);
+  box-shadow: 0 6px 20px rgba(225, 29, 72, 0.45);
+  transform: translateY(-1px);
+}
+
+html.dark .page-card {
+  background: rgba(19, 27, 46, 0.85);
+  border-color: rgba(30, 41, 59, 0.85);
+}
+html.dark .page-card-header {
+  background: rgba(15, 23, 42, 0.85);
+  border-color: rgba(30, 41, 59, 0.85);
+}
+html.dark .page-canvas-wrapper {
+  background: #0f172a;
+}
+

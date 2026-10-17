@@ -310,3 +310,8 @@ body.theme-dark .footer-stats-badge {
     justify-content: center;
   }
 }
+
+/* Global utility classes */
+.hidden {
+  display: none !important;
+}

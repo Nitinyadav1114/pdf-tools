@@ -32,7 +32,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=block" rel="stylesheet">
 
   <!-- Production Single Minified Stylesheet (Zero-Waterfall Pre-bundled Architecture) -->
-  <link rel="stylesheet" href="assets/css/bundle.min.css?v=12">
+  <link rel="stylesheet" href="assets/css/bundle.min.css?v=13">
 
   <!-- Canonical URL -->
   <link rel="canonical" href="https://nitinyadav1114.github.io/pdf-tools/">
@@ -127,7 +127,7 @@
     <!-- Navigation Tabs Pill Bar -->
     <div class="w-full overflow-x-auto pb-2 mb-6">
       <nav class="nav-tabs inline-flex items-center gap-1.5 p-1.5 rounded-full bg-slate-200/60 dark:bg-slate-900/80 backdrop-blur-xl border border-slate-300/50 dark:border-slate-800/70 max-w-full shadow-inner" aria-label="Tool selection">
-        <button class="nav-tab active px-4 py-2 rounded-full transition-all whitespace-nowrap bg-white dark:bg-slate-800 text-primary dark:text-indigo-300 shadow-sm font-semibold text-xs flex items-center gap-1.5" id="tabMergeBtn" data-tab="merge">
+        <button class="nav-tab active px-4 py-2 rounded-full font-medium text-xs transition-all whitespace-nowrap flex items-center gap-1.5" id="tabMergeBtn" data-tab="merge">
           <span class="material-symbols-outlined text-[16px]">merge</span>
           Merge PDFs
         </button>
@@ -367,150 +367,141 @@
       <!-- ============================================== -->
       <div id="removeTabView" class="tab-view hidden">
         <!-- Single PDF Upload Dropzone -->
-        <section class="dropzone-section" id="removeDropzoneSection">
-          <div id="removeDropzone" class="dropzone" tabindex="0" role="button" aria-label="Select a PDF to Remove Pages or browse from your device">
-            <input type="file" id="removeFileInput" accept=".pdf,application/pdf" class="file-input-hidden" aria-label="Select PDF file to remove pages">
-            <div class="dropzone-content">
-              <div class="dropzone-icon-wrapper" style="background-color: var(--danger-light); color: var(--danger);">
-                <svg class="dropzone-icon" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                  <polyline points="14 2 14 8 20 8"></polyline>
-                  <line x1="9" y1="15" x2="15" y2="15"></line>
-                </svg>
+        <section class="dropzone-section mb-6" id="removeDropzoneSection">
+          <div id="removeDropzone" class="dropzone w-full bg-surface-container-lowest/80 dark:bg-[#131b2e]/80 backdrop-blur-xl rounded-3xl p-8 sm:p-14 text-center shadow-sm relative overflow-hidden group border-2 border-dashed border-slate-300/80 dark:border-slate-800 hover:border-rose-500 dark:hover:border-rose-400 transition-all duration-300 cursor-pointer hover:shadow-xl hover:shadow-rose-500/5 hover:-translate-y-0.5" tabindex="0" role="button" aria-label="Select a PDF to Remove Pages or browse from your device">
+            <!-- Ambient subtle Rose Glow Backdrop -->
+            <div class="absolute -top-24 left-1/2 -translate-x-1/2 w-96 h-96 bg-rose-500/10 dark:bg-rose-500/10 rounded-full blur-3xl pointer-events-none transition-all duration-500 group-hover:scale-125"></div>
+            <input type="file" id="removeFileInput" accept=".pdf,application/pdf" class="file-input-hidden hidden" aria-label="Select PDF file to remove pages">
+            <div class="relative z-10 flex flex-col items-center justify-center dropzone-content">
+              <!-- Floating Upload Orb -->
+              <div class="dropzone-icon-wrapper w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-rose-50 dark:bg-rose-950/70 text-rose-600 dark:text-rose-400 flex items-center justify-center shadow-sm group-hover:scale-110 group-hover:bg-rose-600 group-hover:text-white group-hover:shadow-lg group-hover:shadow-rose-500/30 transition-all duration-300 mb-4 sm:mb-5 border border-rose-100/80 dark:border-rose-900/40">
+                <span class="material-symbols-outlined text-[32px] sm:text-[38px] transition-transform duration-300 group-hover:-translate-y-1">content_cut</span>
               </div>
-              <h2 class="dropzone-title"><span class="drop-text-desktop">Select a PDF to Remove Pages</span><span class="drop-text-mobile">Tap to select PDF</span></h2>
-              <p class="dropzone-desc"><span class="browse-link">Choose PDF file</span> from your device</p>
-              <p class="dropzone-hint">Select pages by entering numbers (e.g. 1, 2, 7, 8) or click pages visually</p>
+              <h2 class="text-2xl sm:text-3xl font-bold tracking-tight text-on-surface dark:text-white mb-1.5 dropzone-title">
+                <span class="drop-text-desktop">Select a PDF to Remove Pages</span>
+                <span class="drop-text-mobile sm:hidden">Tap to select PDF</span>
+              </h2>
+              <p class="text-sm sm:text-base text-slate-muted dark:text-slate-400 mb-5 dropzone-desc">
+                or <span class="text-rose-600 dark:text-rose-400 font-semibold underline underline-offset-4 cursor-pointer hover:text-rose-500 transition-colors browse-link">browse from your device</span>
+              </p>
+              <!-- Helper Metadata Pill -->
+              <div class="dropzone-hint inline-flex items-center flex-wrap justify-center gap-2 sm:gap-3 px-4 sm:px-5 py-2 rounded-full bg-slate-100/80 dark:bg-slate-900/70 border border-slate-200/60 dark:border-slate-800 text-slate-muted dark:text-slate-400 text-xs shadow-sm">
+                <span class="flex items-center gap-1 font-medium"><span class="w-1.5 h-1.5 rounded-full bg-rose-500"></span>Visual page deletion</span>
+                <span>•</span>
+                <span class="flex items-center gap-1 font-medium"><span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>Range syntax: 1, 3, 5-8</span>
+                <span>•</span>
+                <span class="flex items-center gap-1 font-medium"><span class="w-1.5 h-1.5 rounded-full bg-sky-500"></span>100% In-Browser</span>
+              </div>
             </div>
           </div>
         </section>
 
         <!-- Remove Pages Workspace (Hidden until file selected) -->
-        <section id="removeWorkspace" class="manage-section hidden">
+        <section id="removeWorkspace" class="manage-section hidden mb-6">
           <!-- File info card & Change file -->
-          <div class="file-loaded-banner">
-            <div class="loaded-file-meta">
-              <span class="file-icon-badge">📄</span>
-              <div>
-                <h3 id="removeFileName" class="loaded-file-title">document.pdf</h3>
-                <p id="removeFileSubtext" class="loaded-file-sub">12 pages &bull; 1.4 MB</p>
+          <div class="file-loaded-banner w-full bg-surface-container-lowest/80 dark:bg-[#131b2e]/80 backdrop-blur-xl rounded-2xl p-4 sm:p-5 border border-slate-200/80 dark:border-slate-800 shadow-sm flex items-center justify-between gap-4 mb-4">
+            <div class="loaded-file-meta flex items-center gap-3 min-w-0">
+              <span class="file-icon-badge text-2xl w-11 h-11 rounded-xl bg-rose-50 dark:bg-rose-950/60 text-rose-600 dark:text-rose-400 border border-rose-100 dark:border-rose-900/40 flex items-center justify-center shrink-0">📄</span>
+              <div class="min-w-0">
+                <h3 id="removeFileName" class="loaded-file-title text-sm font-bold text-on-surface dark:text-white truncate">document.pdf</h3>
+                <p id="removeFileSubtext" class="loaded-file-sub text-xs text-slate-muted dark:text-slate-400">12 pages &bull; 1.4 MB</p>
               </div>
             </div>
-            <button id="removeChangeFileBtn" class="btn btn-secondary">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"></path>
-              </svg>
-              Change File
+            <button id="removeChangeFileBtn" class="btn btn-secondary inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-slate-100/80 dark:bg-slate-900/80 hover:bg-slate-200/80 dark:hover:bg-slate-800 text-on-surface dark:text-slate-200 text-xs font-semibold border border-slate-200/80 dark:border-slate-800 transition-colors shrink-0">
+              <span class="material-symbols-outlined text-[16px]">sync</span>
+              <span>Change File</span>
             </button>
           </div>
 
           <!-- Selection Controls Bar -->
-          <div class="page-select-toolbar">
-            <div class="page-input-wrapper">
-              <label for="pagesToDeleteInput" class="page-input-label">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <polyline points="3 6 5 6 21 6"></polyline>
-                  <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-                </svg>
+          <div class="page-select-toolbar w-full bg-surface-container-lowest/80 dark:bg-[#131b2e]/80 backdrop-blur-xl p-4 sm:p-5 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-sm mb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div class="page-input-wrapper flex items-center gap-3 flex-1 min-w-[260px]">
+              <label for="pagesToDeleteInput" class="page-input-label text-xs font-bold text-rose-600 dark:text-rose-400 flex items-center gap-1.5 whitespace-nowrap">
+                <span class="material-symbols-outlined text-[18px]">delete_sweep</span>
                 Pages to Delete:
               </label>
-              <input type="text" id="pagesToDeleteInput" class="input-text page-numbers-input" placeholder="e.g. 1, 2, 7, 8 or 3-5">
+              <input type="text" id="pagesToDeleteInput" class="input-text page-numbers-input flex-1 bg-slate-100/80 dark:bg-slate-900/80 border border-slate-200/80 dark:border-slate-800 rounded-xl px-3 py-2 text-xs sm:text-sm text-on-surface dark:text-white font-mono focus:outline-none focus:ring-2 focus:ring-rose-500" placeholder="e.g. 1, 2, 7, 8 or 3-5">
             </div>
 
-            <div class="quick-select-buttons">
-              <button id="btnSelectOdd" class="btn-chip" type="button" title="Select all odd pages (1, 3, 5...)">Odd</button>
-              <button id="btnSelectEven" class="btn-chip" type="button" title="Select all even pages (2, 4, 6...)">Even</button>
-              <button id="btnInvertSelect" class="btn-chip" type="button" title="Invert page selection">Invert</button>
-              <button id="btnClearSelect" class="btn-chip btn-chip-danger" type="button" title="Clear selection">Clear</button>
+            <div class="quick-select-buttons flex items-center gap-2 flex-wrap">
+              <button id="btnSelectOdd" class="btn-chip px-3 py-1.5 rounded-xl bg-slate-100/80 dark:bg-slate-900/80 hover:bg-slate-200/80 dark:hover:bg-slate-800 text-xs font-semibold text-on-surface dark:text-slate-200 border border-slate-200/70 dark:border-slate-800 transition-colors" type="button" title="Select all odd pages (1, 3, 5...)">Odd</button>
+              <button id="btnSelectEven" class="btn-chip px-3 py-1.5 rounded-xl bg-slate-100/80 dark:bg-slate-900/80 hover:bg-slate-200/80 dark:hover:bg-slate-800 text-xs font-semibold text-on-surface dark:text-slate-200 border border-slate-200/70 dark:border-slate-800 transition-colors" type="button" title="Select all even pages (2, 4, 6...)">Even</button>
+              <button id="btnInvertSelect" class="btn-chip px-3 py-1.5 rounded-xl bg-slate-100/80 dark:bg-slate-900/80 hover:bg-slate-200/80 dark:hover:bg-slate-800 text-xs font-semibold text-on-surface dark:text-slate-200 border border-slate-200/70 dark:border-slate-800 transition-colors" type="button" title="Invert page selection">Invert</button>
+              <button id="btnClearSelect" class="btn-chip btn-chip-danger px-3 py-1.5 rounded-xl bg-red-50 dark:bg-red-950/40 hover:bg-red-100 dark:hover:bg-red-900/40 text-xs font-semibold text-red-600 dark:text-red-400 border border-red-200/70 dark:border-red-900/40 transition-colors" type="button" title="Clear selection">Clear</button>
             </div>
           </div>
 
           <!-- Live Summary Banner -->
-          <div id="removeSummaryBanner" class="page-summary-banner">
+          <div id="removeSummaryBanner" class="page-summary-banner w-full bg-slate-100/70 dark:bg-slate-900/70 rounded-xl px-4 py-2.5 text-xs text-slate-600 dark:text-slate-400 border border-slate-200/70 dark:border-slate-800 mb-4 flex items-center gap-2">
+            <span class="material-symbols-outlined text-[16px] text-rose-500">info</span>
             <span id="removeSummaryText">Click on any page thumbnail below or type page numbers above.</span>
           </div>
 
           <!-- Visual Page Grid -->
-          <div class="page-grid-header">
-            <h4 class="page-grid-title">Click pages below to mark for deletion:</h4>
-            <span class="page-grid-hint">Red cards with 🗑️ will be deleted</span>
+          <div class="page-grid-header flex items-center justify-between mb-3 px-1">
+            <h4 class="page-grid-title text-sm font-bold text-on-surface dark:text-white">Click pages below to mark for deletion:</h4>
+            <span class="page-grid-hint text-xs text-rose-600 dark:text-rose-400 font-medium">Red cards with 🗑️ will be removed</span>
           </div>
-          <div id="pagesGrid" class="pages-grid"></div>
+          <div id="pagesGrid" class="pages-grid mb-6"></div>
 
           <!-- Action & Download Section -->
-          <div class="merge-action-card remove-action-card">
-            <div class="merge-options">
-              <div class="output-filename-group">
-                <label for="removeOutputFilename" class="filename-label">Output File Name:</label>
-                <div class="filename-input-wrapper">
-                  <input type="text" id="removeOutputFilename" class="input-text" placeholder="document_pages_removed" value="document_pages_removed">
-                  <span class="file-extension">.pdf</span>
+          <div class="merge-action-card remove-action-card w-full bg-surface-container-lowest/90 dark:bg-[#131b2e]/90 backdrop-blur-xl rounded-2xl p-5 sm:p-6 shadow-sm border border-slate-200/80 dark:border-slate-800 flex flex-col md:flex-row md:items-center justify-between gap-5 mb-6">
+            <div class="merge-options flex flex-col sm:flex-row sm:items-center gap-6 flex-1">
+              <div class="output-filename-group flex flex-col gap-1.5">
+                <label for="removeOutputFilename" class="filename-label text-xs text-slate-muted dark:text-slate-400 font-semibold">Output File Name:</label>
+                <div class="filename-input-wrapper flex items-center bg-slate-100/80 dark:bg-slate-900/80 rounded-xl overflow-hidden border border-slate-200/80 dark:border-slate-800 focus-within:ring-2 focus-within:ring-rose-500 transition-all">
+                  <span class="material-symbols-outlined text-slate-muted dark:text-slate-400 text-[18px] pl-3">description</span>
+                  <input type="text" id="removeOutputFilename" class="input-text bg-transparent px-2.5 py-2 text-sm text-on-surface dark:text-white font-semibold focus:outline-none w-48" placeholder="document_pages_removed" value="document_pages_removed">
+                  <span class="file-extension bg-slate-200/70 dark:bg-slate-800 px-3 py-2 text-xs text-on-surface-variant dark:text-slate-300 font-mono font-bold">.pdf</span>
                 </div>
               </div>
             </div>
 
-            <div class="merge-button-wrapper">
-              <button id="executeRemoveBtn" class="btn btn-danger btn-lg">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <polyline points="3 6 5 6 21 6"></polyline>
-                  <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-                </svg>
-                Delete Selected Pages &amp; Save
+            <div class="merge-button-wrapper flex items-center justify-end shrink-0">
+              <button id="executeRemoveBtn" class="btn btn-danger btn-lg w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-7 py-3.5 rounded-full bg-gradient-to-r from-rose-600 to-rose-700 hover:from-rose-500 hover:to-rose-600 text-white text-sm font-bold shadow-lg shadow-rose-500/25 hover:shadow-rose-500/40 hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200" type="button">
+                <span class="material-symbols-outlined text-[20px]">delete_forever</span>
+                <span>Delete Selected Pages &amp; Save</span>
               </button>
             </div>
           </div>
 
           <!-- Remove Progress -->
-          <div id="removeProgressContainer" class="progress-container hidden">
-            <div class="progress-header">
-              <span id="removeProgressText" class="progress-text">Processing pages...</span>
-              <div class="progress-right-controls">
-                <span id="removeProgressPercent" class="progress-percent">0%</span>
-                <button type="button" id="removeCancelBtn" class="btn-cancel-task" title="Cancel operation">Cancel</button>
+          <div id="removeProgressContainer" class="progress-container hidden w-full bg-surface-container-lowest dark:bg-[#131b2e] rounded-xl p-5 shadow-sm border border-slate-border dark:border-slate-800 mb-6">
+            <div class="progress-header flex justify-between items-center text-sm font-semibold mb-2">
+              <span id="removeProgressText" class="progress-text text-on-surface dark:text-white">Processing pages...</span>
+              <div class="progress-right-controls flex items-center gap-3">
+                <span id="removeProgressPercent" class="progress-percent text-rose-600 dark:text-rose-400 font-bold">0%</span>
+                <button type="button" id="removeCancelBtn" class="btn-cancel-task text-xs text-error font-medium hover:underline" title="Cancel operation">Cancel</button>
               </div>
             </div>
-            <div class="progress-bar-bg">
-              <div id="removeProgressBar" class="progress-bar-fill" style="background: linear-gradient(90deg, var(--danger), #f87171);"></div>
+            <div class="progress-bar-bg w-full bg-surface-container dark:bg-slate-800 rounded-full h-2.5 overflow-hidden">
+              <div id="removeProgressBar" class="progress-bar-fill h-2.5 rounded-full transition-all duration-200" style="background: linear-gradient(90deg, #e11d48, #f87171); width: 0%;"></div>
             </div>
           </div>
 
           <!-- Remove Result Card -->
-          <div id="removeResultCard" class="result-card hidden">
-            <div class="result-icon">
-              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-                <polyline points="22 4 12 14.01 9 11.01"></polyline>
-              </svg>
+          <div id="removeResultCard" class="result-card hidden w-full bg-emerald-tint dark:bg-emerald-950/20 rounded-xl p-5 shadow-sm border border-emerald-200 dark:border-emerald-800/50 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mb-6">
+            <div class="flex items-center gap-3">
+              <div class="result-icon w-10 h-10 rounded-full bg-emerald-600 text-white flex items-center justify-center shrink-0">
+                <span class="material-symbols-outlined text-[24px]">task_alt</span>
+              </div>
+              <div class="result-details">
+                <h3 class="result-title text-sm font-bold text-emerald-800 dark:text-emerald-300">Pages Removed Successfully!</h3>
+                <p id="removeResultSummary" class="result-summary text-xs text-emerald-700 dark:text-emerald-400">New PDF containing unselected pages is ready.</p>
+              </div>
             </div>
-            <div class="result-details">
-              <h3 class="result-title">Pages Removed Successfully!</h3>
-              <p id="removeResultSummary" class="result-summary">New PDF containing unselected pages is ready.</p>
-            </div>
-            <div class="result-actions">
-              <a id="removeDownloadBtn" class="btn btn-success btn-lg" download="document_pages_removed.pdf">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                  <polyline points="7 10 12 15 17 10"></polyline>
-                  <line x1="12" y1="15" x2="12" y2="3"></line>
-                </svg>
-                Download PDF
+            <div class="result-actions flex items-center gap-2 flex-wrap">
+              <a id="removeDownloadBtn" class="btn btn-success inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-emerald-600 text-white text-xs font-semibold shadow hover:bg-emerald-700 transition-all" download="document_pages_removed.pdf">
+                <span class="material-symbols-outlined text-[16px]">download</span>
+                <span>Download PDF</span>
               </a>
-              <button id="removePreviewBtn" class="btn btn-secondary btn-lg">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                  <circle cx="12" cy="12" r="3"></circle>
-                </svg>
-                Preview
+              <button id="removePreviewBtn" class="btn btn-secondary inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-white dark:bg-slate-800 text-on-surface dark:text-slate-200 text-xs font-semibold shadow-sm hover:bg-slate-50 dark:hover:bg-slate-700 transition-all border border-slate-200 dark:border-slate-700" type="button">
+                <span class="material-symbols-outlined text-[16px]">visibility</span>
+                <span>Preview</span>
               </button>
-              <button type="button" id="removeShareBtn" class="btn btn-secondary btn-lg btn-share-pdf hidden" title="Share PDF via WhatsApp, Gmail, Slack, AirDrop">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <circle cx="18" cy="5" r="3"></circle>
-                  <circle cx="6" cy="12" r="3"></circle>
-                  <circle cx="18" cy="19" r="3"></circle>
-                  <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
-                  <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
-                </svg>
-                Share
+              <button type="button" id="removeShareBtn" class="btn btn-secondary btn-share-pdf hidden inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-white dark:bg-slate-800 text-on-surface dark:text-slate-200 text-xs font-semibold shadow-sm hover:bg-slate-50 dark:hover:bg-slate-700 transition-all border border-slate-200 dark:border-slate-700" title="Share PDF via WhatsApp, Gmail, Slack, AirDrop">
+                <span class="material-symbols-outlined text-[16px]">share</span>
+                <span>Share</span>
               </button>
             </div>
           </div>
@@ -522,192 +513,179 @@
       <!-- ============================================== -->
       <div id="slidesTabView" class="tab-view hidden">
         <!-- Presentation Upload Drop Zone -->
-        <section class="dropzone-section" id="slidesDropzoneSection">
-          <div id="slidesDropzone" class="dropzone" tabindex="0" role="button" aria-label="Upload Presentation PDF or browse from your device">
-            <input type="file" id="slidesFileInput" accept=".pdf,application/pdf" class="file-input-hidden" aria-label="Select presentation PDF to format as A4 handout">
-            <div class="dropzone-content">
-              <div class="dropzone-icon-wrapper" style="background-color: rgba(37, 99, 235, 0.1); color: var(--tool-slides);">
-                <svg class="dropzone-icon" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                  <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
-                  <line x1="8" y1="21" x2="16" y2="21"></line>
-                  <line x1="12" y1="17" x2="12" y2="21"></line>
-                </svg>
+        <section class="dropzone-section mb-6" id="slidesDropzoneSection">
+          <div id="slidesDropzone" class="dropzone w-full bg-surface-container-lowest/80 dark:bg-[#131b2e]/80 backdrop-blur-xl rounded-3xl p-8 sm:p-14 text-center shadow-sm relative overflow-hidden group border-2 border-dashed border-slate-300/80 dark:border-slate-800 hover:border-blue-500 dark:hover:border-blue-400 transition-all duration-300 cursor-pointer hover:shadow-xl hover:shadow-blue-500/5 hover:-translate-y-0.5" tabindex="0" role="button" aria-label="Upload Presentation PDF or browse from your device">
+            <!-- Ambient subtle Blue Glow Backdrop -->
+            <div class="absolute -top-24 left-1/2 -translate-x-1/2 w-96 h-96 bg-blue-500/10 dark:bg-blue-500/10 rounded-full blur-3xl pointer-events-none transition-all duration-500 group-hover:scale-125"></div>
+            <input type="file" id="slidesFileInput" accept=".pdf,application/pdf" class="file-input-hidden hidden" aria-label="Select presentation PDF to format as A4 handout">
+            <div class="relative z-10 flex flex-col items-center justify-center dropzone-content">
+              <!-- Floating Upload Orb -->
+              <div class="dropzone-icon-wrapper w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-blue-50 dark:bg-blue-950/70 text-blue-600 dark:text-blue-400 flex items-center justify-center shadow-sm group-hover:scale-110 group-hover:bg-blue-600 group-hover:text-white group-hover:shadow-lg group-hover:shadow-blue-500/30 transition-all duration-300 mb-4 sm:mb-5 border border-blue-100/80 dark:border-blue-900/40">
+                <span class="material-symbols-outlined text-[32px] sm:text-[38px] transition-transform duration-300 group-hover:-translate-y-1">view_agenda</span>
               </div>
-              <h2 class="dropzone-title"><span class="drop-text-desktop">Upload Presentation PDF</span><span class="drop-text-mobile">Tap to select Slides PDF</span></h2>
-              <p class="dropzone-desc"><span class="browse-link">Choose presentation</span> from your device</p>
-              <p class="dropzone-hint">Fits 3 slides per A4 page &bull; Clean layout &bull; Optional note lines</p>
+              <h2 class="text-2xl sm:text-3xl font-bold tracking-tight text-on-surface dark:text-white mb-1.5 dropzone-title">
+                <span class="drop-text-desktop">Upload Presentation PDF</span>
+                <span class="drop-text-mobile sm:hidden">Tap to select Slides PDF</span>
+              </h2>
+              <p class="text-sm sm:text-base text-slate-muted dark:text-slate-400 mb-5 dropzone-desc">
+                or <span class="text-blue-600 dark:text-blue-400 font-semibold underline underline-offset-4 cursor-pointer hover:text-blue-500 transition-colors browse-link">browse from your device</span>
+              </p>
+              <!-- Helper Metadata Pill -->
+              <div class="dropzone-hint inline-flex items-center flex-wrap justify-center gap-2 sm:gap-3 px-4 sm:px-5 py-2 rounded-full bg-slate-100/80 dark:bg-slate-900/70 border border-slate-200/60 dark:border-slate-800 text-slate-muted dark:text-slate-400 text-xs shadow-sm">
+                <span class="flex items-center gap-1 font-medium"><span class="w-1.5 h-1.5 rounded-full bg-blue-500"></span>Fits 3 slides per A4 page</span>
+                <span>•</span>
+                <span class="flex items-center gap-1 font-medium"><span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>Optional note lines</span>
+                <span>•</span>
+                <span class="flex items-center gap-1 font-medium"><span class="w-1.5 h-1.5 rounded-full bg-indigo-500"></span>Auto margin optimization</span>
+              </div>
             </div>
           </div>
         </section>
 
         <!-- Slides to A4 Workspace (Hidden until file selected) -->
-        <section id="slidesWorkspace" class="manage-section hidden">
+        <section id="slidesWorkspace" class="manage-section hidden mb-6">
           <!-- File info card & Change file -->
-          <div class="file-loaded-banner">
-            <div class="loaded-file-meta">
-              <span class="file-icon-badge">📊</span>
-              <div>
-                <h3 id="slidesFileName" class="loaded-file-title">presentation.pdf</h3>
-                <p id="slidesFileSubtext" class="loaded-file-sub">15 slides &bull; 2.5 MB</p>
+          <div class="file-loaded-banner w-full bg-surface-container-lowest/80 dark:bg-[#131b2e]/80 backdrop-blur-xl rounded-2xl p-4 sm:p-5 border border-slate-200/80 dark:border-slate-800 shadow-sm flex items-center justify-between gap-4 mb-4">
+            <div class="loaded-file-meta flex items-center gap-3 min-w-0">
+              <span class="file-icon-badge text-2xl w-11 h-11 rounded-xl bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 border border-blue-100 dark:border-blue-900/40 flex items-center justify-center shrink-0">📊</span>
+              <div class="min-w-0">
+                <h3 id="slidesFileName" class="loaded-file-title text-sm font-bold text-on-surface dark:text-white truncate">presentation.pdf</h3>
+                <p id="slidesFileSubtext" class="loaded-file-sub text-xs text-slate-muted dark:text-slate-400">15 slides &bull; 2.5 MB</p>
               </div>
             </div>
-            <button id="slidesChangeFileBtn" class="btn btn-secondary">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"></path>
-              </svg>
-              Change File
+            <button id="slidesChangeFileBtn" class="btn btn-secondary inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-slate-100/80 dark:bg-slate-900/80 hover:bg-slate-200/80 dark:hover:bg-slate-800 text-on-surface dark:text-slate-200 text-xs font-semibold border border-slate-200/80 dark:border-slate-800 transition-colors shrink-0">
+              <span class="material-symbols-outlined text-[16px]">sync</span>
+              <span>Change File</span>
             </button>
           </div>
 
           <!-- Handout Settings & Controls -->
-          <div class="handout-settings-card">
-            <div class="settings-row">
-              <div class="setting-item">
-                <label for="slidesPerLayoutSelect" class="setting-label">
-                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-                    <line x1="3" y1="9" x2="21" y2="9"></line>
-                    <line x1="3" y1="15" x2="21" y2="15"></line>
-                  </svg>
-                  Layout:
-                </label>
-                <select id="slidesPerLayoutSelect" class="select-dropdown">
-                  <option value="3-centered" selected>3 Slides Centered (Large &amp; Clear)</option>
-                  <option value="3-notes">3 Slides + Note-Taking Lines (Handout)</option>
-                  <option value="2-centered">2 Slides per A4 Page</option>
-                  <option value="4-grid">4 Slides per A4 Page (2×2 Grid)</option>
-                  <option value="6-grid">6 Slides per A4 Page (2×3 Grid)</option>
-                </select>
+          <div class="handout-settings-card w-full bg-surface-container-lowest/80 dark:bg-[#131b2e]/80 backdrop-blur-xl rounded-2xl p-5 sm:p-6 border border-slate-200/80 dark:border-slate-800 shadow-sm mb-4">
+            <div class="settings-row flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
+              <div class="flex items-center gap-4 flex-wrap">
+                <div class="setting-item flex items-center gap-2">
+                  <label for="slidesPerLayoutSelect" class="setting-label text-xs font-bold text-slate-muted dark:text-slate-400 flex items-center gap-1.5">
+                    <span class="material-symbols-outlined text-[18px] text-blue-500">grid_view</span>
+                    Layout:
+                  </label>
+                  <select id="slidesPerLayoutSelect" class="select-dropdown bg-slate-100/80 dark:bg-slate-900/80 border border-slate-200/80 dark:border-slate-800 rounded-xl px-3 py-1.5 text-xs font-semibold text-on-surface dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer">
+                    <option value="3-centered" selected class="dark:bg-[#131b2e]">3 Slides Centered (Large &amp; Clear)</option>
+                    <option value="3-notes" class="dark:bg-[#131b2e]">3 Slides + Note-Taking Lines (Handout)</option>
+                    <option value="2-centered" class="dark:bg-[#131b2e]">2 Slides per A4 Page</option>
+                    <option value="4-grid" class="dark:bg-[#131b2e]">4 Slides per A4 Page (2×2 Grid)</option>
+                    <option value="6-grid" class="dark:bg-[#131b2e]">6 Slides per A4 Page (2×3 Grid)</option>
+                  </select>
+                </div>
+
+                <!-- Margin Presets (Like MS Word) -->
+                <div class="setting-item flex items-center gap-2">
+                  <label for="marginSelect" class="setting-label text-xs font-bold text-slate-muted dark:text-slate-400 flex items-center gap-1.5">
+                    <span class="material-symbols-outlined text-[18px] text-blue-500">crop_free</span>
+                    Margins:
+                  </label>
+                  <select id="marginSelect" class="select-dropdown bg-slate-100/80 dark:bg-slate-900/80 border border-slate-200/80 dark:border-slate-800 rounded-xl px-3 py-1.5 text-xs font-semibold text-on-surface dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer">
+                    <option value="narrow" selected class="dark:bg-[#131b2e]">Narrow (0.25" &bull; Fills Page)</option>
+                    <option value="moderate" class="dark:bg-[#131b2e]">Moderate (0.5")</option>
+                    <option value="normal" class="dark:bg-[#131b2e]">Normal (0.75")</option>
+                    <option value="minimal" class="dark:bg-[#131b2e]">Minimal (0.15" &bull; Ultra Size)</option>
+                  </select>
+                </div>
               </div>
 
-              <!-- Margin Presets (Like MS Word) -->
-              <div class="setting-item">
-                <label for="marginSelect" class="setting-label">
-                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-                    <rect x="7" y="7" width="10" height="10" rx="1" ry="1"></rect>
-                  </svg>
-                  Margins:
+              <div class="setting-item-options flex items-center gap-4 flex-wrap">
+                <label class="toggle-control inline-flex items-center gap-2 cursor-pointer select-none" title="Draw clean border around each slide">
+                  <input type="checkbox" id="slideBorderCheckbox" checked class="w-4 h-4 rounded text-blue-600 focus:ring-blue-500" aria-label="Draw clean border around each slide">
+                  <span class="toggle-label text-xs font-semibold text-on-surface dark:text-slate-200">Slide borders</span>
                 </label>
-                <select id="marginSelect" class="select-dropdown">
-                  <option value="narrow" selected>Narrow (0.25" &bull; Fills Page)</option>
-                  <option value="moderate">Moderate (0.5")</option>
-                  <option value="normal">Normal (0.75")</option>
-                  <option value="minimal">Minimal (0.15" &bull; Ultra Size)</option>
-                </select>
-              </div>
-
-              <div class="setting-item-options">
-                <label class="toggle-control" title="Draw clean border around each slide">
-                  <input type="checkbox" id="slideBorderCheckbox" checked aria-label="Draw clean border around each slide">
-                  <span class="toggle-label">Slide borders</span>
-                </label>
-                <label class="toggle-control" title="Include small slide numbers (e.g. Slide 1)">
-                  <input type="checkbox" id="slideNumbersCheckbox" checked aria-label="Include small slide numbers">
-                  <span class="toggle-label">Slide numbers</span>
+                <label class="toggle-control inline-flex items-center gap-2 cursor-pointer select-none" title="Include small slide numbers (e.g. Slide 1)">
+                  <input type="checkbox" id="slideNumbersCheckbox" checked class="w-4 h-4 rounded text-blue-600 focus:ring-blue-500" aria-label="Include small slide numbers">
+                  <span class="toggle-label text-xs font-semibold text-on-surface dark:text-slate-200">Slide numbers</span>
                 </label>
               </div>
             </div>
 
             <!-- Calculation Summary Banner -->
-            <div id="slidesCalcBanner" class="slides-calc-banner">
+            <div id="slidesCalcBanner" class="slides-calc-banner w-full bg-blue-50/80 dark:bg-blue-950/40 text-blue-800 dark:text-blue-300 rounded-xl px-4 py-2.5 text-xs font-semibold border border-blue-200/70 dark:border-blue-900/50 flex items-center gap-2">
+              <span class="material-symbols-outlined text-[16px] text-blue-600 dark:text-blue-400">analytics</span>
               <span id="slidesCalcText">📊 15 slides will fit onto 5 A4 pages (3 slides per page).</span>
             </div>
           </div>
 
           <!-- Live Mockup Preview Box -->
-          <div class="handout-preview-wrapper">
-            <div class="handout-preview-header">
-              <span class="preview-title">A4 Page 1 Preview</span>
-              <span id="previewPageIndicator" class="preview-badge">Shows first 3 slides</span>
+          <div class="handout-preview-wrapper w-full bg-surface-container-lowest/80 dark:bg-[#131b2e]/80 backdrop-blur-xl rounded-2xl p-5 sm:p-6 border border-slate-200/80 dark:border-slate-800 shadow-sm mb-4">
+            <div class="handout-preview-header flex items-center justify-between mb-3 px-1">
+              <span class="preview-title text-sm font-bold text-on-surface dark:text-white">A4 Page 1 Preview</span>
+              <span id="previewPageIndicator" class="preview-badge px-2.5 py-1 rounded-full bg-blue-100 dark:bg-blue-950/60 text-blue-700 dark:text-blue-300 text-xs font-semibold border border-blue-200 dark:border-blue-900/50">Shows first 3 slides</span>
             </div>
-            <div class="a4-sheet-preview-container">
-              <div class="a4-sheet-preview" id="a4SheetPreview">
+            <div class="a4-sheet-preview-container flex justify-center p-4 sm:p-6 bg-slate-100/60 dark:bg-slate-900/60 rounded-xl border border-slate-200/60 dark:border-slate-800">
+              <div class="a4-sheet-preview shadow-2xl" id="a4SheetPreview">
                 <!-- Rendered preview mockup -->
               </div>
             </div>
           </div>
 
           <!-- Action & Merge Card -->
-          <div class="merge-action-card">
-            <div class="merge-options">
-              <div class="output-filename-group">
-                <label for="slidesOutputFilename" class="filename-label">Output File Name:</label>
-                <div class="filename-input-wrapper">
-                  <input type="text" id="slidesOutputFilename" class="input-text" placeholder="presentation_A4_handout" value="presentation_A4_handout">
-                  <span class="file-extension">.pdf</span>
+          <div class="merge-action-card w-full bg-surface-container-lowest/90 dark:bg-[#131b2e]/90 backdrop-blur-xl rounded-2xl p-5 sm:p-6 shadow-sm border border-slate-200/80 dark:border-slate-800 flex flex-col md:flex-row md:items-center justify-between gap-5 mb-6">
+            <div class="merge-options flex flex-col sm:flex-row sm:items-center gap-6 flex-1">
+              <div class="output-filename-group flex flex-col gap-1.5">
+                <label for="slidesOutputFilename" class="filename-label text-xs text-slate-muted dark:text-slate-400 font-semibold">Output File Name:</label>
+                <div class="filename-input-wrapper flex items-center bg-slate-100/80 dark:bg-slate-900/80 rounded-xl overflow-hidden border border-slate-200/80 dark:border-slate-800 focus-within:ring-2 focus-within:ring-blue-500 transition-all">
+                  <span class="material-symbols-outlined text-slate-muted dark:text-slate-400 text-[18px] pl-3">description</span>
+                  <input type="text" id="slidesOutputFilename" class="input-text bg-transparent px-2.5 py-2 text-sm text-on-surface dark:text-white font-semibold focus:outline-none w-48" placeholder="presentation_A4_handout" value="presentation_A4_handout">
+                  <span class="file-extension bg-slate-200/70 dark:bg-slate-800 px-3 py-2 text-xs text-on-surface-variant dark:text-slate-300 font-mono font-bold">.pdf</span>
                 </div>
               </div>
             </div>
 
-            <div class="merge-button-wrapper">
-              <button id="executeSlidesBtn" class="btn btn-primary btn-lg" style="background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                  <polyline points="14 2 14 8 20 8"></polyline>
-                  <line x1="16" y1="13" x2="8" y2="13"></line>
-                  <line x1="16" y1="17" x2="8" y2="17"></line>
-                  <polyline points="10 9 9 9 8 9"></polyline>
-                </svg>
-                Generate 3-Slide A4 PDF
+            <div class="merge-button-wrapper flex items-center justify-end shrink-0">
+              <button id="executeSlidesBtn" class="btn btn-primary btn-lg w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-7 py-3.5 rounded-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-500 hover:to-blue-600 text-white text-sm font-bold shadow-lg shadow-blue-500/25 hover:shadow-blue-500/40 hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200" type="button">
+                <span class="material-symbols-outlined text-[20px]">layers</span>
+                <span>Generate 3-Slide A4 PDF</span>
               </button>
             </div>
           </div>
 
           <!-- Progress -->
-          <div id="slidesProgressContainer" class="progress-container hidden">
-            <div class="progress-header">
-              <span id="slidesProgressText" class="progress-text">Fitting slides into A4 pages...</span>
-              <div class="progress-right-controls">
-                <span id="slidesProgressPercent" class="progress-percent">0%</span>
-                <button type="button" id="slidesCancelBtn" class="btn-cancel-task" title="Cancel operation">Cancel</button>
+          <div id="slidesProgressContainer" class="progress-container hidden w-full bg-surface-container-lowest dark:bg-[#131b2e] rounded-xl p-5 shadow-sm border border-slate-border dark:border-slate-800 mb-6">
+            <div class="progress-header flex justify-between items-center text-sm font-semibold mb-2">
+              <span id="slidesProgressText" class="progress-text text-on-surface dark:text-white">Fitting slides into A4 pages...</span>
+              <div class="progress-right-controls flex items-center gap-3">
+                <span id="slidesProgressPercent" class="progress-percent text-blue-600 dark:text-blue-400 font-bold">0%</span>
+                <button type="button" id="slidesCancelBtn" class="btn-cancel-task text-xs text-error font-medium hover:underline" title="Cancel operation">Cancel</button>
               </div>
             </div>
-            <div class="progress-bar-bg">
-              <div id="slidesProgressBar" class="progress-bar-fill" style="background: linear-gradient(90deg, #2563eb, #60a5fa);"></div>
+            <div class="progress-bar-bg w-full bg-surface-container dark:bg-slate-800 rounded-full h-2.5 overflow-hidden">
+              <div id="slidesProgressBar" class="progress-bar-fill h-2.5 rounded-full transition-all duration-200" style="background: linear-gradient(90deg, #2563eb, #60a5fa); width: 0%;"></div>
             </div>
           </div>
 
           <!-- Result Card -->
-          <div id="slidesResultCard" class="result-card hidden">
-            <div class="result-icon" style="background: rgba(37, 99, 235, 0.1); color: #2563eb;">
-              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-                <polyline points="22 4 12 14.01 9 11.01"></polyline>
-              </svg>
+          <div id="slidesResultCard" class="result-card hidden w-full bg-emerald-tint dark:bg-emerald-950/20 rounded-xl p-5 shadow-sm border border-emerald-200 dark:border-emerald-800/50 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mb-6">
+            <div class="flex items-center gap-3">
+              <div class="result-icon w-10 h-10 rounded-full bg-emerald-600 text-white flex items-center justify-center shrink-0">
+                <span class="material-symbols-outlined text-[24px]">task_alt</span>
+              </div>
+              <div class="result-details">
+                <h3 class="result-title text-sm font-bold text-emerald-800 dark:text-emerald-300">A4 Handout Generated!</h3>
+                <p id="slidesResultSummary" class="result-summary text-xs text-emerald-700 dark:text-emerald-400">Successfully formatted slides into A4 pages.</p>
+              </div>
             </div>
-            <div class="result-details">
-              <h3 class="result-title">A4 Handout Generated!</h3>
-              <p id="slidesResultSummary" class="result-summary">Successfully formatted slides into A4 pages.</p>
-            </div>
-            <div class="result-actions">
-              <a id="slidesDownloadBtn" class="btn btn-success btn-lg" download="presentation_A4_handout.pdf">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                  <polyline points="7 10 12 15 17 10"></polyline>
-                  <line x1="12" y1="15" x2="12" y2="3"></line>
-                </svg>
-                Download A4 PDF
+            <div class="result-actions flex items-center gap-2 flex-wrap">
+              <a id="slidesDownloadBtn" class="btn btn-success inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-emerald-600 text-white text-xs font-semibold shadow hover:bg-emerald-700 transition-all" download="presentation_A4_handout.pdf">
+                <span class="material-symbols-outlined text-[16px]">download</span>
+                <span>Download A4 PDF</span>
               </a>
-              <button id="slidesPreviewBtn" class="btn btn-secondary btn-lg">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                  <circle cx="12" cy="12" r="3"></circle>
-                </svg>
-                Preview
+              <button id="slidesPreviewBtn" class="btn btn-secondary inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-white dark:bg-slate-800 text-on-surface dark:text-slate-200 text-xs font-semibold shadow-sm hover:bg-slate-50 dark:hover:bg-slate-700 transition-all border border-slate-200 dark:border-slate-700" type="button">
+                <span class="material-symbols-outlined text-[16px]">visibility</span>
+                <span>Preview</span>
               </button>
-              <button type="button" id="slidesShareBtn" class="btn btn-secondary btn-lg btn-share-pdf hidden" title="Share PDF via WhatsApp, Gmail, Slack, AirDrop">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <circle cx="18" cy="5" r="3"></circle>
-                  <circle cx="6" cy="12" r="3"></circle>
-                  <circle cx="18" cy="19" r="3"></circle>
-                  <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
-                  <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
-                </svg>
-                Share
+              <button type="button" id="slidesShareBtn" class="btn btn-secondary btn-share-pdf hidden inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-white dark:bg-slate-800 text-on-surface dark:text-slate-200 text-xs font-semibold shadow-sm hover:bg-slate-50 dark:hover:bg-slate-700 transition-all border border-slate-200 dark:border-slate-700" title="Share PDF via WhatsApp, Gmail, Slack, AirDrop">
+                <span class="material-symbols-outlined text-[16px]">share</span>
+                <span>Share</span>
               </button>
-              <button type="button" id="slidesSendToInvertBtn" class="btn btn-secondary btn-lg btn-flow-jump" title="Send this handout PDF directly to Color Inverter to save ink before printing">
-                🌓 Invert for Printing
+              <button type="button" id="slidesSendToInvertBtn" class="btn btn-secondary btn-flow-jump inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-white dark:bg-slate-800 text-on-surface dark:text-slate-200 text-xs font-semibold shadow-sm hover:bg-slate-50 dark:hover:bg-slate-700 transition-all border border-slate-200 dark:border-slate-700" title="Send this handout PDF directly to Color Inverter to save ink before printing">
+                <span class="material-symbols-outlined text-[16px]">contrast</span>
+                <span>Invert for Printing</span>
               </button>
             </div>
           </div>
@@ -719,92 +697,99 @@
       <!-- ============================================== -->
       <div id="invertTabView" class="tab-view hidden">
         <!-- Invert Upload Drop Zone -->
-        <section class="dropzone-section" id="invertDropzoneSection">
-          <div id="invertDropzone" class="dropzone" tabindex="0" role="button" aria-label="Select a PDF to Invert Colors or browse from your device">
-            <input type="file" id="invertFileInput" accept=".pdf,application/pdf" class="file-input-hidden" aria-label="Select PDF file to invert colors">
-            <div class="dropzone-content">
-              <div class="dropzone-icon-wrapper" style="background-color: rgba(124, 58, 237, 0.1); color: var(--tool-invert);">
-                <svg class="dropzone-icon" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                  <circle cx="12" cy="12" r="10"></circle>
-                  <path d="M12 2a10 10 0 0 1 0 20z" fill="currentColor"></path>
-                </svg>
+        <section class="dropzone-section mb-6" id="invertDropzoneSection">
+          <div id="invertDropzone" class="dropzone w-full bg-surface-container-lowest/80 dark:bg-[#131b2e]/80 backdrop-blur-xl rounded-3xl p-8 sm:p-14 text-center shadow-sm relative overflow-hidden group border-2 border-dashed border-slate-300/80 dark:border-slate-800 hover:border-purple-500 dark:hover:border-purple-400 transition-all duration-300 cursor-pointer hover:shadow-xl hover:shadow-purple-500/5 hover:-translate-y-0.5" tabindex="0" role="button" aria-label="Select a PDF to Invert Colors or browse from your device">
+            <!-- Ambient subtle Purple Glow Backdrop -->
+            <div class="absolute -top-24 left-1/2 -translate-x-1/2 w-96 h-96 bg-purple-500/10 dark:bg-purple-500/10 rounded-full blur-3xl pointer-events-none transition-all duration-500 group-hover:scale-125"></div>
+            <input type="file" id="invertFileInput" accept=".pdf,application/pdf" class="file-input-hidden hidden" aria-label="Select PDF file to invert colors">
+            <div class="relative z-10 flex flex-col items-center justify-center dropzone-content">
+              <!-- Floating Upload Orb -->
+              <div class="dropzone-icon-wrapper w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-purple-50 dark:bg-purple-950/70 text-purple-600 dark:text-purple-400 flex items-center justify-center shadow-sm group-hover:scale-110 group-hover:bg-purple-600 group-hover:text-white group-hover:shadow-lg group-hover:shadow-purple-500/30 transition-all duration-300 mb-4 sm:mb-5 border border-purple-100/80 dark:border-purple-900/40">
+                <span class="material-symbols-outlined text-[32px] sm:text-[38px] transition-transform duration-300 group-hover:-translate-y-1">contrast</span>
               </div>
-              <h2 class="dropzone-title"><span class="drop-text-desktop">Select a PDF to Invert Colors</span><span class="drop-text-mobile">Tap to select PDF to Invert</span></h2>
-              <p class="dropzone-desc"><span class="browse-link">Choose PDF file</span> from your device</p>
-              <p class="dropzone-hint">Invert dark backgrounds to clean white paper &bull; Save printer ink &bull; Crisp hardcopy printouts</p>
+              <h2 class="text-2xl sm:text-3xl font-bold tracking-tight text-on-surface dark:text-white mb-1.5 dropzone-title">
+                <span class="drop-text-desktop">Select a PDF to Invert Colors</span>
+                <span class="drop-text-mobile sm:hidden">Tap to select PDF to Invert</span>
+              </h2>
+              <p class="text-sm sm:text-base text-slate-muted dark:text-slate-400 mb-5 dropzone-desc">
+                or <span class="text-purple-600 dark:text-purple-400 font-semibold underline underline-offset-4 cursor-pointer hover:text-purple-500 transition-colors browse-link">browse from your device</span>
+              </p>
+              <!-- Helper Metadata Pill -->
+              <div class="dropzone-hint inline-flex items-center flex-wrap justify-center gap-2 sm:gap-3 px-4 sm:px-5 py-2 rounded-full bg-slate-100/80 dark:bg-slate-900/70 border border-slate-200/60 dark:border-slate-800 text-slate-muted dark:text-slate-400 text-xs shadow-sm">
+                <span class="flex items-center gap-1 font-medium"><span class="w-1.5 h-1.5 rounded-full bg-purple-500"></span>Invert dark slides to white</span>
+                <span>•</span>
+                <span class="flex items-center gap-1 font-medium"><span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>Saves up to 90% toner</span>
+                <span>•</span>
+                <span class="flex items-center gap-1 font-medium"><span class="w-1.5 h-1.5 rounded-full bg-sky-500"></span>Crisp hardcopy printouts</span>
+              </div>
             </div>
           </div>
         </section>
 
         <!-- Invert Colors Workspace (Hidden until file selected) -->
-        <section id="invertWorkspace" class="manage-section hidden">
+        <section id="invertWorkspace" class="manage-section hidden mb-6">
           <!-- File info banner & Change file -->
-          <div class="file-loaded-banner">
-            <div class="loaded-file-meta">
-              <span class="file-icon-badge">🌓</span>
-              <div>
-                <h3 id="invertFileName" class="loaded-file-title">document.pdf</h3>
-                <p id="invertFileSubtext" class="loaded-file-sub">10 pages &bull; 2.1 MB</p>
+          <div class="file-loaded-banner w-full bg-surface-container-lowest/80 dark:bg-[#131b2e]/80 backdrop-blur-xl rounded-2xl p-4 sm:p-5 border border-slate-200/80 dark:border-slate-800 shadow-sm flex items-center justify-between gap-4 mb-4">
+            <div class="loaded-file-meta flex items-center gap-3 min-w-0">
+              <span class="file-icon-badge text-2xl w-11 h-11 rounded-xl bg-purple-50 dark:bg-purple-950/60 text-purple-600 dark:text-purple-400 border border-purple-100 dark:border-purple-900/40 flex items-center justify-center shrink-0">🌓</span>
+              <div class="min-w-0">
+                <h3 id="invertFileName" class="loaded-file-title text-sm font-bold text-on-surface dark:text-white truncate">document.pdf</h3>
+                <p id="invertFileSubtext" class="loaded-file-sub text-xs text-slate-muted dark:text-slate-400">10 pages &bull; 2.1 MB</p>
               </div>
             </div>
-            <button id="invertChangeFileBtn" class="btn btn-secondary">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"></path>
-              </svg>
-              Change File
+            <button id="invertChangeFileBtn" class="btn btn-secondary inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-slate-100/80 dark:bg-slate-900/80 hover:bg-slate-200/80 dark:hover:bg-slate-800 text-on-surface dark:text-slate-200 text-xs font-semibold border border-slate-200/80 dark:border-slate-800 transition-colors shrink-0">
+              <span class="material-symbols-outlined text-[16px]">sync</span>
+              <span>Change File</span>
             </button>
           </div>
 
           <!-- Inverter Settings Card -->
-          <div class="options-card">
-            <div class="options-card-header">
-              <h3 class="options-title">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <circle cx="12" cy="12" r="10"></circle>
-                  <path d="M12 2a10 10 0 0 1 0 20z" fill="currentColor"></path>
-                </svg>
+          <div class="options-card w-full bg-surface-container-lowest/80 dark:bg-[#131b2e]/80 backdrop-blur-xl rounded-2xl p-5 sm:p-6 border border-slate-200/80 dark:border-slate-800 shadow-sm mb-4">
+            <div class="options-card-header mb-4 pb-3 border-b border-slate-200/80 dark:border-slate-800">
+              <h3 class="options-title text-sm font-bold text-on-surface dark:text-white flex items-center gap-2">
+                <span class="material-symbols-outlined text-[18px] text-purple-500">palette</span>
                 Select Ink Saver Style
               </h3>
-              <span class="options-subtitle">Choose how dark presentation slides should be converted for printing</span>
+              <span class="options-subtitle text-xs text-slate-muted dark:text-slate-400">Choose how dark presentation slides should be converted for printing</span>
             </div>
 
-            <div class="preset-choice-grid">
+            <div class="preset-choice-grid grid grid-cols-1 md:grid-cols-3 gap-3 mb-4">
               <!-- Option 1: Clean White Paper (Default) -->
-              <label class="preset-choice-card active" id="invertModeNegativeCard" data-mode="negative">
-                <input type="radio" name="invertModeRadio" value="negative" checked aria-label="Ink Saver Style: Clean White Paper">
-                <div class="preset-choice-header">
-                  <span class="preset-choice-title">📄 Clean White Paper</span>
-                  <span class="preset-tag tag-recommended">Recommended</span>
+              <label class="preset-choice-card active bg-white dark:bg-[#131b2e] border-2 border-purple-500 rounded-xl p-4 cursor-pointer transition-all hover:-translate-y-0.5 shadow-sm" id="invertModeNegativeCard" data-mode="negative">
+                <input type="radio" name="invertModeRadio" value="negative" checked aria-label="Ink Saver Style: Clean White Paper" class="sr-only">
+                <div class="preset-choice-header flex items-center justify-between gap-2 mb-2">
+                  <span class="preset-choice-title text-sm font-bold text-on-surface dark:text-white">📄 Clean White Paper</span>
+                  <span class="preset-tag tag-recommended px-2 py-0.5 rounded-md bg-purple-100 dark:bg-purple-950/70 text-purple-700 dark:text-purple-300 text-[10px] font-bold">Recommended</span>
                 </div>
-                <p class="preset-choice-desc">Dark backgrounds turn into clean white paper with dark text. Saves ~90% toner.</p>
-                <div class="preset-choice-savings">
-                  Best for: <strong>Standard Desktop &amp; Office Printers</strong>
+                <p class="preset-choice-desc text-xs text-slate-muted dark:text-slate-400 mb-2">Dark backgrounds turn into clean white paper with dark text. Saves ~90% toner.</p>
+                <div class="preset-choice-savings text-[11px] text-purple-600 dark:text-purple-400 font-semibold">
+                  Best for: Standard Desktop Printers
                 </div>
               </label>
 
               <!-- Option 2: Pure Monochrome -->
-              <label class="preset-choice-card" id="invertModeGrayscaleCard" data-mode="grayscale-invert">
-                <input type="radio" name="invertModeRadio" value="grayscale-invert" aria-label="Ink Saver Style: Pure Black and White">
-                <div class="preset-choice-header">
-                  <span class="preset-choice-title">🖨️ Pure Black &amp; White</span>
-                  <span class="preset-tag tag-lossless">Max Ink Saver</span>
+              <label class="preset-choice-card bg-white dark:bg-[#131b2e] border-2 border-slate-200/80 dark:border-slate-800 rounded-xl p-4 cursor-pointer transition-all hover:-translate-y-0.5 shadow-sm" id="invertModeGrayscaleCard" data-mode="grayscale-invert">
+                <input type="radio" name="invertModeRadio" value="grayscale-invert" aria-label="Ink Saver Style: Pure Black and White" class="sr-only">
+                <div class="preset-choice-header flex items-center justify-between gap-2 mb-2">
+                  <span class="preset-choice-title text-sm font-bold text-on-surface dark:text-white">🖨️ Pure Black &amp; White</span>
+                  <span class="preset-tag tag-lossless px-2 py-0.5 rounded-md bg-emerald-100 dark:bg-emerald-950/70 text-emerald-700 dark:text-emerald-300 text-[10px] font-bold">Max Ink Saver</span>
                 </div>
-                <p class="preset-choice-desc">Converts all colored backgrounds, text, and graphics into crisp monochrome black ink.</p>
-                <div class="preset-choice-savings">
-                  Best for: <strong>B&amp;W Laser Printers &amp; Scanners</strong>
+                <p class="preset-choice-desc text-xs text-slate-muted dark:text-slate-400 mb-2">Converts all colored backgrounds, text, and graphics into crisp monochrome black ink.</p>
+                <div class="preset-choice-savings text-[11px] text-emerald-600 dark:text-emerald-400 font-semibold">
+                  Best for: B&amp;W Laser Printers
                 </div>
               </label>
 
               <!-- Option 3: Keep Colors -->
-              <label class="preset-choice-card" id="invertModeHueCard" data-mode="preserve-hue">
-                <input type="radio" name="invertModeRadio" value="preserve-hue" aria-label="Ink Saver Style: Keep Theme Colors">
-                <div class="preset-choice-header">
-                  <span class="preset-choice-title">🎨 Keep Theme Colors</span>
-                  <span class="preset-tag tag-balanced">Colors Retained</span>
+              <label class="preset-choice-card bg-white dark:bg-[#131b2e] border-2 border-slate-200/80 dark:border-slate-800 rounded-xl p-4 cursor-pointer transition-all hover:-translate-y-0.5 shadow-sm" id="invertModeHueCard" data-mode="preserve-hue">
+                <input type="radio" name="invertModeRadio" value="preserve-hue" aria-label="Ink Saver Style: Keep Theme Colors" class="sr-only">
+                <div class="preset-choice-header flex items-center justify-between gap-2 mb-2">
+                  <span class="preset-choice-title text-sm font-bold text-on-surface dark:text-white">🎨 Keep Theme Colors</span>
+                  <span class="preset-tag tag-balanced px-2 py-0.5 rounded-md bg-blue-100 dark:bg-blue-950/70 text-blue-700 dark:text-blue-300 text-[10px] font-bold">Colors Retained</span>
                 </div>
-                <p class="preset-choice-desc">Flips dark slides to light paper while preserving slide theme colors (blues, greens, etc.).</p>
-                <div class="preset-choice-savings">
-                  Best for: <strong>Color Handouts &amp; Charts</strong>
+                <p class="preset-choice-desc text-xs text-slate-muted dark:text-slate-400 mb-2">Flips dark slides to light paper while preserving slide theme colors (blues, greens, etc.).</p>
+                <div class="preset-choice-savings text-[11px] text-blue-600 dark:text-blue-400 font-semibold">
+                  Best for: Color Handouts &amp; Charts
                 </div>
               </label>
             </div>
@@ -818,132 +803,117 @@
             </select>
 
             <!-- Collapsible Advanced Settings (Quality & Custom Pages) -->
-            <details class="advanced-settings-details">
-              <summary class="advanced-settings-summary">
+            <details class="advanced-settings-details rounded-xl border border-slate-200/80 dark:border-slate-800 p-3 bg-slate-50/50 dark:bg-slate-900/50">
+              <summary class="advanced-settings-summary flex items-center justify-between cursor-pointer text-xs font-bold text-slate-600 dark:text-slate-300 select-none">
                 <span>⚙️ Advanced Options (Print Quality &amp; Custom Page Range)</span>
-                <span class="summary-arrow">▾</span>
+                <span class="summary-arrow text-sm">▾</span>
               </summary>
-              <div class="advanced-settings-grid">
-                <div class="setting-item">
-                  <label for="invertQualitySelect" class="setting-label">Print Quality:</label>
-                  <select id="invertQualitySelect" class="select-dropdown">
-                    <option value="high" selected>High Quality (150 DPI • Balanced size)</option>
-                    <option value="ultra">Ultra Sharp (220 DPI • Laser crisp)</option>
-                    <option value="standard">Standard Draft (110 DPI • Faster)</option>
+              <div class="advanced-settings-grid grid grid-cols-1 sm:grid-cols-2 gap-3 pt-3 mt-2 border-t border-slate-200/60 dark:border-slate-800">
+                <div class="setting-item flex flex-col gap-1">
+                  <label for="invertQualitySelect" class="setting-label text-xs font-semibold text-slate-muted dark:text-slate-400">Print Quality:</label>
+                  <select id="invertQualitySelect" class="select-dropdown bg-slate-100/80 dark:bg-slate-900/80 border border-slate-200/80 dark:border-slate-800 rounded-xl px-3 py-1.5 text-xs font-semibold text-on-surface dark:text-white focus:outline-none focus:ring-2 focus:ring-purple-500">
+                    <option value="high" selected class="dark:bg-[#131b2e]">High Quality (150 DPI • Balanced size)</option>
+                    <option value="ultra" class="dark:bg-[#131b2e]">Ultra Sharp (220 DPI • Laser crisp)</option>
+                    <option value="standard" class="dark:bg-[#131b2e]">Standard Draft (110 DPI • Faster)</option>
                   </select>
                 </div>
-                <div class="setting-item">
-                  <label for="invertPagesSelect" class="setting-label">Pages to Invert:</label>
-                  <select id="invertPagesSelect" class="select-dropdown">
-                    <option value="all" selected>All Pages</option>
-                    <option value="custom">Custom Page Range...</option>
+                <div class="setting-item flex flex-col gap-1">
+                  <label for="invertPagesSelect" class="setting-label text-xs font-semibold text-slate-muted dark:text-slate-400">Pages to Invert:</label>
+                  <select id="invertPagesSelect" class="select-dropdown bg-slate-100/80 dark:bg-slate-900/80 border border-slate-200/80 dark:border-slate-800 rounded-xl px-3 py-1.5 text-xs font-semibold text-on-surface dark:text-white focus:outline-none focus:ring-2 focus:ring-purple-500">
+                    <option value="all" selected class="dark:bg-[#131b2e]">All Pages</option>
+                    <option value="custom" class="dark:bg-[#131b2e]">Custom Page Range...</option>
                   </select>
                 </div>
-                <div id="invertCustomRangeGroup" class="setting-item hidden full-width">
-                  <label for="invertCustomPagesInput" class="setting-label">Enter Custom Pages:</label>
-                  <input type="text" id="invertCustomPagesInput" class="custom-range-input" placeholder="e.g. 1, 3, 5-8 (blank inverts all)">
+                <div id="invertCustomRangeGroup" class="setting-item hidden full-width sm:col-span-2 flex flex-col gap-1">
+                  <label for="invertCustomPagesInput" class="setting-label text-xs font-semibold text-slate-muted dark:text-slate-400">Enter Custom Pages:</label>
+                  <input type="text" id="invertCustomPagesInput" class="custom-range-input bg-slate-100/80 dark:bg-slate-900/80 border border-slate-200/80 dark:border-slate-800 rounded-xl px-3 py-1.5 text-xs text-on-surface dark:text-white font-mono focus:outline-none focus:ring-2 focus:ring-purple-500" placeholder="e.g. 1, 3, 5-8 (blank inverts all)">
                 </div>
               </div>
             </details>
           </div>
 
           <!-- Sleek Interactive Single Preview Card with Instant Toggle -->
-          <div class="single-preview-card">
-            <div class="preview-toolbar">
-              <div class="preview-mode-toggle">
-                <button type="button" class="toggle-pill-btn" id="btnShowOriginal">💻 Original Screen</button>
-                <button type="button" class="toggle-pill-btn active" id="btnShowInverted">🖨️ Inverted Print-Ready</button>
+          <div class="single-preview-card w-full bg-surface-container-lowest/80 dark:bg-[#131b2e]/80 backdrop-blur-xl rounded-2xl p-5 sm:p-6 border border-slate-200/80 dark:border-slate-800 shadow-sm mb-4">
+            <div class="preview-toolbar flex items-center justify-between gap-3 flex-wrap mb-3 px-1">
+              <div class="preview-mode-toggle flex items-center gap-1.5 bg-slate-100/80 dark:bg-slate-900/80 p-1 rounded-xl border border-slate-200/80 dark:border-slate-800">
+                <button type="button" class="toggle-pill-btn px-3 py-1.5 rounded-lg text-xs font-bold text-slate-600 dark:text-slate-300 hover:text-on-surface dark:hover:text-white transition-all" id="btnShowOriginal">💻 Original Screen</button>
+                <button type="button" class="toggle-pill-btn active px-3 py-1.5 rounded-lg text-xs font-bold bg-purple-600 text-white shadow-sm transition-all" id="btnShowInverted">🖨️ Inverted Print-Ready</button>
               </div>
-              <div class="preview-page-nav">
-                <button id="invertPrevPageBtn" class="btn btn-sm btn-secondary" title="Previous Page" disabled>&larr;</button>
-                <span id="invertPageNavText" class="preview-page-indicator">Page 1 of 1</span>
-                <button id="invertNextPageBtn" class="btn btn-sm btn-secondary" title="Next Page" disabled>&rarr;</button>
+              <div class="preview-page-nav flex items-center gap-2">
+                <button id="invertPrevPageBtn" class="btn btn-sm btn-secondary px-2.5 py-1 rounded-lg text-xs font-bold bg-slate-100/80 dark:bg-slate-900/80 text-on-surface dark:text-slate-200 border border-slate-200/80 dark:border-slate-800" title="Previous Page" disabled>&larr;</button>
+                <span id="invertPageNavText" class="preview-page-indicator text-xs font-semibold text-slate-muted dark:text-slate-400 min-w-[70px] text-center">Page 1 of 1</span>
+                <button id="invertNextPageBtn" class="btn btn-sm btn-secondary px-2.5 py-1 rounded-lg text-xs font-bold bg-slate-100/80 dark:bg-slate-900/80 text-on-surface dark:text-slate-200 border border-slate-200/80 dark:border-slate-800" title="Next Page" disabled>&rarr;</button>
               </div>
             </div>
 
-            <div class="single-preview-canvas-wrap">
-              <canvas id="invertDisplayCanvas" class="single-preview-canvas"></canvas>
+            <div class="single-preview-canvas-wrap flex justify-center items-center min-h-[220px] bg-slate-100/60 dark:bg-slate-900/60 rounded-xl p-4 border border-slate-200/60 dark:border-slate-800 relative">
+              <canvas id="invertDisplayCanvas" class="single-preview-canvas max-h-[380px] object-contain shadow-lg rounded-md"></canvas>
               <canvas id="invertOriginalCanvas" style="display: none;"></canvas>
               <canvas id="invertPreviewCanvas" style="display: none;"></canvas>
-              <div id="invertPreviewSpinner" class="comparison-spinner hidden">Rendering preview...</div>
-              <div id="invertOriginalSpinner" class="comparison-spinner hidden">Loading original...</div>
+              <div id="invertPreviewSpinner" class="comparison-spinner hidden text-xs font-semibold text-purple-600 dark:text-purple-400">Rendering preview...</div>
+              <div id="invertOriginalSpinner" class="comparison-spinner hidden text-xs font-semibold text-slate-500">Loading original...</div>
             </div>
-            <div class="preview-status-caption">
+            <div class="preview-status-caption mt-2 text-center text-xs text-slate-muted dark:text-slate-400">
               <span id="invertDisplayCaption">Viewing: <strong>Hardcopy Print-Ready (White Paper)</strong></span>
             </div>
           </div>
 
           <!-- Action Bar: Output name & Execute CTA -->
-          <div class="action-bar-card">
-            <div class="output-filename-wrapper">
-              <label for="invertOutputFilename" class="filename-label">Save As:</label>
-              <div class="input-with-extension">
-                <input type="text" id="invertOutputFilename" class="filename-input" value="document_inverted.pdf" placeholder="document_inverted">
+          <div class="action-bar-card w-full bg-surface-container-lowest/90 dark:bg-[#131b2e]/90 backdrop-blur-xl rounded-2xl p-5 sm:p-6 shadow-sm border border-slate-200/80 dark:border-slate-800 flex flex-col md:flex-row md:items-center justify-between gap-5 mb-6">
+            <div class="output-filename-wrapper flex flex-col gap-1.5">
+              <label for="invertOutputFilename" class="filename-label text-xs text-slate-muted dark:text-slate-400 font-semibold">Save As:</label>
+              <div class="input-with-extension flex items-center bg-slate-100/80 dark:bg-slate-900/80 rounded-xl overflow-hidden border border-slate-200/80 dark:border-slate-800 focus-within:ring-2 focus-within:ring-purple-500 transition-all">
+                <span class="material-symbols-outlined text-slate-muted dark:text-slate-400 text-[18px] pl-3">description</span>
+                <input type="text" id="invertOutputFilename" class="filename-input bg-transparent px-2.5 py-2 text-sm text-on-surface dark:text-white font-semibold focus:outline-none w-48" value="document_inverted.pdf" placeholder="document_inverted">
+                <span class="file-extension bg-slate-200/70 dark:bg-slate-800 px-3 py-2 text-xs text-on-surface-variant dark:text-slate-300 font-mono font-bold">.pdf</span>
               </div>
             </div>
 
-            <div class="merge-button-wrapper">
-              <button id="executeInvertBtn" class="btn btn-primary btn-lg" style="background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%);">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <circle cx="12" cy="12" r="10"></circle>
-                  <path d="M12 2a10 10 0 0 1 0 20z" fill="currentColor"></path>
-                </svg>
-                Invert &amp; Export PDF
+            <div class="merge-button-wrapper flex items-center justify-end shrink-0">
+              <button id="executeInvertBtn" class="btn btn-primary btn-lg w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-7 py-3.5 rounded-full bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-500 hover:to-purple-600 text-white text-sm font-bold shadow-lg shadow-purple-500/25 hover:shadow-purple-500/40 hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200" type="button">
+                <span class="material-symbols-outlined text-[20px]">invert_colors</span>
+                <span>Invert &amp; Export PDF</span>
               </button>
             </div>
           </div>
 
           <!-- Invert Progress Bar -->
-          <div id="invertProgressContainer" class="progress-container hidden">
-            <div class="progress-header">
-              <span id="invertProgressText" class="progress-text">Inverting page colors...</span>
-              <div class="progress-right-controls">
-                <span id="invertProgressPercent" class="progress-percent">0%</span>
-                <button type="button" id="invertCancelBtn" class="btn-cancel-task" title="Cancel operation">Cancel</button>
+          <div id="invertProgressContainer" class="progress-container hidden w-full bg-surface-container-lowest dark:bg-[#131b2e] rounded-xl p-5 shadow-sm border border-slate-border dark:border-slate-800 mb-6">
+            <div class="progress-header flex justify-between items-center text-sm font-semibold mb-2">
+              <span id="invertProgressText" class="progress-text text-on-surface dark:text-white">Inverting page colors...</span>
+              <div class="progress-right-controls flex items-center gap-3">
+                <span id="invertProgressPercent" class="progress-percent text-purple-600 dark:text-purple-400 font-bold">0%</span>
+                <button type="button" id="invertCancelBtn" class="btn-cancel-task text-xs text-error font-medium hover:underline" title="Cancel operation">Cancel</button>
               </div>
             </div>
-            <div class="progress-bar-bg">
-              <div id="invertProgressBar" class="progress-bar-fill" style="background: linear-gradient(90deg, #7c3aed 0%, #a855f7 100%);"></div>
+            <div class="progress-bar-bg w-full bg-surface-container dark:bg-slate-800 rounded-full h-2.5 overflow-hidden">
+              <div id="invertProgressBar" class="progress-bar-fill h-2.5 rounded-full transition-all duration-200" style="background: linear-gradient(90deg, #7c3aed 0%, #a855f7 100%); width: 0%;"></div>
             </div>
           </div>
 
           <!-- Invert Success Card -->
-          <div id="invertResultCard" class="result-card hidden">
-            <div class="result-icon" style="background: rgba(124, 58, 237, 0.1); color: #7c3aed;">
-              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-                <polyline points="22 4 12 14.01 9 11.01"></polyline>
-              </svg>
+          <div id="invertResultCard" class="result-card hidden w-full bg-emerald-tint dark:bg-emerald-950/20 rounded-xl p-5 shadow-sm border border-emerald-200 dark:border-emerald-800/50 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mb-6">
+            <div class="flex items-center gap-3">
+              <div class="result-icon w-10 h-10 rounded-full bg-emerald-600 text-white flex items-center justify-center shrink-0">
+                <span class="material-symbols-outlined text-[24px]">task_alt</span>
+              </div>
+              <div class="result-details">
+                <h3 class="result-title text-sm font-bold text-emerald-800 dark:text-emerald-300">Inversion Complete!</h3>
+                <p id="invertResultSummary" class="result-summary text-xs text-emerald-700 dark:text-emerald-400">Successfully inverted pages for clean hardcopy printing.</p>
+              </div>
             </div>
-            <div class="result-details">
-              <h3 class="result-title">Inversion Complete!</h3>
-              <p id="invertResultSummary" class="result-summary">Successfully inverted pages for clean hardcopy printing.</p>
-            </div>
-            <div class="result-actions">
-              <a id="invertDownloadBtn" class="btn btn-success btn-lg" download="document_inverted.pdf">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                  <polyline points="7 10 12 15 17 10"></polyline>
-                  <line x1="12" y1="15" x2="12" y2="3"></line>
-                </svg>
-                Download Inverted PDF
+            <div class="result-actions flex items-center gap-2 flex-wrap">
+              <a id="invertDownloadBtn" class="btn btn-success inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-emerald-600 text-white text-xs font-semibold shadow hover:bg-emerald-700 transition-all" download="document_inverted.pdf">
+                <span class="material-symbols-outlined text-[16px]">download</span>
+                <span>Download Inverted PDF</span>
               </a>
-              <button id="invertPreviewBtn" class="btn btn-secondary btn-lg">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                  <circle cx="12" cy="12" r="3"></circle>
-                </svg>
-                Preview
+              <button id="invertPreviewBtn" class="btn btn-secondary inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-white dark:bg-slate-800 text-on-surface dark:text-slate-200 text-xs font-semibold shadow-sm hover:bg-slate-50 dark:hover:bg-slate-700 transition-all border border-slate-200 dark:border-slate-700" type="button">
+                <span class="material-symbols-outlined text-[16px]">visibility</span>
+                <span>Preview</span>
               </button>
-              <button type="button" id="invertShareBtn" class="btn btn-secondary btn-lg btn-share-pdf hidden" title="Share PDF via WhatsApp, Gmail, Slack, AirDrop">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <circle cx="18" cy="5" r="3"></circle>
-                  <circle cx="6" cy="12" r="3"></circle>
-                  <circle cx="18" cy="19" r="3"></circle>
-                  <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
-                  <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
-                </svg>
-                Share
+              <button type="button" id="invertShareBtn" class="btn btn-secondary btn-share-pdf hidden inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-white dark:bg-slate-800 text-on-surface dark:text-slate-200 text-xs font-semibold shadow-sm hover:bg-slate-50 dark:hover:bg-slate-700 transition-all border border-slate-200 dark:border-slate-700" title="Share PDF via WhatsApp, Gmail, Slack, AirDrop">
+                <span class="material-symbols-outlined text-[16px]">share</span>
+                <span>Share</span>
               </button>
             </div>
           </div>
@@ -955,238 +925,223 @@
       <!-- ============================================== -->
       <div id="compressTabView" class="tab-view hidden">
         <!-- Upload Drop Zone -->
-        <section class="dropzone-section">
-          <div id="compressDropzone" class="dropzone" tabindex="0" role="button" aria-label="Drop PDF to Compress or browse from your device">
-            <input type="file" id="compressFileInput" accept=".pdf,application/pdf" class="file-input-hidden" aria-label="Select PDF file to compress">
-            <div class="dropzone-content">
-              <div class="dropzone-icon-wrapper" style="background-color: rgba(5, 150, 105, 0.1); color: var(--tool-compress);">
-                <svg class="dropzone-icon" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                  <polyline points="4 14 10 14 10 20"></polyline>
-                  <polyline points="20 10 14 10 14 4"></polyline>
-                  <line x1="14" y1="10" x2="21" y2="3"></line>
-                  <line x1="3" y1="21" x2="10" y2="14"></line>
-                </svg>
+        <section class="dropzone-section mb-6">
+          <div id="compressDropzone" class="dropzone w-full bg-surface-container-lowest/80 dark:bg-[#131b2e]/80 backdrop-blur-xl rounded-3xl p-8 sm:p-14 text-center shadow-sm relative overflow-hidden group border-2 border-dashed border-slate-300/80 dark:border-slate-800 hover:border-emerald-500 dark:hover:border-emerald-400 transition-all duration-300 cursor-pointer hover:shadow-xl hover:shadow-emerald-500/5 hover:-translate-y-0.5" tabindex="0" role="button" aria-label="Drop PDF to Compress or browse from your device">
+            <!-- Ambient subtle Emerald Glow Backdrop -->
+            <div class="absolute -top-24 left-1/2 -translate-x-1/2 w-96 h-96 bg-emerald-500/10 dark:bg-emerald-500/10 rounded-full blur-3xl pointer-events-none transition-all duration-500 group-hover:scale-125"></div>
+            <input type="file" id="compressFileInput" accept=".pdf,application/pdf" class="file-input-hidden hidden" aria-label="Select PDF file to compress">
+            <div class="relative z-10 flex flex-col items-center justify-center dropzone-content">
+              <!-- Floating Upload Orb -->
+              <div class="dropzone-icon-wrapper w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-emerald-50 dark:bg-emerald-950/70 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shadow-sm group-hover:scale-110 group-hover:bg-emerald-600 group-hover:text-white group-hover:shadow-lg group-hover:shadow-emerald-500/30 transition-all duration-300 mb-4 sm:mb-5 border border-emerald-100/80 dark:border-emerald-900/40">
+                <span class="material-symbols-outlined text-[32px] sm:text-[38px] transition-transform duration-300 group-hover:-translate-y-1">compress</span>
               </div>
-              <h2 class="dropzone-title"><span class="drop-text-desktop">Drop PDF to Compress</span><span class="drop-text-mobile">Tap to select PDF to Compress</span></h2>
-              <p class="dropzone-desc"><span class="browse-link">Choose PDF file</span> from your device</p>
-              <p class="dropzone-hint">Smart lossless &amp; visual compression &bull; Up to 90% size reduction &bull; 100% private</p>
+              <h2 class="text-2xl sm:text-3xl font-bold tracking-tight text-on-surface dark:text-white mb-1.5 dropzone-title">
+                <span class="drop-text-desktop">Drop PDF to Compress</span>
+                <span class="drop-text-mobile sm:hidden">Tap to select PDF to Compress</span>
+              </h2>
+              <p class="text-sm sm:text-base text-slate-muted dark:text-slate-400 mb-5 dropzone-desc">
+                or <span class="text-emerald-600 dark:text-emerald-400 font-semibold underline underline-offset-4 cursor-pointer hover:text-emerald-500 transition-colors browse-link">browse from your device</span>
+              </p>
+              <!-- Helper Metadata Pill -->
+              <div class="dropzone-hint inline-flex items-center flex-wrap justify-center gap-2 sm:gap-3 px-4 sm:px-5 py-2 rounded-full bg-slate-100/80 dark:bg-slate-900/70 border border-slate-200/60 dark:border-slate-800 text-slate-muted dark:text-slate-400 text-xs shadow-sm">
+                <span class="flex items-center gap-1 font-medium"><span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>Smart lossless &amp; visual compression</span>
+                <span>•</span>
+                <span class="flex items-center gap-1 font-medium"><span class="w-1.5 h-1.5 rounded-full bg-indigo-500"></span>Up to 90% size reduction</span>
+                <span>•</span>
+                <span class="flex items-center gap-1 font-medium"><span class="w-1.5 h-1.5 rounded-full bg-sky-500"></span>100% In-Browser</span>
+              </div>
             </div>
           </div>
         </section>
 
         <!-- Workspace Section (Hidden until file selected) -->
-        <section id="compressWorkspaceSection" class="workspace-section hidden">
+        <section id="compressWorkspaceSection" class="workspace-section hidden mb-6">
           <!-- File Info Header Card -->
-          <div class="file-loaded-banner">
-            <div class="loaded-file-meta">
-              <span class="file-icon-badge">🗜️</span>
-              <div>
-                <h3 id="compressFileName" class="loaded-file-title">document.pdf</h3>
-                <p id="compressFileSubtext" class="loaded-file-sub">
+          <div class="file-loaded-banner w-full bg-surface-container-lowest/80 dark:bg-[#131b2e]/80 backdrop-blur-xl rounded-2xl p-4 sm:p-5 border border-slate-200/80 dark:border-slate-800 shadow-sm flex items-center justify-between gap-4 mb-4">
+            <div class="loaded-file-meta flex items-center gap-3 min-w-0">
+              <span class="file-icon-badge text-2xl w-11 h-11 rounded-xl bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 border border-emerald-100 dark:border-emerald-900/40 flex items-center justify-center shrink-0">🗜️</span>
+              <div class="min-w-0">
+                <h3 id="compressFileName" class="loaded-file-title text-sm font-bold text-on-surface dark:text-white truncate">document.pdf</h3>
+                <p id="compressFileSubtext" class="loaded-file-sub text-xs text-slate-muted dark:text-slate-400">
                   <span id="compressPageCount">0 pages</span> &bull;
                   <span id="compressOriginalSize">0 MB</span> (Original)
                 </p>
               </div>
             </div>
-            <button id="compressChangeFileBtn" class="btn btn-secondary">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"></path>
-              </svg>
-              Change File
+            <button id="compressChangeFileBtn" class="btn btn-secondary inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-slate-100/80 dark:bg-slate-900/80 hover:bg-slate-200/80 dark:hover:bg-slate-800 text-on-surface dark:text-slate-200 text-xs font-semibold border border-slate-200/80 dark:border-slate-800 transition-colors shrink-0">
+              <span class="material-symbols-outlined text-[16px]">sync</span>
+              <span>Change File</span>
             </button>
           </div>
 
           <!-- Compression Mode Preset Cards -->
-          <div class="options-card">
-            <div class="options-card-header">
-              <h3 class="options-title">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <polyline points="4 14 10 14 10 20"></polyline>
-                  <polyline points="20 10 14 10 14 4"></polyline>
-                  <line x1="14" y1="10" x2="21" y2="3"></line>
-                  <line x1="3" y1="21" x2="10" y2="14"></line>
-                </svg>
+          <div class="options-card w-full bg-surface-container-lowest/80 dark:bg-[#131b2e]/80 backdrop-blur-xl rounded-2xl p-5 sm:p-6 border border-slate-200/80 dark:border-slate-800 shadow-sm mb-4">
+            <div class="options-card-header mb-4 pb-3 border-b border-slate-200/80 dark:border-slate-800">
+              <h3 class="options-title text-sm font-bold text-on-surface dark:text-white flex items-center gap-2">
+                <span class="material-symbols-outlined text-[18px] text-emerald-500">tune</span>
                 Select Compression Level
               </h3>
-              <span class="options-subtitle">Choose how aggressively you want to reduce the file size</span>
+              <span class="options-subtitle text-xs text-slate-muted dark:text-slate-400">Choose how aggressively you want to reduce the file size</span>
             </div>
 
-            <div class="preset-choice-grid">
+            <div class="preset-choice-grid grid grid-cols-1 md:grid-cols-3 gap-3 mb-4">
               <!-- Tier 1: Recommended (Smart Compress) -->
-              <label class="preset-choice-card active" id="presetRecommendedCard" data-preset="recommended">
-                <input type="radio" name="compressPreset" value="recommended" checked>
-                <div class="preset-choice-header">
-                  <span class="preset-choice-title">🎯 Smart Compress</span>
-                  <span class="preset-tag tag-recommended">Recommended</span>
+              <label class="preset-choice-card active bg-white dark:bg-[#131b2e] border-2 border-emerald-500 rounded-xl p-4 cursor-pointer transition-all hover:-translate-y-0.5 shadow-sm" id="presetRecommendedCard" data-preset="recommended">
+                <input type="radio" name="compressPreset" value="recommended" checked class="sr-only">
+                <div class="preset-choice-header flex items-center justify-between gap-2 mb-2">
+                  <span class="preset-choice-title text-sm font-bold text-on-surface dark:text-white">🎯 Smart Compress</span>
+                  <span class="preset-tag tag-recommended px-2 py-0.5 rounded-md bg-emerald-100 dark:bg-emerald-950/70 text-emerald-700 dark:text-emerald-300 text-[10px] font-bold">Recommended</span>
                 </div>
-                <p class="preset-choice-desc">Visually identical quality. Shrinks large scans, slide backgrounds, and photos dramatically.</p>
-                <div class="preset-choice-savings">
+                <p class="preset-choice-desc text-xs text-slate-muted dark:text-slate-400 mb-2">Visually identical quality. Shrinks large scans, slide backgrounds, and photos dramatically.</p>
+                <div class="preset-choice-savings text-[11px] text-emerald-600 dark:text-emerald-400 font-semibold">
                   Estimated: <strong>~75% smaller</strong>
                 </div>
               </label>
 
               <!-- Tier 2: Lossless -->
-              <label class="preset-choice-card" id="presetLosslessCard" data-preset="lossless">
-                <input type="radio" name="compressPreset" value="lossless">
-                <div class="preset-choice-header">
-                  <span class="preset-choice-title">💎 Pure Lossless</span>
-                  <span class="preset-tag tag-lossless">100% Bit-Exact</span>
+              <label class="preset-choice-card bg-white dark:bg-[#131b2e] border-2 border-slate-200/80 dark:border-slate-800 rounded-xl p-4 cursor-pointer transition-all hover:-translate-y-0.5 shadow-sm" id="presetLosslessCard" data-preset="lossless">
+                <input type="radio" name="compressPreset" value="lossless" class="sr-only">
+                <div class="preset-choice-header flex items-center justify-between gap-2 mb-2">
+                  <span class="preset-choice-title text-sm font-bold text-on-surface dark:text-white">💎 Pure Lossless</span>
+                  <span class="preset-tag tag-lossless px-2 py-0.5 rounded-md bg-blue-100 dark:bg-blue-950/70 text-blue-700 dark:text-blue-300 text-[10px] font-bold">100% Bit-Exact</span>
                 </div>
-                <p class="preset-choice-desc">Packs object streams &amp; cleans redundant metadata. Zero change to any image or text pixel.</p>
-                <div class="preset-choice-savings">
+                <p class="preset-choice-desc text-xs text-slate-muted dark:text-slate-400 mb-2">Packs object streams &amp; cleans redundant metadata. Zero change to any image or text pixel.</p>
+                <div class="preset-choice-savings text-[11px] text-blue-600 dark:text-blue-400 font-semibold">
                   Estimated: <strong>~20% smaller</strong>
                 </div>
               </label>
 
               <!-- Tier 3: Extreme (Email Friendly) -->
-              <label class="preset-choice-card" id="presetExtremeCard" data-preset="extreme">
-                <input type="radio" name="compressPreset" value="extreme">
-                <div class="preset-choice-header">
-                  <span class="preset-choice-title">📧 Smallest File</span>
-                  <span class="preset-tag tag-extreme">Fits in Email</span>
+              <label class="preset-choice-card bg-white dark:bg-[#131b2e] border-2 border-slate-200/80 dark:border-slate-800 rounded-xl p-4 cursor-pointer transition-all hover:-translate-y-0.5 shadow-sm" id="presetExtremeCard" data-preset="extreme">
+                <input type="radio" name="compressPreset" value="extreme" class="sr-only">
+                <div class="preset-choice-header flex items-center justify-between gap-2 mb-2">
+                  <span class="preset-choice-title text-sm font-bold text-on-surface dark:text-white">📧 Smallest File</span>
+                  <span class="preset-tag tag-extreme px-2 py-0.5 rounded-md bg-amber-100 dark:bg-amber-950/70 text-amber-700 dark:text-amber-300 text-[10px] font-bold">Fits in Email</span>
                 </div>
-                <p class="preset-choice-desc">Maximum reduction to fit strict email attachment limits (&lt;25 MB) and job application portals.</p>
-                <div class="preset-choice-savings">
+                <p class="preset-choice-desc text-xs text-slate-muted dark:text-slate-400 mb-2">Maximum reduction to fit strict email attachment limits (&lt;25 MB) and job application portals.</p>
+                <div class="preset-choice-savings text-[11px] text-amber-600 dark:text-amber-400 font-semibold">
                   Estimated: <strong>Up to 90% smaller</strong>
                 </div>
               </label>
             </div>
 
             <!-- Live Dynamic Savings Meter -->
-            <div class="savings-meter-card">
-              <div class="savings-meter-item">
-                <span class="meter-label">Original File</span>
-                <span id="meterOrigSize" class="meter-val">0 MB</span>
+            <div class="savings-meter-card flex flex-col sm:flex-row items-center justify-between gap-3 p-3.5 rounded-xl bg-slate-100/80 dark:bg-slate-900/80 border border-slate-200/80 dark:border-slate-800">
+              <div class="flex items-center gap-3">
+                <div class="savings-meter-item flex flex-col">
+                  <span class="meter-label text-[11px] font-semibold text-slate-muted dark:text-slate-400">Original File</span>
+                  <span id="meterOrigSize" class="meter-val text-sm font-bold text-on-surface dark:text-white">0 MB</span>
+                </div>
+                <div class="savings-meter-arrow text-slate-400 dark:text-slate-500">
+                  <span class="material-symbols-outlined text-[20px]">arrow_forward</span>
+                </div>
+                <div class="savings-meter-item highlight flex flex-col">
+                  <span class="meter-label text-[11px] font-semibold text-emerald-600 dark:text-emerald-400">Estimated Output</span>
+                  <span id="meterEstSize" class="meter-val text-sm font-bold text-emerald-600 dark:text-emerald-400">~0 MB</span>
+                </div>
               </div>
-              <div class="savings-meter-arrow">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <line x1="5" y1="12" x2="19" y2="12"></line>
-                  <polyline points="12 5 19 12 12 19"></polyline>
-                </svg>
-              </div>
-              <div class="savings-meter-item highlight">
-                <span class="meter-label">Estimated Output</span>
-                <span id="meterEstSize" class="meter-val">~0 MB</span>
-              </div>
-              <div class="savings-meter-badge" id="meterEstSaved">
+              <div class="savings-meter-badge px-3 py-1 rounded-full bg-emerald-100 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300 text-xs font-bold border border-emerald-200 dark:border-emerald-800/50" id="meterEstSaved">
                 🎯 Estimated savings: ~75%
               </div>
             </div>
           </div>
 
           <!-- Optional Quick Quality Preview (Collapsible) -->
-          <details class="advanced-settings-details" id="compressPreviewDetails">
-            <summary class="advanced-settings-summary">
+          <details class="advanced-settings-details rounded-xl border border-slate-200/80 dark:border-slate-800 p-3 bg-slate-50/50 dark:bg-slate-900/50 mb-4" id="compressPreviewDetails">
+            <summary class="advanced-settings-summary flex items-center justify-between cursor-pointer text-xs font-bold text-slate-600 dark:text-slate-300 select-none">
               <span>👁️ Optional: Inspect Sample Page Before Compressing</span>
-              <span class="summary-arrow">▾</span>
+              <span class="summary-arrow text-sm">▾</span>
             </summary>
-            <div class="single-preview-card" style="margin-top: 0.75rem;">
-              <div class="preview-toolbar">
-                <span class="preview-title" id="compressPreviewBadgeText">Simulated Output Quality</span>
-                <div class="preview-page-nav">
-                  <button id="compressPrevPageBtn" class="btn btn-sm btn-secondary" title="Previous Page" disabled>&larr;</button>
-                  <span id="compressPageNavText" class="preview-page-indicator">Page 1 of 1</span>
-                  <button id="compressNextPageBtn" class="btn btn-sm btn-secondary" title="Next Page" disabled>&rarr;</button>
+            <div class="single-preview-card mt-3 pt-3 border-t border-slate-200/60 dark:border-slate-800">
+              <div class="preview-toolbar flex items-center justify-between gap-3 mb-2 px-1">
+                <span class="preview-title text-xs font-bold text-on-surface dark:text-white" id="compressPreviewBadgeText">Simulated Output Quality</span>
+                <div class="preview-page-nav flex items-center gap-2">
+                  <button id="compressPrevPageBtn" class="btn btn-sm btn-secondary px-2.5 py-1 rounded-lg text-xs font-bold bg-slate-100/80 dark:bg-slate-900/80 text-on-surface dark:text-slate-200 border border-slate-200/80 dark:border-slate-800" title="Previous Page" disabled>&larr;</button>
+                  <span id="compressPageNavText" class="preview-page-indicator text-xs font-semibold text-slate-muted dark:text-slate-400 min-w-[70px] text-center">Page 1 of 1</span>
+                  <button id="compressNextPageBtn" class="btn btn-sm btn-secondary px-2.5 py-1 rounded-lg text-xs font-bold bg-slate-100/80 dark:bg-slate-900/80 text-on-surface dark:text-slate-200 border border-slate-200/80 dark:border-slate-800" title="Next Page" disabled>&rarr;</button>
                 </div>
               </div>
-              <div class="single-preview-canvas-wrap">
-                <canvas id="compressPreviewCanvas" class="single-preview-canvas"></canvas>
+              <div class="single-preview-canvas-wrap flex justify-center items-center min-h-[200px] bg-slate-100/60 dark:bg-slate-900/60 rounded-xl p-3 border border-slate-200/60 dark:border-slate-800 relative">
+                <canvas id="compressPreviewCanvas" class="single-preview-canvas max-h-[350px] object-contain shadow-lg rounded-md"></canvas>
                 <canvas id="compressOriginalCanvas" style="display: none;"></canvas>
                 <span id="compressOriginalBadgeText" style="display: none;">Native Vector</span>
-                <div id="compressPreviewSpinner" class="comparison-spinner hidden">Simulating output...</div>
-                <div id="compressOriginalSpinner" class="comparison-spinner hidden">Loading original...</div>
+                <div id="compressPreviewSpinner" class="comparison-spinner hidden text-xs font-semibold text-emerald-600 dark:text-emerald-400">Simulating output...</div>
+                <div id="compressOriginalSpinner" class="comparison-spinner hidden text-xs font-semibold text-slate-500">Loading original...</div>
               </div>
             </div>
           </details>
 
           <!-- Action Bar: Output name & Execute CTA -->
-          <div class="action-bar-card">
-            <div class="output-filename-wrapper">
-              <label for="compressOutputFilename" class="filename-label">Save As:</label>
-              <div class="input-with-extension">
-                <input type="text" id="compressOutputFilename" class="filename-input" value="document_compressed.pdf" placeholder="document_compressed">
+          <div class="action-bar-card w-full bg-surface-container-lowest/90 dark:bg-[#131b2e]/90 backdrop-blur-xl rounded-2xl p-5 sm:p-6 shadow-sm border border-slate-200/80 dark:border-slate-800 flex flex-col md:flex-row md:items-center justify-between gap-5 mb-6">
+            <div class="output-filename-wrapper flex flex-col gap-1.5">
+              <label for="compressOutputFilename" class="filename-label text-xs text-slate-muted dark:text-slate-400 font-semibold">Save As:</label>
+              <div class="input-with-extension flex items-center bg-slate-100/80 dark:bg-slate-900/80 rounded-xl overflow-hidden border border-slate-200/80 dark:border-slate-800 focus-within:ring-2 focus-within:ring-emerald-500 transition-all">
+                <span class="material-symbols-outlined text-slate-muted dark:text-slate-400 text-[18px] pl-3">description</span>
+                <input type="text" id="compressOutputFilename" class="filename-input bg-transparent px-2.5 py-2 text-sm text-on-surface dark:text-white font-semibold focus:outline-none w-48" value="document_compressed.pdf" placeholder="document_compressed">
+                <span class="file-extension bg-slate-200/70 dark:bg-slate-800 px-3 py-2 text-xs text-on-surface-variant dark:text-slate-300 font-mono font-bold">.pdf</span>
               </div>
             </div>
 
-            <div class="merge-button-wrapper">
-              <button id="executeCompressBtn" class="btn btn-primary btn-lg" style="background: linear-gradient(135deg, #059669 0%, #047857 100%);">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <polyline points="4 14 10 14 10 20"></polyline>
-                  <polyline points="20 10 14 10 14 4"></polyline>
-                  <line x1="14" y1="10" x2="21" y2="3"></line>
-                  <line x1="3" y1="21" x2="10" y2="14"></line>
-                </svg>
-                Compress PDF Now
+            <div class="merge-button-wrapper flex items-center justify-end shrink-0">
+              <button id="executeCompressBtn" class="btn btn-primary btn-lg w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-7 py-3.5 rounded-full bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-500 hover:to-emerald-600 text-white text-sm font-bold shadow-lg shadow-emerald-500/25 hover:shadow-emerald-500/40 hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200" type="button">
+                <span class="material-symbols-outlined text-[20px]">compress</span>
+                <span>Compress PDF Now</span>
               </button>
             </div>
           </div>
 
           <!-- Compress Progress Bar -->
-          <div id="compressProgressContainer" class="progress-container hidden">
-            <div class="progress-header">
-              <span id="compressProgressText" class="progress-text">Compressing PDF...</span>
-              <div class="progress-right-controls">
-                <span id="compressProgressPercent" class="progress-percent">0%</span>
-                <button type="button" id="compressCancelBtn" class="btn-cancel-task" title="Cancel operation">Cancel</button>
+          <div id="compressProgressContainer" class="progress-container hidden w-full bg-surface-container-lowest dark:bg-[#131b2e] rounded-xl p-5 shadow-sm border border-slate-border dark:border-slate-800 mb-6">
+            <div class="progress-header flex justify-between items-center text-sm font-semibold mb-2">
+              <span id="compressProgressText" class="progress-text text-on-surface dark:text-white">Compressing PDF...</span>
+              <div class="progress-right-controls flex items-center gap-3">
+                <span id="compressProgressPercent" class="progress-percent text-emerald-600 dark:text-emerald-400 font-bold">0%</span>
+                <button type="button" id="compressCancelBtn" class="btn-cancel-task text-xs text-error font-medium hover:underline" title="Cancel operation">Cancel</button>
               </div>
             </div>
-            <div class="progress-bar-bg">
-              <div id="compressProgressBar" class="progress-bar-fill" style="background: linear-gradient(90deg, #059669 0%, #34d399 100%);"></div>
+            <div class="progress-bar-bg w-full bg-surface-container dark:bg-slate-800 rounded-full h-2.5 overflow-hidden">
+              <div id="compressProgressBar" class="progress-bar-fill h-2.5 rounded-full transition-all duration-200" style="background: linear-gradient(90deg, #059669 0%, #34d399 100%); width: 0%;"></div>
             </div>
           </div>
 
           <!-- Compress Success Card -->
-          <div id="compressResultCard" class="result-card hidden">
-            <div class="result-icon" style="background: rgba(5, 150, 105, 0.1); color: #059669;">
-              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-                <polyline points="22 4 12 14.01 9 11.01"></polyline>
-              </svg>
-            </div>
-            <div class="result-details">
-              <h3 class="result-title">Compression Complete!</h3>
-              <p id="compressResultSummary" class="result-summary">Reduced file size successfully.</p>
-              <div class="compress-stats-row">
-                <div class="stat-box">
-                  <span class="stat-label">Original</span>
-                  <span id="statOriginalSize" class="stat-val">0 MB</span>
-                </div>
-                <div class="stat-arrow">&rarr;</div>
-                <div class="stat-box">
-                  <span class="stat-label">Compressed</span>
-                  <span id="statCompressedSize" class="stat-val">0 MB</span>
-                </div>
-                <div class="stat-box stat-highlight">
-                  <span class="stat-label">Saved</span>
-                  <span id="statPercentSaved" class="stat-val">-0%</span>
+          <div id="compressResultCard" class="result-card hidden w-full bg-emerald-tint dark:bg-emerald-950/20 rounded-xl p-5 shadow-sm border border-emerald-200 dark:border-emerald-800/50 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mb-6">
+            <div class="flex items-center gap-3">
+              <div class="result-icon w-10 h-10 rounded-full bg-emerald-600 text-white flex items-center justify-center shrink-0">
+                <span class="material-symbols-outlined text-[24px]">task_alt</span>
+              </div>
+              <div class="result-details">
+                <h3 class="result-title text-sm font-bold text-emerald-800 dark:text-emerald-300">Compression Complete!</h3>
+                <p id="compressResultSummary" class="result-summary text-xs text-emerald-700 dark:text-emerald-400">Reduced file size successfully.</p>
+                <div class="compress-stats-row flex items-center gap-2 mt-2">
+                  <div class="stat-box px-2.5 py-1 rounded-lg bg-white/70 dark:bg-slate-800/70 border border-slate-200/80 dark:border-slate-700 flex flex-col">
+                    <span class="stat-label text-[10px] text-slate-500">Original</span>
+                    <span id="statOriginalSize" class="stat-val text-xs font-bold text-on-surface dark:text-white">0 MB</span>
+                  </div>
+                  <span class="stat-arrow text-slate-400">&rarr;</span>
+                  <div class="stat-box px-2.5 py-1 rounded-lg bg-white/70 dark:bg-slate-800/70 border border-slate-200/80 dark:border-slate-700 flex flex-col">
+                    <span class="stat-label text-[10px] text-slate-500">Compressed</span>
+                    <span id="statCompressedSize" class="stat-val text-xs font-bold text-on-surface dark:text-white">0 MB</span>
+                  </div>
+                  <div class="stat-box stat-highlight px-2.5 py-1 rounded-lg bg-emerald-100 dark:bg-emerald-950/60 border border-emerald-300 dark:border-emerald-800 flex flex-col">
+                    <span class="stat-label text-[10px] text-emerald-700 dark:text-emerald-300 font-bold">Saved</span>
+                    <span id="statPercentSaved" class="stat-val text-xs font-bold text-emerald-700 dark:text-emerald-300">-0%</span>
+                  </div>
                 </div>
               </div>
             </div>
-            <div class="result-actions">
-              <a id="compressDownloadBtn" class="btn btn-success btn-lg" download="document_compressed.pdf">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                  <polyline points="7 10 12 15 17 10"></polyline>
-                  <line x1="12" y1="15" x2="12" y2="3"></line>
-                </svg>
-                Download Compressed PDF
+            <div class="result-actions flex items-center gap-2 flex-wrap">
+              <a id="compressDownloadBtn" class="btn btn-success inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-emerald-600 text-white text-xs font-semibold shadow hover:bg-emerald-700 transition-all" download="document_compressed.pdf">
+                <span class="material-symbols-outlined text-[16px]">download</span>
+                <span>Download Compressed PDF</span>
               </a>
-              <button id="compressPreviewBtn" class="btn btn-secondary btn-lg">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                  <circle cx="12" cy="12" r="3"></circle>
-                </svg>
-                Preview
+              <button id="compressPreviewBtn" class="btn btn-secondary inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-white dark:bg-slate-800 text-on-surface dark:text-slate-200 text-xs font-semibold shadow-sm hover:bg-slate-50 dark:hover:bg-slate-700 transition-all border border-slate-200 dark:border-slate-700" type="button">
+                <span class="material-symbols-outlined text-[16px]">visibility</span>
+                <span>Preview</span>
               </button>
-              <button type="button" id="compressShareBtn" class="btn btn-secondary btn-lg btn-share-pdf hidden" title="Share PDF via WhatsApp, Gmail, Slack, AirDrop">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <circle cx="18" cy="5" r="3"></circle>
-                  <circle cx="6" cy="12" r="3"></circle>
-                  <circle cx="18" cy="19" r="3"></circle>
-                  <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
-                  <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
-                </svg>
-                Share
+              <button type="button" id="compressShareBtn" class="btn btn-secondary btn-share-pdf hidden inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-white dark:bg-slate-800 text-on-surface dark:text-slate-200 text-xs font-semibold shadow-sm hover:bg-slate-50 dark:hover:bg-slate-700 transition-all border border-slate-200 dark:border-slate-700" title="Share PDF via WhatsApp, Gmail, Slack, AirDrop">
+                <span class="material-symbols-outlined text-[16px]">share</span>
+                <span>Share</span>
               </button>
             </div>
           </div>
@@ -1198,205 +1153,191 @@
       <!-- ============================================== -->
       <div id="imagesTabView" class="tab-view hidden">
         <!-- Upload Drop Zone -->
-        <section class="dropzone-section" id="imagesDropzoneSection">
-          <div id="imagesDropzone" class="dropzone" tabindex="0" role="button" aria-label="Drop your image files here or browse from your device">
-            <input type="file" id="imagesFileInput" multiple accept="image/*,.jpg,.jpeg,.png,.webp,.gif,.bmp" class="file-input-hidden" aria-label="Select image files to convert to PDF">
-            <div class="dropzone-content">
-              <div class="dropzone-icon-wrapper" style="background-color: rgba(13, 148, 136, 0.1); color: var(--tool-images);">
-                <svg class="dropzone-icon" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                  <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-                  <circle cx="8.5" cy="8.5" r="1.5"></circle>
-                  <polyline points="21 15 16 10 5 21"></polyline>
-                </svg>
+        <section class="dropzone-section mb-6" id="imagesDropzoneSection">
+          <div id="imagesDropzone" class="dropzone w-full bg-surface-container-lowest/80 dark:bg-[#131b2e]/80 backdrop-blur-xl rounded-3xl p-8 sm:p-14 text-center shadow-sm relative overflow-hidden group border-2 border-dashed border-slate-300/80 dark:border-slate-800 hover:border-teal-500 dark:hover:border-teal-400 transition-all duration-300 cursor-pointer hover:shadow-xl hover:shadow-teal-500/5 hover:-translate-y-0.5" tabindex="0" role="button" aria-label="Drop your image files here or browse from your device">
+            <!-- Ambient subtle Teal Glow Backdrop -->
+            <div class="absolute -top-24 left-1/2 -translate-x-1/2 w-96 h-96 bg-teal-500/10 dark:bg-teal-500/10 rounded-full blur-3xl pointer-events-none transition-all duration-500 group-hover:scale-125"></div>
+            <input type="file" id="imagesFileInput" multiple accept="image/*,.jpg,.jpeg,.png,.webp,.gif,.bmp" class="file-input-hidden hidden" aria-label="Select image files to convert to PDF">
+            <div class="relative z-10 flex flex-col items-center justify-center dropzone-content">
+              <!-- Floating Upload Orb -->
+              <div class="dropzone-icon-wrapper w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-teal-50 dark:bg-teal-950/70 text-teal-600 dark:text-teal-400 flex items-center justify-center shadow-sm group-hover:scale-110 group-hover:bg-teal-600 group-hover:text-white group-hover:shadow-lg group-hover:shadow-teal-500/30 transition-all duration-300 mb-4 sm:mb-5 border border-teal-100/80 dark:border-teal-900/40">
+                <span class="material-symbols-outlined text-[32px] sm:text-[38px] transition-transform duration-300 group-hover:-translate-y-1">photo_library</span>
               </div>
-              <h2 class="dropzone-title"><span class="drop-text-desktop">Drop your image files here</span><span class="drop-text-mobile">Tap to select Photos / Images</span></h2>
-              <p class="dropzone-desc"><span class="browse-link">Choose images</span> from photo library or files</p>
-              <p class="dropzone-hint">Supports JPG, PNG, WebP, GIF, BMP &bull; Drag to reorder &bull; Rotate &amp; convert to PDF</p>
+              <h2 class="text-2xl sm:text-3xl font-bold tracking-tight text-on-surface dark:text-white mb-1.5 dropzone-title">
+                <span class="drop-text-desktop">Drop your image files here</span>
+                <span class="drop-text-mobile sm:hidden">Tap to select Photos / Images</span>
+              </h2>
+              <p class="text-sm sm:text-base text-slate-muted dark:text-slate-400 mb-5 dropzone-desc">
+                or <span class="text-teal-600 dark:text-teal-400 font-semibold underline underline-offset-4 cursor-pointer hover:text-teal-500 transition-colors browse-link">choose images</span> from device
+              </p>
+              <!-- Helper Metadata Pill -->
+              <div class="dropzone-hint inline-flex items-center flex-wrap justify-center gap-2 sm:gap-3 px-4 sm:px-5 py-2 rounded-full bg-slate-100/80 dark:bg-slate-900/70 border border-slate-200/60 dark:border-slate-800 text-slate-muted dark:text-slate-400 text-xs shadow-sm">
+                <span class="flex items-center gap-1 font-medium"><span class="w-1.5 h-1.5 rounded-full bg-teal-500"></span>JPG, PNG, WebP, GIF, BMP</span>
+                <span>•</span>
+                <span class="flex items-center gap-1 font-medium"><span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>Drag to reorder</span>
+                <span>•</span>
+                <span class="flex items-center gap-1 font-medium"><span class="w-1.5 h-1.5 rounded-full bg-sky-500"></span>Rotate &amp; convert to PDF</span>
+              </div>
             </div>
           </div>
         </section>
 
         <!-- Images Manage & Convert Section (Hidden when empty) -->
-        <section id="imagesManageSection" class="manage-section hidden">
+        <section id="imagesManageSection" class="manage-section hidden mb-6">
           <!-- Toolbar -->
-          <div class="toolbar">
-            <div class="toolbar-left">
-              <div class="stats-badge">
+          <div class="toolbar flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-surface-container-lowest/80 dark:bg-[#131b2e]/80 backdrop-blur-xl p-4 sm:p-5 rounded-2xl shadow-sm border border-slate-200/80 dark:border-slate-800 mb-4">
+            <div class="toolbar-left flex items-center gap-3">
+              <span class="w-2.5 h-2.5 rounded-full bg-teal-500"></span>
+              <div class="stats-badge flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100/80 dark:bg-slate-900/80 border border-slate-200/60 dark:border-slate-800 text-xs font-bold text-on-surface dark:text-white">
                 <span id="imagesCountBadge">0 images</span>
-                <span class="dot-separator">•</span>
-                <span id="imagesSizeBadge">0 MB total</span>
+                <span class="dot-separator text-slate-muted dark:text-slate-400">•</span>
+                <span id="imagesSizeBadge" class="text-slate-muted dark:text-slate-400">0 MB total</span>
               </div>
             </div>
-            <div class="toolbar-right">
-              <button id="imagesRotateAllBtn" class="btn btn-secondary" title="Rotate all images 90° clockwise">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <polyline points="23 4 23 10 17 10"></polyline>
-                  <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path>
-                </svg>
-                Rotate All 90°
+            <div class="toolbar-right flex items-center gap-2 flex-wrap">
+              <button id="imagesRotateAllBtn" class="btn btn-secondary inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100/80 dark:bg-slate-900/80 hover:bg-slate-200/80 dark:hover:bg-slate-800 text-xs font-semibold text-on-surface dark:text-slate-200 border border-slate-200/80 dark:border-slate-800 transition-colors" title="Rotate all images 90° clockwise">
+                <span class="material-symbols-outlined text-[16px]">rotate_right</span>
+                <span>Rotate All 90°</span>
               </button>
-              <button id="imagesAddMoreBtn" class="btn btn-secondary">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <line x1="12" y1="5" x2="12" y2="19"></line>
-                  <line x1="5" y1="12" x2="19" y2="12"></line>
-                </svg>
-                Add Images
+              <button id="imagesAddMoreBtn" class="btn btn-secondary inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-teal-50 dark:bg-teal-950/70 text-teal-600 dark:text-teal-300 text-xs font-bold hover:bg-teal-100 dark:hover:bg-teal-900/50 border border-teal-100 dark:border-teal-900/40 transition-colors">
+                <span class="material-symbols-outlined text-[16px]">add</span>
+                <span>Add Images</span>
               </button>
-              <button id="imagesClearAllBtn" class="btn btn-danger-outline" title="Clear all images">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <polyline points="3 6 5 6 21 6"></polyline>
-                  <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-                </svg>
-                Clear
+              <button id="imagesClearAllBtn" class="btn btn-danger-outline inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-red-50 dark:bg-red-950/40 text-red-600 dark:text-red-400 text-xs font-bold hover:bg-red-100 dark:hover:bg-red-900/40 border border-red-100 dark:border-red-900/40 transition-colors" title="Clear all images">
+                <span class="material-symbols-outlined text-[16px]">delete_sweep</span>
+                <span>Clear</span>
               </button>
             </div>
           </div>
 
           <!-- 3 Choice Cards for Page Size -->
-          <div class="preset-choice-grid" id="imagesPageSizeGrid">
-            <label class="preset-choice-card active" data-page-size="fit">
+          <div class="preset-choice-grid grid grid-cols-1 md:grid-cols-3 gap-3 mb-4" id="imagesPageSizeGrid">
+            <label class="preset-choice-card active bg-white dark:bg-[#131b2e] border-2 border-teal-500 rounded-xl p-4 cursor-pointer transition-all hover:-translate-y-0.5 shadow-sm" data-page-size="fit">
               <input type="radio" name="imagesPageSizeRadio" value="fit" checked class="sr-only">
-              <div class="preset-choice-header">
-                <span class="preset-choice-title">🖼️ Fit to Image Size</span>
-                <span class="preset-tag tag-recommended">Recommended</span>
+              <div class="preset-choice-header flex items-center justify-between gap-2 mb-2">
+                <span class="preset-choice-title text-sm font-bold text-on-surface dark:text-white">🖼️ Fit to Image Size</span>
+                <span class="preset-tag tag-recommended px-2 py-0.5 rounded-md bg-teal-100 dark:bg-teal-950/70 text-teal-700 dark:text-teal-300 text-[10px] font-bold">Recommended</span>
               </div>
-              <p class="preset-choice-desc">Each PDF page matches the exact image resolution &amp; aspect ratio. Zero white borders or cropping.</p>
-              <div class="preset-choice-savings" style="color: #059669;">Zero border • 100% native image dimensions</div>
+              <p class="preset-choice-desc text-xs text-slate-muted dark:text-slate-400 mb-2">Each PDF page matches the exact image resolution &amp; aspect ratio. Zero white borders.</p>
+              <div class="preset-choice-savings text-[11px] text-teal-600 dark:text-teal-400 font-semibold">Zero border • 100% native dimensions</div>
             </label>
 
-            <label class="preset-choice-card" data-page-size="a4">
+            <label class="preset-choice-card bg-white dark:bg-[#131b2e] border-2 border-slate-200/80 dark:border-slate-800 rounded-xl p-4 cursor-pointer transition-all hover:-translate-y-0.5 shadow-sm" data-page-size="a4">
               <input type="radio" name="imagesPageSizeRadio" value="a4" class="sr-only">
-              <div class="preset-choice-header">
-                <span class="preset-choice-title">📄 Standard A4</span>
+              <div class="preset-choice-header flex items-center justify-between gap-2 mb-2">
+                <span class="preset-choice-title text-sm font-bold text-on-surface dark:text-white">📄 Standard A4</span>
               </div>
-              <p class="preset-choice-desc">Formats into standard international A4 sheets (210 × 297 mm) ready for desktop printing.</p>
-              <div class="preset-choice-savings" style="color: #0284c7;">Standard office &amp; school printouts</div>
+              <p class="preset-choice-desc text-xs text-slate-muted dark:text-slate-400 mb-2">Formats into standard international A4 sheets (210 × 297 mm) ready for desktop printing.</p>
+              <div class="preset-choice-savings text-[11px] text-blue-600 dark:text-blue-400 font-semibold">Standard office &amp; school printouts</div>
             </label>
 
-            <label class="preset-choice-card" data-page-size="letter">
+            <label class="preset-choice-card bg-white dark:bg-[#131b2e] border-2 border-slate-200/80 dark:border-slate-800 rounded-xl p-4 cursor-pointer transition-all hover:-translate-y-0.5 shadow-sm" data-page-size="letter">
               <input type="radio" name="imagesPageSizeRadio" value="letter" class="sr-only">
-              <div class="preset-choice-header">
-                <span class="preset-choice-title">📑 US Letter</span>
+              <div class="preset-choice-header flex items-center justify-between gap-2 mb-2">
+                <span class="preset-choice-title text-sm font-bold text-on-surface dark:text-white">📑 US Letter</span>
               </div>
-              <p class="preset-choice-desc">Standard North American paper size (8.5 × 11 in). Auto-centers each picture.</p>
-              <div class="preset-choice-savings" style="color: #6366f1;">Standard US/Canada document size</div>
+              <p class="preset-choice-desc text-xs text-slate-muted dark:text-slate-400 mb-2">Standard North American paper size (8.5 × 11 in). Auto-centers each picture.</p>
+              <div class="preset-choice-savings text-[11px] text-indigo-600 dark:text-indigo-400 font-semibold">Standard US/Canada document size</div>
             </label>
           </div>
 
           <!-- Collapsible Layout Options -->
-          <details class="advanced-settings-details" id="imagesLayoutDetails">
-            <summary class="advanced-settings-summary">
+          <details class="advanced-settings-details rounded-xl border border-slate-200/80 dark:border-slate-800 p-3 bg-slate-50/50 dark:bg-slate-900/50 mb-4" id="imagesLayoutDetails">
+            <summary class="advanced-settings-summary flex items-center justify-between cursor-pointer text-xs font-bold text-slate-600 dark:text-slate-300 select-none">
               <span>⚙️ Page Orientation, Margins &amp; Scaling</span>
-              <span class="summary-arrow">▼</span>
+              <span class="summary-arrow text-sm">▼</span>
             </summary>
-            <div class="advanced-settings-grid">
-              <div class="setting-item">
-                <label for="imagesOrientationSelect">Page Orientation</label>
-                <select id="imagesOrientationSelect" class="select-dropdown">
-                  <option value="auto" selected>✨ Auto (Detect per image)</option>
-                  <option value="portrait">📱 Portrait (Vertical)</option>
-                  <option value="landscape">🖥️ Landscape (Horizontal)</option>
+            <div class="advanced-settings-grid grid grid-cols-1 sm:grid-cols-3 gap-3 pt-3 mt-2 border-t border-slate-200/60 dark:border-slate-800">
+              <div class="setting-item flex flex-col gap-1">
+                <label for="imagesOrientationSelect" class="text-xs font-semibold text-slate-muted dark:text-slate-400">Page Orientation</label>
+                <select id="imagesOrientationSelect" class="select-dropdown bg-slate-100/80 dark:bg-slate-900/80 border border-slate-200/80 dark:border-slate-800 rounded-xl px-3 py-1.5 text-xs font-semibold text-on-surface dark:text-white focus:outline-none focus:ring-2 focus:ring-teal-500">
+                  <option value="auto" selected class="dark:bg-[#131b2e]">✨ Auto (Detect per image)</option>
+                  <option value="portrait" class="dark:bg-[#131b2e]">📱 Portrait (Vertical)</option>
+                  <option value="landscape" class="dark:bg-[#131b2e]">🖥️ Landscape (Horizontal)</option>
                 </select>
               </div>
-              <div class="setting-item">
-                <label for="imagesMarginSelect">Page Margins</label>
-                <select id="imagesMarginSelect" class="select-dropdown">
-                  <option value="none" selected>None (Full Bleed - 0mm)</option>
-                  <option value="small">Small Border (10mm)</option>
-                  <option value="normal">Normal Border (20mm)</option>
+              <div class="setting-item flex flex-col gap-1">
+                <label for="imagesMarginSelect" class="text-xs font-semibold text-slate-muted dark:text-slate-400">Page Margins</label>
+                <select id="imagesMarginSelect" class="select-dropdown bg-slate-100/80 dark:bg-slate-900/80 border border-slate-200/80 dark:border-slate-800 rounded-xl px-3 py-1.5 text-xs font-semibold text-on-surface dark:text-white focus:outline-none focus:ring-2 focus:ring-teal-500">
+                  <option value="none" selected class="dark:bg-[#131b2e]">None (Full Bleed - 0mm)</option>
+                  <option value="small" class="dark:bg-[#131b2e]">Small Border (10mm)</option>
+                  <option value="normal" class="dark:bg-[#131b2e]">Normal Border (20mm)</option>
                 </select>
               </div>
-              <div class="setting-item">
-                <label for="imagesFitSelect">Image Placement</label>
-                <select id="imagesFitSelect" class="select-dropdown">
-                  <option value="contain" selected>Fit Entire Image (No Cropping)</option>
-                  <option value="cover">Fill Entire Page (Crop if Needed)</option>
+              <div class="setting-item flex flex-col gap-1">
+                <label for="imagesFitSelect" class="text-xs font-semibold text-slate-muted dark:text-slate-400">Image Placement</label>
+                <select id="imagesFitSelect" class="select-dropdown bg-slate-100/80 dark:bg-slate-900/80 border border-slate-200/80 dark:border-slate-800 rounded-xl px-3 py-1.5 text-xs font-semibold text-on-surface dark:text-white focus:outline-none focus:ring-2 focus:ring-teal-500">
+                  <option value="contain" selected class="dark:bg-[#131b2e]">Fit Entire Image (No Crop)</option>
+                  <option value="cover" class="dark:bg-[#131b2e]">Fill Entire Page (Crop if Needed)</option>
                 </select>
               </div>
             </div>
           </details>
 
           <!-- Images Grid (Reorderable via Drag & Drop) -->
-          <div id="imagesGrid" class="images-grid">
+          <div id="imagesGrid" class="images-grid mb-6">
             <!-- Image cards populated dynamically -->
           </div>
 
           <!-- Action Bar -->
-          <div class="action-bar">
-            <div class="action-bar-left">
-              <label for="imagesOutputFilename" class="filename-label">Output filename:</label>
-              <div class="filename-input-wrapper">
-                <input type="text" id="imagesOutputFilename" class="filename-input" value="converted_images.pdf">
-                <span class="filename-ext">.pdf</span>
+          <div class="action-bar merge-action-card w-full bg-surface-container-lowest/90 dark:bg-[#131b2e]/90 backdrop-blur-xl rounded-2xl p-5 sm:p-6 shadow-sm border border-slate-200/80 dark:border-slate-800 flex flex-col md:flex-row md:items-center justify-between gap-5 mb-6">
+            <div class="action-bar-left flex flex-col gap-1.5">
+              <label for="imagesOutputFilename" class="filename-label text-xs text-slate-muted dark:text-slate-400 font-semibold">Output Filename:</label>
+              <div class="filename-input-wrapper flex items-center bg-slate-100/80 dark:bg-slate-900/80 rounded-xl overflow-hidden border border-slate-200/80 dark:border-slate-800 focus-within:ring-2 focus-within:ring-teal-500 transition-all">
+                <span class="material-symbols-outlined text-slate-muted dark:text-slate-400 text-[18px] pl-3">description</span>
+                <input type="text" id="imagesOutputFilename" class="filename-input bg-transparent px-2.5 py-2 text-sm text-on-surface dark:text-white font-semibold focus:outline-none w-48" value="converted_images.pdf">
+                <span class="filename-ext file-extension bg-slate-200/70 dark:bg-slate-800 px-3 py-2 text-xs text-on-surface-variant dark:text-slate-300 font-mono font-bold">.pdf</span>
               </div>
             </div>
-            <div class="action-bar-right">
-              <button id="executeImagesBtn" class="btn btn-primary btn-lg" style="background: linear-gradient(135deg, #0d9488 0%, #0f766e 100%);">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                  <polyline points="14 2 14 8 20 8"></polyline>
-                  <line x1="12" y1="18" x2="12" y2="12"></line>
-                  <line x1="9" y1="15" x2="15" y2="15"></line>
-                </svg>
-                Convert to PDF
+            <div class="action-bar-right merge-button-wrapper flex items-center justify-end shrink-0">
+              <button id="executeImagesBtn" class="btn btn-primary btn-lg w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-7 py-3.5 rounded-full bg-gradient-to-r from-teal-600 to-teal-700 hover:from-teal-500 hover:to-teal-600 text-white text-sm font-bold shadow-lg shadow-teal-500/25 hover:shadow-teal-500/40 hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200" type="button">
+                <span class="material-symbols-outlined text-[20px]">picture_as_pdf</span>
+                <span>Convert to PDF</span>
               </button>
             </div>
           </div>
 
           <!-- Progress Bar -->
-          <div id="imagesProgressContainer" class="progress-container hidden">
-            <div class="progress-header">
-              <span id="imagesProgressText" class="progress-text">Converting images to PDF...</span>
-              <div class="progress-right-controls">
-                <span id="imagesProgressPercent" class="progress-percent">0%</span>
-                <button type="button" id="imagesCancelBtn" class="btn-cancel-task" title="Cancel operation">Cancel</button>
+          <div id="imagesProgressContainer" class="progress-container hidden w-full bg-surface-container-lowest dark:bg-[#131b2e] rounded-xl p-5 shadow-sm border border-slate-border dark:border-slate-800 mb-6">
+            <div class="progress-header flex justify-between items-center text-sm font-semibold mb-2">
+              <span id="imagesProgressText" class="progress-text text-on-surface dark:text-white">Converting images to PDF...</span>
+              <div class="progress-right-controls flex items-center gap-3">
+                <span id="imagesProgressPercent" class="progress-percent text-teal-600 dark:text-teal-400 font-bold">0%</span>
+                <button type="button" id="imagesCancelBtn" class="btn-cancel-task text-xs text-error font-medium hover:underline" title="Cancel operation">Cancel</button>
               </div>
             </div>
-            <div class="progress-bar-bg">
-              <div id="imagesProgressBar" class="progress-bar-fill" style="background: linear-gradient(90deg, #0d9488 0%, #2dd4bf 100%);"></div>
+            <div class="progress-bar-bg w-full bg-surface-container dark:bg-slate-800 rounded-full h-2.5 overflow-hidden">
+              <div id="imagesProgressBar" class="progress-bar-fill h-2.5 rounded-full transition-all duration-200" style="background: linear-gradient(90deg, #0d9488 0%, #2dd4bf 100%); width: 0%;"></div>
             </div>
           </div>
 
           <!-- Result Card -->
-          <div id="imagesResultCard" class="result-card hidden">
-            <div class="result-icon" style="background: rgba(13, 148, 136, 0.1); color: #0d9488;">
-              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-                <polyline points="22 4 12 14.01 9 11.01"></polyline>
-              </svg>
+          <div id="imagesResultCard" class="result-card hidden w-full bg-emerald-tint dark:bg-emerald-950/20 rounded-xl p-5 shadow-sm border border-emerald-200 dark:border-emerald-800/50 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mb-6">
+            <div class="flex items-center gap-3">
+              <div class="result-icon w-10 h-10 rounded-full bg-emerald-600 text-white flex items-center justify-center shrink-0">
+                <span class="material-symbols-outlined text-[24px]">task_alt</span>
+              </div>
+              <div class="result-details">
+                <h3 class="result-title text-sm font-bold text-emerald-800 dark:text-emerald-300">PDF Created Successfully!</h3>
+                <p id="imagesResultSummary" class="result-summary text-xs text-emerald-700 dark:text-emerald-400">Converted images into a clean PDF document.</p>
+              </div>
             </div>
-            <div class="result-details">
-              <h3 class="result-title">PDF Created Successfully!</h3>
-              <p id="imagesResultSummary" class="result-summary">Converted images into a clean PDF document.</p>
-            </div>
-            <div class="result-actions">
-              <a id="imagesDownloadBtn" class="btn btn-success btn-lg" download="converted_images.pdf">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                  <polyline points="7 10 12 15 17 10"></polyline>
-                  <line x1="12" y1="15" x2="12" y2="3"></line>
-                </svg>
-                Download PDF
+            <div class="result-actions flex items-center gap-2 flex-wrap">
+              <a id="imagesDownloadBtn" class="btn btn-success inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-emerald-600 text-white text-xs font-semibold shadow hover:bg-emerald-700 transition-all" download="converted_images.pdf">
+                <span class="material-symbols-outlined text-[16px]">download</span>
+                <span>Download PDF</span>
               </a>
-              <button id="imagesPreviewBtn" class="btn btn-secondary btn-lg">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                  <circle cx="12" cy="12" r="3"></circle>
-                </svg>
-                Preview
+              <button id="imagesPreviewBtn" class="btn btn-secondary inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-white dark:bg-slate-800 text-on-surface dark:text-slate-200 text-xs font-semibold shadow-sm hover:bg-slate-50 dark:hover:bg-slate-700 transition-all border border-slate-200 dark:border-slate-700" type="button">
+                <span class="material-symbols-outlined text-[16px]">visibility</span>
+                <span>Preview</span>
               </button>
-              <button type="button" id="imagesShareBtn" class="btn btn-secondary btn-lg btn-share-pdf hidden" title="Share PDF via WhatsApp, Gmail, Slack, AirDrop">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <circle cx="18" cy="5" r="3"></circle>
-                  <circle cx="6" cy="12" r="3"></circle>
-                  <circle cx="18" cy="19" r="3"></circle>
-                  <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
-                  <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
-                </svg>
-                Share
+              <button type="button" id="imagesShareBtn" class="btn btn-secondary btn-share-pdf hidden inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-white dark:bg-slate-800 text-on-surface dark:text-slate-200 text-xs font-semibold shadow-sm hover:bg-slate-50 dark:hover:bg-slate-700 transition-all border border-slate-200 dark:border-slate-700" title="Share PDF via WhatsApp, Gmail, Slack, AirDrop">
+                <span class="material-symbols-outlined text-[16px]">share</span>
+                <span>Share</span>
               </button>
-              <button type="button" id="imagesSendToCompressBtn" class="btn btn-secondary btn-lg btn-flow-jump" title="Compress this PDF to reduce file size">
-                🗜️ Compress PDF
+              <button type="button" id="imagesSendToCompressBtn" class="btn btn-secondary btn-flow-jump inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-white dark:bg-slate-800 text-on-surface dark:text-slate-200 text-xs font-semibold shadow-sm hover:bg-slate-50 dark:hover:bg-slate-700 transition-all border border-slate-200 dark:border-slate-700" title="Compress this PDF to reduce file size">
+                <span class="material-symbols-outlined text-[16px]">compress</span>
+                <span>Compress PDF</span>
               </button>
             </div>
           </div>
@@ -1408,225 +1349,215 @@
       <!-- ============================================== -->
       <div id="pdfToImagesTabView" class="tab-view hidden">
         <!-- Dropzone Section -->
-        <section id="pdfToImagesDropzoneSection" class="dropzone-section">
-          <div id="pdfToImagesDropzone" class="dropzone" role="button" tabindex="0" aria-label="Select a PDF to Convert to Images or browse from your device">
-            <input type="file" id="pdfToImagesFileInput" class="file-input-hidden" accept=".pdf,application/pdf" aria-label="Select PDF document to convert to images">
-            <div class="dropzone-content">
-              <div class="dropzone-icon-wrapper" style="background-color: rgba(2, 132, 199, 0.1); color: var(--tool-pdftoimages);">
-                <svg class="dropzone-icon" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                  <polyline points="14 2 14 8 20 8"></polyline>
-                  <circle cx="10" cy="13" r="2"></circle>
-                  <path d="m18 17-2.5-2.5a1.5 1.5 0 0 0-2.12 0L9 19"></path>
-                </svg>
+        <section id="pdfToImagesDropzoneSection" class="dropzone-section mb-6">
+          <div id="pdfToImagesDropzone" class="dropzone w-full bg-surface-container-lowest/80 dark:bg-[#131b2e]/80 backdrop-blur-xl rounded-3xl p-8 sm:p-14 text-center shadow-sm relative overflow-hidden group border-2 border-dashed border-slate-300/80 dark:border-slate-800 hover:border-sky-500 dark:hover:border-sky-400 transition-all duration-300 cursor-pointer hover:shadow-xl hover:shadow-sky-500/5 hover:-translate-y-0.5" role="button" tabindex="0" aria-label="Select a PDF to Convert to Images or browse from your device">
+            <!-- Ambient subtle Sky Blue Glow Backdrop -->
+            <div class="absolute -top-24 left-1/2 -translate-x-1/2 w-96 h-96 bg-sky-500/10 dark:bg-sky-500/10 rounded-full blur-3xl pointer-events-none transition-all duration-500 group-hover:scale-125"></div>
+            <input type="file" id="pdfToImagesFileInput" class="file-input-hidden hidden" accept=".pdf,application/pdf" aria-label="Select PDF document to convert to images">
+            <div class="relative z-10 flex flex-col items-center justify-center dropzone-content">
+              <!-- Floating Upload Orb -->
+              <div class="dropzone-icon-wrapper w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-sky-50 dark:bg-sky-950/70 text-sky-600 dark:text-sky-400 flex items-center justify-center shadow-sm group-hover:scale-110 group-hover:bg-sky-600 group-hover:text-white group-hover:shadow-lg group-hover:shadow-sky-500/30 transition-all duration-300 mb-4 sm:mb-5 border border-sky-100/80 dark:border-sky-900/40">
+                <span class="material-symbols-outlined text-[32px] sm:text-[38px] transition-transform duration-300 group-hover:-translate-y-1">burst_mode</span>
               </div>
-              <h2 class="dropzone-title"><span class="drop-text-desktop">Select a PDF to Convert to Images</span><span class="drop-text-mobile">Tap to select PDF</span></h2>
-              <p class="dropzone-desc"><span class="browse-link" style="color: var(--tool-pdftoimages);">Choose PDF document</span> from your device</p>
-              <p class="dropzone-hint">Convert each page into high-resolution JPG or PNG images &bull; 100% Private in Browser</p>
+              <h2 class="text-2xl sm:text-3xl font-bold tracking-tight text-on-surface dark:text-white mb-1.5 dropzone-title">
+                <span class="drop-text-desktop">Select a PDF to Convert to Images</span>
+                <span class="drop-text-mobile sm:hidden">Tap to select PDF</span>
+              </h2>
+              <p class="text-sm sm:text-base text-slate-muted dark:text-slate-400 mb-5 dropzone-desc">
+                or <span class="text-sky-600 dark:text-sky-400 font-semibold underline underline-offset-4 cursor-pointer hover:text-sky-500 transition-colors browse-link">browse from your device</span>
+              </p>
+              <!-- Helper Metadata Pill -->
+              <div class="dropzone-hint inline-flex items-center flex-wrap justify-center gap-2 sm:gap-3 px-4 sm:px-5 py-2 rounded-full bg-slate-100/80 dark:bg-slate-900/70 border border-slate-200/60 dark:border-slate-800 text-slate-muted dark:text-slate-400 text-xs shadow-sm">
+                <span class="flex items-center gap-1 font-medium"><span class="w-1.5 h-1.5 rounded-full bg-sky-500"></span>Convert pages to JPG or PNG</span>
+                <span>•</span>
+                <span class="flex items-center gap-1 font-medium"><span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>Up to 300 DPI ultra print</span>
+                <span>•</span>
+                <span class="flex items-center gap-1 font-medium"><span class="w-1.5 h-1.5 rounded-full bg-indigo-500"></span>Download as ZIP</span>
+              </div>
             </div>
           </div>
         </section>
 
         <!-- Workspace Section -->
-        <section id="pdfToImagesWorkspace" class="manage-section hidden">
+        <section id="pdfToImagesWorkspace" class="manage-section hidden mb-6">
           <!-- File info card & Change file -->
-          <div class="file-loaded-banner">
-            <div class="loaded-file-meta">
-              <span class="file-icon-badge">🖼️</span>
-              <div>
-                <h3 id="pdfToImagesFileName" class="loaded-file-title">document.pdf</h3>
-                <p class="loaded-file-sub">
+          <div class="file-loaded-banner w-full bg-surface-container-lowest/80 dark:bg-[#131b2e]/80 backdrop-blur-xl rounded-2xl p-4 sm:p-5 border border-slate-200/80 dark:border-slate-800 shadow-sm flex items-center justify-between gap-4 mb-4">
+            <div class="loaded-file-meta flex items-center gap-3 min-w-0">
+              <span class="file-icon-badge text-2xl w-11 h-11 rounded-xl bg-sky-50 dark:bg-sky-950/60 text-sky-600 dark:text-sky-400 border border-sky-100 dark:border-sky-900/40 flex items-center justify-center shrink-0">🖼️</span>
+              <div class="min-w-0">
+                <h3 id="pdfToImagesFileName" class="loaded-file-title text-sm font-bold text-on-surface dark:text-white truncate">document.pdf</h3>
+                <p class="loaded-file-sub text-xs text-slate-muted dark:text-slate-400">
                   <span id="pdfToImagesPageCountBadge">0 pages</span> &bull;
                   <span id="pdfToImagesFileSizeBadge">0 KB</span>
                 </p>
               </div>
             </div>
-            <button type="button" id="pdfToImagesChangeFileBtn" class="btn btn-secondary">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"></path>
-              </svg>
-              Change File
+            <button type="button" id="pdfToImagesChangeFileBtn" class="btn btn-secondary inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-slate-100/80 dark:bg-slate-900/80 hover:bg-slate-200/80 dark:hover:bg-slate-800 text-on-surface dark:text-slate-200 text-xs font-semibold border border-slate-200/80 dark:border-slate-800 transition-colors shrink-0">
+              <span class="material-symbols-outlined text-[16px]">sync</span>
+              <span>Change File</span>
             </button>
           </div>
 
           <!-- Format Choice Card -->
-          <div class="options-card">
-            <div class="options-card-header">
-              <h3 class="options-title">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-                  <circle cx="8.5" cy="8.5" r="1.5"></circle>
-                  <polyline points="21 15 16 10 5 21"></polyline>
-                </svg>
+          <div class="options-card w-full bg-surface-container-lowest/80 dark:bg-[#131b2e]/80 backdrop-blur-xl rounded-2xl p-5 sm:p-6 border border-slate-200/80 dark:border-slate-800 shadow-sm mb-4">
+            <div class="options-card-header mb-4 pb-3 border-b border-slate-200/80 dark:border-slate-800">
+              <h3 class="options-title text-sm font-bold text-on-surface dark:text-white flex items-center gap-2">
+                <span class="material-symbols-outlined text-[18px] text-sky-500">collections</span>
                 Select Image Format
               </h3>
-              <span class="options-subtitle">Choose between lightweight JPEG or crystal-clear lossless PNG</span>
+              <span class="options-subtitle text-xs text-slate-muted dark:text-slate-400">Choose between lightweight JPEG or crystal-clear lossless PNG</span>
             </div>
 
-            <div class="preset-choice-grid" style="grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));">
-              <label class="preset-choice-card active" data-format="jpg">
+            <div class="preset-choice-grid grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
+              <label class="preset-choice-card active bg-white dark:bg-[#131b2e] border-2 border-sky-500 rounded-xl p-4 cursor-pointer transition-all hover:-translate-y-0.5 shadow-sm" data-format="jpg">
                 <input type="radio" name="pdfToImagesFormatRadio" value="jpg" checked class="sr-only">
-                <div class="preset-choice-header">
-                  <span class="preset-choice-title">📸 JPG (JPEG)</span>
-                  <span class="preset-tag tag-recommended">Recommended</span>
+                <div class="preset-choice-header flex items-center justify-between gap-2 mb-2">
+                  <span class="preset-choice-title text-sm font-bold text-on-surface dark:text-white">📸 JPG (JPEG)</span>
+                  <span class="preset-tag tag-recommended px-2 py-0.5 rounded-md bg-emerald-100 dark:bg-emerald-950/70 text-emerald-700 dark:text-emerald-300 text-[10px] font-bold">Recommended</span>
                 </div>
-                <p class="preset-choice-desc">Best for sharing on WhatsApp, social media, and presentations. White background, lightweight file size.</p>
-                <div class="preset-choice-savings" style="color: #059669;">Compact size &bull; Universal compatibility</div>
+                <p class="preset-choice-desc text-xs text-slate-muted dark:text-slate-400 mb-2">Best for sharing on WhatsApp, social media, and presentations. White background, compact size.</p>
+                <div class="preset-choice-savings text-[11px] text-emerald-600 dark:text-emerald-400 font-semibold">Compact size &bull; Universal compatibility</div>
               </label>
 
-              <label class="preset-choice-card" data-format="png">
+              <label class="preset-choice-card bg-white dark:bg-[#131b2e] border-2 border-slate-200/80 dark:border-slate-800 rounded-xl p-4 cursor-pointer transition-all hover:-translate-y-0.5 shadow-sm" data-format="png">
                 <input type="radio" name="pdfToImagesFormatRadio" value="png" class="sr-only">
-                <div class="preset-choice-header">
-                  <span class="preset-choice-title">🎨 PNG</span>
-                  <span class="preset-tag tag-lossless">Lossless</span>
+                <div class="preset-choice-header flex items-center justify-between gap-2 mb-2">
+                  <span class="preset-choice-title text-sm font-bold text-on-surface dark:text-white">🎨 PNG</span>
+                  <span class="preset-tag tag-lossless px-2 py-0.5 rounded-md bg-blue-100 dark:bg-blue-950/70 text-blue-700 dark:text-blue-300 text-[10px] font-bold">Lossless</span>
                 </div>
-                <p class="preset-choice-desc">Pixel-perfect lossless fidelity. Maximum sharpness for technical diagrams, graphs, and tiny text.</p>
-                <div class="preset-choice-savings" style="color: #0284c7;">Lossless vector &amp; text clarity</div>
+                <p class="preset-choice-desc text-xs text-slate-muted dark:text-slate-400 mb-2">Pixel-perfect lossless fidelity. Maximum sharpness for technical diagrams and text.</p>
+                <div class="preset-choice-savings text-[11px] text-blue-600 dark:text-blue-400 font-semibold">Lossless vector &amp; text clarity</div>
               </label>
             </div>
           </div>
 
           <!-- Resolution / DPI Presets Card -->
-          <div class="options-card">
-            <div class="options-card-header">
-              <h3 class="options-title">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <circle cx="12" cy="12" r="3"></circle>
-                  <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
-                </svg>
+          <div class="options-card w-full bg-surface-container-lowest/80 dark:bg-[#131b2e]/80 backdrop-blur-xl rounded-2xl p-5 sm:p-6 border border-slate-200/80 dark:border-slate-800 shadow-sm mb-4">
+            <div class="options-card-header mb-4 pb-3 border-b border-slate-200/80 dark:border-slate-800">
+              <h3 class="options-title text-sm font-bold text-on-surface dark:text-white flex items-center gap-2">
+                <span class="material-symbols-outlined text-[18px] text-sky-500">high_density</span>
                 Select Resolution &amp; DPI
               </h3>
-              <span class="options-subtitle">Configure rendering scale and pixel density for your needs</span>
+              <span class="options-subtitle text-xs text-slate-muted dark:text-slate-400">Configure rendering scale and pixel density for your needs</span>
             </div>
 
-            <div class="preset-choice-grid">
-              <label class="preset-choice-card active" data-scale="1.5">
+            <div class="preset-choice-grid grid grid-cols-1 md:grid-cols-3 gap-3 mb-4">
+              <label class="preset-choice-card active bg-white dark:bg-[#131b2e] border-2 border-sky-500 rounded-xl p-4 cursor-pointer transition-all hover:-translate-y-0.5 shadow-sm" data-scale="1.5">
                 <input type="radio" name="pdfToImagesScaleRadio" value="1.5" checked class="sr-only">
-                <div class="preset-choice-header">
-                  <span class="preset-choice-title">📱 Standard (150 DPI)</span>
-                  <span class="preset-tag tag-recommended">Fastest</span>
+                <div class="preset-choice-header flex items-center justify-between gap-2 mb-2">
+                  <span class="preset-choice-title text-sm font-bold text-on-surface dark:text-white">📱 Standard (150 DPI)</span>
+                  <span class="preset-tag tag-recommended px-2 py-0.5 rounded-md bg-emerald-100 dark:bg-emerald-950/70 text-emerald-700 dark:text-emerald-300 text-[10px] font-bold">Fastest</span>
                 </div>
-                <p class="preset-choice-desc">Optimal balance of sharp clarity and swift conversion speed. ~1240 × 1754 px.</p>
+                <p class="preset-choice-desc text-xs text-slate-muted dark:text-slate-400">Optimal balance of sharp clarity and swift speed. ~1240 × 1754 px.</p>
               </label>
 
-              <label class="preset-choice-card" data-scale="2.0">
+              <label class="preset-choice-card bg-white dark:bg-[#131b2e] border-2 border-slate-200/80 dark:border-slate-800 rounded-xl p-4 cursor-pointer transition-all hover:-translate-y-0.5 shadow-sm" data-scale="2.0">
                 <input type="radio" name="pdfToImagesScaleRadio" value="2.0" class="sr-only">
-                <div class="preset-choice-header">
-                  <span class="preset-choice-title">🖥️ High Def (200 DPI)</span>
+                <div class="preset-choice-header flex items-center justify-between gap-2 mb-2">
+                  <span class="preset-choice-title text-sm font-bold text-on-surface dark:text-white">🖥️ High Def (200 DPI)</span>
                 </div>
-                <p class="preset-choice-desc">Ultra-sharp presentation quality for 4K and Retina monitors. ~1654 × 2338 px.</p>
+                <p class="preset-choice-desc text-xs text-slate-muted dark:text-slate-400">Ultra-sharp presentation quality for 4K and Retina monitors. ~1654 × 2338 px.</p>
               </label>
 
-              <label class="preset-choice-card" data-scale="3.0">
+              <label class="preset-choice-card bg-white dark:bg-[#131b2e] border-2 border-slate-200/80 dark:border-slate-800 rounded-xl p-4 cursor-pointer transition-all hover:-translate-y-0.5 shadow-sm" data-scale="3.0">
                 <input type="radio" name="pdfToImagesScaleRadio" value="3.0" class="sr-only">
-                <div class="preset-choice-header">
-                  <span class="preset-choice-title">🖨️ Ultra Print (300 DPI)</span>
+                <div class="preset-choice-header flex items-center justify-between gap-2 mb-2">
+                  <span class="preset-choice-title text-sm font-bold text-on-surface dark:text-white">🖨️ Ultra Print (300 DPI)</span>
                 </div>
-                <p class="preset-choice-desc">Maximum publication detail. Ideal for printing, archives, and OCR. ~2480 × 3508 px.</p>
+                <p class="preset-choice-desc text-xs text-slate-muted dark:text-slate-400">Maximum publication detail. Ideal for printing, archives, and OCR. ~2480 × 3508 px.</p>
               </label>
             </div>
           </div>
 
           <!-- Page Selection Details -->
-          <details class="advanced-settings-details" id="pdfToImagesRangeDetails">
-            <summary class="advanced-settings-summary">
+          <details class="advanced-settings-details rounded-xl border border-slate-200/80 dark:border-slate-800 p-3 bg-slate-50/50 dark:bg-slate-900/50 mb-4" id="pdfToImagesRangeDetails">
+            <summary class="advanced-settings-summary flex items-center justify-between cursor-pointer text-xs font-bold text-slate-600 dark:text-slate-300 select-none">
               <span>📄 Page Selection: All Pages vs. Specific Range</span>
-              <span class="summary-arrow">▼</span>
+              <span class="summary-arrow text-sm">▼</span>
             </summary>
-            <div style="padding: 1rem 0;">
-              <div class="radio-group" style="display: flex; gap: 1.5rem; margin-bottom: 0.75rem; flex-wrap: wrap;">
-                <label style="display: flex; align-items: center; gap: 0.4rem; cursor: pointer;">
-                  <input type="radio" name="pdfToImagesPageMode" value="all" checked id="pdfToImagesPageModeAll">
-                  <strong>All Pages</strong>
+            <div class="pt-3 mt-2 border-t border-slate-200/60 dark:border-slate-800">
+              <div class="radio-group flex gap-6 mb-2 flex-wrap text-xs">
+                <label class="flex items-center gap-1.5 cursor-pointer font-bold text-on-surface dark:text-slate-200">
+                  <input type="radio" name="pdfToImagesPageMode" value="all" checked id="pdfToImagesPageModeAll" class="w-4 h-4 text-sky-600">
+                  <span>All Pages</span>
                 </label>
-                <label style="display: flex; align-items: center; gap: 0.4rem; cursor: pointer;">
-                  <input type="radio" name="pdfToImagesPageMode" value="custom" id="pdfToImagesPageModeCustom">
-                  <strong>Specific Pages / Range</strong>
+                <label class="flex items-center gap-1.5 cursor-pointer font-bold text-on-surface dark:text-slate-200">
+                  <input type="radio" name="pdfToImagesPageMode" value="custom" id="pdfToImagesPageModeCustom" class="w-4 h-4 text-sky-600">
+                  <span>Specific Pages / Range</span>
                 </label>
               </div>
-              <div id="pdfToImagesCustomRangeContainer" class="hidden" style="margin-top: 0.5rem;">
-                <input type="text" id="pdfToImagesPageRangeInput" class="input-text" placeholder="e.g. 1, 3, 5-8" style="max-width: 350px;">
-                <p class="setting-desc" style="margin-top: 0.25rem;">Type page numbers and ranges separated by commas.</p>
+              <div id="pdfToImagesCustomRangeContainer" class="hidden mt-2">
+                <input type="text" id="pdfToImagesPageRangeInput" class="input-text bg-slate-100/80 dark:bg-slate-900/80 border border-slate-200/80 dark:border-slate-800 rounded-xl px-3 py-1.5 text-xs text-on-surface dark:text-white font-mono focus:outline-none focus:ring-2 focus:ring-sky-500 max-w-sm w-full" placeholder="e.g. 1, 3, 5-8">
+                <p class="setting-desc text-[11px] text-slate-muted dark:text-slate-400 mt-1">Type page numbers and ranges separated by commas.</p>
               </div>
             </div>
           </details>
 
           <!-- Action & Convert Card -->
-          <div class="merge-action-card">
-            <div class="merge-options">
-              <div class="output-filename-group">
-                <label for="pdfToImagesOutputPrefix" class="filename-label">Image Prefix:</label>
-                <div class="filename-input-wrapper">
-                  <input type="text" id="pdfToImagesOutputPrefix" class="input-text" placeholder="page" value="page">
-                  <span class="file-extension">_[1...N]</span>
+          <div class="merge-action-card w-full bg-surface-container-lowest/90 dark:bg-[#131b2e]/90 backdrop-blur-xl rounded-2xl p-5 sm:p-6 shadow-sm border border-slate-200/80 dark:border-slate-800 flex flex-col md:flex-row md:items-center justify-between gap-5 mb-6">
+            <div class="merge-options flex flex-col sm:flex-row sm:items-center gap-6 flex-1">
+              <div class="output-filename-group flex flex-col gap-1.5">
+                <label for="pdfToImagesOutputPrefix" class="filename-label text-xs text-slate-muted dark:text-slate-400 font-semibold">Image Prefix:</label>
+                <div class="filename-input-wrapper flex items-center bg-slate-100/80 dark:bg-slate-900/80 rounded-xl overflow-hidden border border-slate-200/80 dark:border-slate-800 focus-within:ring-2 focus-within:ring-sky-500 transition-all">
+                  <span class="material-symbols-outlined text-slate-muted dark:text-slate-400 text-[18px] pl-3">description</span>
+                  <input type="text" id="pdfToImagesOutputPrefix" class="input-text bg-transparent px-2.5 py-2 text-sm text-on-surface dark:text-white font-semibold focus:outline-none w-48" placeholder="page" value="page">
+                  <span class="file-extension bg-slate-200/70 dark:bg-slate-800 px-3 py-2 text-xs text-on-surface-variant dark:text-slate-300 font-mono font-bold">_[1...N]</span>
                 </div>
               </div>
             </div>
 
-            <div class="merge-button-wrapper">
-              <button type="button" id="pdfToImagesExecuteBtn" class="btn btn-primary btn-lg" style="background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-                  <circle cx="8.5" cy="8.5" r="1.5"></circle>
-                  <polyline points="21 15 16 10 5 21"></polyline>
-                </svg>
-                Convert to Images
+            <div class="merge-button-wrapper flex items-center justify-end shrink-0">
+              <button type="button" id="pdfToImagesExecuteBtn" class="btn btn-primary btn-lg w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-7 py-3.5 rounded-full bg-gradient-to-r from-sky-600 to-sky-700 hover:from-sky-500 hover:to-sky-600 text-white text-sm font-bold shadow-lg shadow-sky-500/25 hover:shadow-sky-500/40 hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200">
+                <span class="material-symbols-outlined text-[20px]">burst_mode</span>
+                <span>Convert to Images</span>
               </button>
             </div>
           </div>
 
           <!-- Progress Container -->
-          <div id="pdfToImagesProgressContainer" class="progress-container hidden">
-            <div class="progress-header">
-              <span id="pdfToImagesProgressText" class="progress-status">Preparing conversion...</span>
-              <div class="progress-right">
-                <span id="pdfToImagesProgressPercent" class="progress-percent">0%</span>
-                <button type="button" id="pdfToImagesCancelBtn" class="btn-cancel-task" title="Cancel operation">Cancel</button>
+          <div id="pdfToImagesProgressContainer" class="progress-container hidden w-full bg-surface-container-lowest dark:bg-[#131b2e] rounded-xl p-5 shadow-sm border border-slate-border dark:border-slate-800 mb-6">
+            <div class="progress-header flex justify-between items-center text-sm font-semibold mb-2">
+              <span id="pdfToImagesProgressText" class="progress-status text-on-surface dark:text-white">Preparing conversion...</span>
+              <div class="progress-right flex items-center gap-3">
+                <span id="pdfToImagesProgressPercent" class="progress-percent text-sky-600 dark:text-sky-400 font-bold">0%</span>
+                <button type="button" id="pdfToImagesCancelBtn" class="btn-cancel-task text-xs text-error font-medium hover:underline" title="Cancel operation">Cancel</button>
               </div>
             </div>
-            <div class="progress-bar-bg">
-              <div id="pdfToImagesProgressBar" class="progress-bar-fill" style="background: linear-gradient(90deg, #0284c7 0%, #38bdf8 100%); width: 0%;"></div>
+            <div class="progress-bar-bg w-full bg-surface-container dark:bg-slate-800 rounded-full h-2.5 overflow-hidden">
+              <div id="pdfToImagesProgressBar" class="progress-bar-fill h-2.5 rounded-full transition-all duration-200" style="background: linear-gradient(90deg, #0284c7 0%, #38bdf8 100%); width: 0%;"></div>
             </div>
           </div>
 
           <!-- Result Gallery Section -->
-          <div id="pdfToImagesResultCard" class="result-card hidden">
-            <div class="result-icon" style="background: rgba(2, 132, 199, 0.1); color: #0284c7;">
-              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-                <polyline points="22 4 12 14.01 9 11.01"></polyline>
-              </svg>
-            </div>
-            <div class="result-details">
-              <h3 class="result-title">Conversion Complete!</h3>
-              <p id="pdfToImagesResultSummary" class="result-summary">Successfully converted pages to images.</p>
-            </div>
-            <div class="result-actions">
-              <button type="button" id="pdfToImagesDownloadZipBtn" class="btn btn-success btn-lg">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                  <polyline points="7 10 12 15 17 10"></polyline>
-                  <line x1="12" y1="15" x2="12" y2="3"></line>
-                </svg>
-                📦 Download All as ZIP
-              </button>
-              <button type="button" id="pdfToImagesShareBtn" class="btn btn-secondary btn-lg btn-share-pdf hidden" title="Share images via WhatsApp, Slack, Gmail, AirDrop">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <circle cx="18" cy="5" r="3"></circle>
-                  <circle cx="6" cy="12" r="3"></circle>
-                  <circle cx="18" cy="19" r="3"></circle>
-                  <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
-                  <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
-                </svg>
-                Share All
-              </button>
-              <button type="button" id="pdfToImagesResetBtn" class="btn btn-secondary btn-lg">
-                🔄 Convert Another PDF
-              </button>
+          <div id="pdfToImagesResultCard" class="result-card hidden w-full bg-emerald-tint dark:bg-emerald-950/20 rounded-xl p-5 shadow-sm border border-emerald-200 dark:border-emerald-800/50 flex flex-col items-start gap-4 mb-6">
+            <div class="flex items-center justify-between w-full flex-wrap gap-4">
+              <div class="flex items-center gap-3">
+                <div class="result-icon w-10 h-10 rounded-full bg-emerald-600 text-white flex items-center justify-center shrink-0">
+                  <span class="material-symbols-outlined text-[24px]">task_alt</span>
+                </div>
+                <div class="result-details">
+                  <h3 class="result-title text-sm font-bold text-emerald-800 dark:text-emerald-300">Conversion Complete!</h3>
+                  <p id="pdfToImagesResultSummary" class="result-summary text-xs text-emerald-700 dark:text-emerald-400">Successfully converted pages to images.</p>
+                </div>
+              </div>
+              <div class="result-actions flex items-center gap-2 flex-wrap">
+                <button type="button" id="pdfToImagesDownloadZipBtn" class="btn btn-success inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-emerald-600 text-white text-xs font-semibold shadow hover:bg-emerald-700 transition-all">
+                  <span class="material-symbols-outlined text-[16px]">folder_zip</span>
+                  <span>📦 Download All as ZIP</span>
+                </button>
+                <button type="button" id="pdfToImagesShareBtn" class="btn btn-secondary btn-share-pdf hidden inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-white dark:bg-slate-800 text-on-surface dark:text-slate-200 text-xs font-semibold shadow-sm hover:bg-slate-50 dark:hover:bg-slate-700 transition-all border border-slate-200 dark:border-slate-700" title="Share images via WhatsApp, Slack, Gmail, AirDrop">
+                  <span class="material-symbols-outlined text-[16px]">share</span>
+                  <span>Share All</span>
+                </button>
+                <button type="button" id="pdfToImagesResetBtn" class="btn btn-secondary inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-white dark:bg-slate-800 text-on-surface dark:text-slate-200 text-xs font-semibold shadow-sm hover:bg-slate-50 dark:hover:bg-slate-700 transition-all border border-slate-200 dark:border-slate-700">
+                  <span class="material-symbols-outlined text-[16px]">refresh</span>
+                  <span>Convert Another PDF</span>
+                </button>
+              </div>
             </div>
 
             <!-- Converted Images Grid -->
-            <div id="pdfToImagesGallery" class="pdftoimages-gallery" style="width: 100%; margin-top: 1.25rem;">
+            <div id="pdfToImagesGallery" class="pdftoimages-gallery w-full mt-2">
               <!-- Dynamically populated cards -->
             </div>
           </div>
@@ -1740,7 +1671,7 @@
   <script defer src="assets/vendor/pdf.min.js" integrity="sha384-/1qUCSGwTur9vjf/z9lmu/eCUYbpOTgSjmpbMQZ1/CtX2v/WcAIKqRv+U1DUCG6e" crossorigin="anonymous"></script>
   <script defer src="assets/vendor/sortable.min.js" integrity="sha384-BSxuMLxX+FCbTdYec3TbXlnMGEEM2QXTFdtDaveen71o+jswm2J36+xFqp8k4VHM" crossorigin="anonymous"></script>
 
-  <script type="module" src="assets/js/app.js?v=9"></script>
+  <script type="module" src="assets/js/app.js?v=13"></script>
   <script>
     // Register Service Worker for fast browser caching & offline access
     if ('serviceWorker' in navigator) {

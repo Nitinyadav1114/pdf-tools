@@ -9,14 +9,14 @@ run_app.py
 launch.bat
 create_shortcut.ps1
 test_pdfjs.html
-test_suite.html
 
 # Local dev screenshots (production social preview is preserved in assets/og-preview.png)
 app_preview*.png
 remove_pages_preview.png
 slides_preview.png
 
-# Operating system / IDE files
+# Operating system / IDE / Agent files
+.agents/
 .DS_Store
 Thumbs.db
 *.log

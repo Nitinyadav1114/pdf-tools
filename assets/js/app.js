@@ -51,6 +51,12 @@ if (typeof window !== 'undefined') {
   window.pdfToImagesState = pdfToImagesState;
   window.mergeState = mergeState;
   window.handleMergeFilesAdded = handleMergeFilesAdded;
+  window.handleCompressFileSelected = handleCompressFileSelected;
+  window.handleRemoveFileSelected = handleRemoveFileSelected;
+  window.handleSlidesFileSelected = handleSlidesFileSelected;
+  window.handleInvertFileSelected = handleInvertFileSelected;
+  window.handlePdfToImagesFileSelected = handlePdfToImagesFileSelected;
+  window.handleImageFilesAdded = handleImageFilesAdded;
   window.switchTab = switchTab;
   window.trackToolUsage = trackToolUsage;
   window.incrementProcessedCounter = incrementProcessedCounter;

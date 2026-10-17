@@ -192,3 +192,24 @@ body.theme-dark .stat-highlight .stat-val {
   height: 16px;
   cursor: pointer;
 }
+
+#executeCompressBtn {
+  background: linear-gradient(135deg, #059669 0%, #047857 100%);
+  box-shadow: 0 4px 14px rgba(5, 150, 105, 0.35);
+}
+#executeCompressBtn:hover {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  box-shadow: 0 6px 20px rgba(5, 150, 105, 0.45);
+  transform: translateY(-1px);
+}
+
+html.dark #compressWorkspaceSection .preset-choice-card.active {
+  border-color: #34d399;
+  background: rgba(52, 211, 153, 0.1);
+  box-shadow: 0 0 0 3px rgba(52, 211, 153, 0.25);
+}
+html.dark .savings-meter-card {
+  background: rgba(15, 23, 42, 0.8);
+  border-color: rgba(30, 41, 59, 0.85);
+}
+
