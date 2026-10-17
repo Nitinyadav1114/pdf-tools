@@ -26,6 +26,7 @@ import {
 import { isValidPdfFile, isValidImageFile } from './core/validators.js';
 import { createZipArchive } from './core/zip-builder.js';
 import { initPWAInstallBanner } from './core/pwa.js';
+import { initCounter, incrementProcessedCounter, getCounterStats } from './core/counter.js';
 
 import { initMergeTab, setDefaultOutputFilename, handleMergeFilesAdded } from './tabs/tab-merge.js';
 import { initRemoveTab, handleRemoveFileSelected } from './tabs/tab-remove.js';
@@ -50,6 +51,8 @@ if (typeof window !== 'undefined') {
   window.pdfToImagesState = pdfToImagesState;
   window.switchTab = switchTab;
   window.trackToolUsage = trackToolUsage;
+  window.incrementProcessedCounter = incrementProcessedCounter;
+  window.getCounterStats = getCounterStats;
 }
 
 /**
@@ -178,6 +181,7 @@ export function init() {
   if (elements.tabPdfToImagesBtn) elements.tabPdfToImagesBtn.addEventListener('click', () => switchTab('pdftoimages'));
 
   initPWAInstallBanner();
+  initCounter();
 
   // Handle URL query parameters and deep linking
   const urlParams = new URLSearchParams(window.location.search);

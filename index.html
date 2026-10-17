@@ -1656,11 +1656,38 @@
 
     <!-- Footer -->
     <footer class="app-footer">
-      <p>PDF Tools &bull; 100% Free &amp; Private in Browser &bull; No downloads or accounts required &bull; Files never leave your device</p>
+      <div class="footer-stats-card" id="footerStatsCard">
+        <div class="footer-stats-header">
+          <div class="live-indicator-wrapper">
+            <span class="live-pulse-dot"></span>
+            <span class="footer-stats-title">Live Global Impact</span>
+          </div>
+          <span class="footer-stats-badge">100% Private</span>
+        </div>
+        <div class="footer-stats-grid">
+          <div class="footer-stat-item">
+            <span class="footer-stat-icon">👥</span>
+            <div class="footer-stat-content">
+              <span class="footer-stat-val" id="statVisitorsCount">1,480+</span>
+              <span class="footer-stat-lbl">Visitors Worldwide</span>
+            </div>
+          </div>
+          <div class="footer-stat-divider"></div>
+          <div class="footer-stat-item">
+            <span class="footer-stat-icon">📄</span>
+            <div class="footer-stat-content">
+              <span class="footer-stat-val" id="statProcessedCount">3,920+</span>
+              <span class="footer-stat-lbl">PDFs Processed Privately</span>
+            </div>
+          </div>
+        </div>
+        <p class="footer-stats-note">⚡ Counters update anonymously • Zero file bytes are ever uploaded to any server</p>
+      </div>
+      <p class="footer-copy">PDF Tools &bull; 100% Free &amp; Private in Browser &bull; No downloads or accounts required &bull; Files never leave your device</p>
     </footer>
   </div>
 
-  <script type="module" src="assets/js/app.js?v=4"></script>
+  <script type="module" src="assets/js/app.js?v=5"></script>
   <script>
     // Register Service Worker for fast browser caching & offline access
     if ('serviceWorker' in navigator) {

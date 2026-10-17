@@ -25,6 +25,7 @@ const ASSETS_TO_CACHE = [
   './assets/js/core/validators.js',
   './assets/js/core/zip-builder.js',
   './assets/js/core/pwa.js',
+  './assets/js/core/counter.js',
   './assets/js/tabs/tab-merge.js',
   './assets/js/tabs/tab-remove.js',
   './assets/js/tabs/tab-slides.js',
