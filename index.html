@@ -10,7 +10,7 @@
   <meta name="robots" content="index, follow">
 
   <!-- Security & Privacy Hardening -->
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self' https://cloudflareinsights.com https://pdf-counter.nitinyadav0dev.workers.dev blob: data:; worker-src 'self' blob:; object-src 'self' blob:; frame-src 'self' blob:; base-uri 'self'; form-action 'self';">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: blob:; font-src 'self' data: https://fonts.gstatic.com; connect-src 'self' https://cloudflareinsights.com https://pdf-counter.nitinyadav0dev.workers.dev blob: data:; worker-src 'self' blob:; object-src 'self' blob:; frame-src 'self' blob:; base-uri 'self'; form-action 'self';">
   <meta name="referrer" content="strict-origin-when-cross-origin">
   <meta http-equiv="Permissions-Policy" content="camera=(), microphone=(), geolocation=(), payment=(), usb=()">
 
@@ -23,6 +23,91 @@
         document.documentElement.style.display = 'none';
       }
     }
+  </script>
+
+  <!-- Typography & Icons: Plus Jakarta Sans & Google Material Symbols -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+
+  <!-- Tailwind CSS Play CDN & Design System Config -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "error-container": "#ffdad6",
+            "secondary": "#4648d4",
+            "tertiary-fixed": "#6ffbbe",
+            "on-secondary-fixed": "#07006c",
+            "on-primary-fixed-variant": "#3323cc",
+            "surface": "#faf8ff",
+            "primary": "#3525cd",
+            "slate-muted": "#64748B",
+            "surface-container": "#eaedff",
+            "outline": "#777587",
+            "slate-bg": "#F8FAFC",
+            "secondary-fixed": "#e1e0ff",
+            "on-error-container": "#93000a",
+            "on-error": "#ffffff",
+            "surface-container-high": "#e2e7ff",
+            "on-background": "#131b2e",
+            "on-surface": "#131b2e",
+            "on-secondary-container": "#fffbff",
+            "on-tertiary-fixed": "#002113",
+            "secondary-fixed-dim": "#c0c1ff",
+            "primary-fixed": "#e2dfff",
+            "on-surface-variant": "#464555",
+            "on-secondary": "#ffffff",
+            "surface-dim": "#d2d9f4",
+            "background": "#faf8ff",
+            "inverse-primary": "#c3c0ff",
+            "tertiary-fixed-dim": "#4edea3",
+            "tertiary": "#005338",
+            "surface-variant": "#dae2fd",
+            "on-primary": "#ffffff",
+            "secondary-container": "#6063ee",
+            "primary-container": "#4f46e5",
+            "emerald-tint": "#ECFDF5",
+            "slate-border": "#E2E8F0",
+            "inverse-on-surface": "#eef0ff",
+            "surface-tint": "#4d44e3",
+            "surface-bright": "#faf8ff",
+            "primary-fixed-dim": "#c3c0ff",
+            "on-primary-container": "#dad7ff",
+            "on-secondary-fixed-variant": "#2f2ebe",
+            "surface-container-lowest": "#ffffff",
+            "on-tertiary-fixed-variant": "#005236",
+            "on-tertiary-container": "#67f4b7",
+            "error": "#ba1a1a",
+            "surface-container-highest": "#dae2fd",
+            "tertiary-container": "#006e4b",
+            "on-primary-fixed": "#0f0069",
+            "outline-variant": "#c7c4d8",
+            "slate-border-subtle": "#F1F5F9",
+            "inverse-surface": "#283044",
+            "slate-card": "#FFFFFF",
+            "surface-container-low": "#f2f3ff",
+            "on-tertiary": "#ffffff",
+            "indigo-tint": "#EEF2FF"
+          },
+          borderRadius: {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          fontFamily: {
+            sans: ["Plus Jakarta Sans", "sans-serif"],
+            headline: ["Plus Jakarta Sans", "sans-serif"],
+            body: ["Plus Jakarta Sans", "sans-serif"]
+          }
+        }
+      }
+    };
   </script>
 
   <!-- Canonical URL -->
@@ -70,297 +155,282 @@
   <link rel="manifest" href="manifest.json">
 
   <!-- Styles & Scripts (Modular Architecture & Subresource Integrity) -->
-  <link rel="stylesheet" href="assets/css/styles.css?v=5">
+  <link rel="stylesheet" href="assets/css/styles.css?v=6">
   <script src="assets/vendor/pdf-lib.min.js" integrity="sha384-weMABwrltA6jWR8DDe9Jp5blk+tZQh7ugpCsF3JwSA53WZM9/14PjS5LAJNHNjAI" crossorigin="anonymous"></script>
   <script src="assets/vendor/pdf.min.js" integrity="sha384-/1qUCSGwTur9vjf/z9lmu/eCUYbpOTgSjmpbMQZ1/CtX2v/WcAIKqRv+U1DUCG6e" crossorigin="anonymous"></script>
   <script src="assets/vendor/sortable.min.js" integrity="sha384-BSxuMLxX+FCbTdYec3TbXlnMGEEM2QXTFdtDaveen71o+jswm2J36+xFqp8k4VHM" crossorigin="anonymous"></script>
 </head>
-<body class="theme-light">
-  <div class="app-container">
+<body class="theme-light bg-slate-bg dark:bg-[#0a0f1d] font-sans text-on-surface dark:text-slate-100 antialiased min-h-screen flex flex-col">
+  <div class="app-container w-full max-w-6xl mx-auto px-4 sm:px-6 py-6 flex flex-col flex-1">
     <!-- Header -->
-    <header class="app-header">
-      <div class="header-left">
-        <div class="logo-icon">
-          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-            <polyline points="14 2 14 8 20 8"></polyline>
-            <line x1="9" y1="13" x2="15" y2="13"></line>
-            <line x1="9" y1="17" x2="15" y2="17"></line>
-            <polyline points="9 9 10 9 11 9"></polyline>
-          </svg>
+    <header class="w-full bg-surface-container-lowest/90 dark:bg-[#131b2e]/90 backdrop-blur-xl border border-slate-border dark:border-slate-800 rounded-2xl py-3 px-4 sm:px-6 mb-6 shadow-sm">
+      <div class="flex items-center justify-between gap-4">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-primary-container text-white flex items-center justify-center shadow-sm shrink-0">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+              <line x1="9" y1="13" x2="15" y2="13"></line>
+              <line x1="9" y1="17" x2="15" y2="17"></line>
+              <polyline points="9 9 10 9 11 9"></polyline>
+            </svg>
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <h1 class="text-xl font-bold tracking-tight text-on-surface dark:text-white" id="appMainTitle">PDF Tools</h1>
+              <span class="hidden sm:inline-flex items-center px-2 py-0.5 rounded-full bg-surface-container-high dark:bg-slate-800 text-on-surface-variant dark:text-slate-300 text-[11px] font-bold">Desktop Suite</span>
+            </div>
+            <p class="text-xs text-slate-muted dark:text-slate-400 hidden md:block" id="appMainSubtitle">Sort by timestamp or drag &amp; drop to reorder</p>
+          </div>
         </div>
-        <div>
-          <h1 class="app-title" id="appMainTitle">PDF Tools</h1>
-          <p class="app-subtitle" id="appMainSubtitle">Sort by timestamp or drag &amp; drop to reorder</p>
+        <div class="flex items-center gap-2 sm:gap-3">
+          <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-tint dark:bg-emerald-950/60 text-tertiary-container dark:text-emerald-300 shadow-sm border border-transparent dark:border-emerald-800/40">
+            <span class="w-2 h-2 rounded-full bg-[#10b981] animate-pulse"></span>
+            <span class="material-symbols-outlined text-[15px]">lock</span>
+            <span class="text-xs font-semibold whitespace-nowrap hidden sm:inline">100% In-Browser &amp; Private</span>
+            <span class="text-xs font-semibold whitespace-nowrap sm:hidden">100% Private</span>
+          </div>
+          <button id="themeToggleBtn" class="w-8 h-8 rounded-full bg-surface-container dark:bg-slate-800 flex items-center justify-center text-on-surface-variant dark:text-slate-300 hover:bg-surface-container-high dark:hover:bg-slate-700 transition-colors" type="button" aria-label="Toggle dark/light mode" title="Toggle theme">
+            <span class="theme-icon light-icon text-sm">🌙</span>
+            <span class="theme-icon dark-icon text-sm hidden">☀️</span>
+          </button>
+          <button id="headerInstallBtn" class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-primary-container text-white text-xs font-semibold shadow hover:bg-primary transition-all" type="button" aria-label="Install App" title="Install PDF Tools as desktop or mobile app">
+            <span class="material-symbols-outlined text-[16px]">download_for_offline</span>
+            <span class="hidden sm:inline">Install App</span>
+          </button>
         </div>
-      </div>
-      <div class="header-right">
-        <span class="privacy-badge" title="All processing happens right in your browser. No files are ever uploaded to any server.">
-          <span class="privacy-dot"></span>
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
-            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
-          </svg>
-          <span class="privacy-text-full">100% In-Browser &amp; Private</span>
-          <span class="privacy-text-short">100% Private</span>
-        </span>
-        <button id="themeToggleBtn" class="btn-icon" aria-label="Toggle dark/light mode" title="Toggle theme">
-          <span class="theme-icon light-icon">🌙</span>
-          <span class="theme-icon dark-icon">☀️</span>
-        </button>
       </div>
     </header>
 
-    <!-- Navigation Tabs -->
-    <nav class="nav-tabs" aria-label="Tool selection">
-      <button class="nav-tab active" id="tabMergeBtn" data-tab="merge">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-          <polyline points="14 2 14 8 20 8"></polyline>
-          <line x1="9" y1="13" x2="15" y2="13"></line>
-          <line x1="9" y1="17" x2="15" y2="17"></line>
-        </svg>
-        Merge PDFs
-      </button>
-      <button class="nav-tab" id="tabRemoveBtn" data-tab="remove">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <circle cx="6" cy="6" r="3"></circle>
-          <circle cx="6" cy="18" r="3"></circle>
-          <line x1="20" y1="4" x2="8.12" y2="15.88"></line>
-          <line x1="14.47" y1="14.48" x2="20" y2="20"></line>
-          <line x1="8.12" y1="8.12" x2="12" y2="12"></line>
-        </svg>
-        Remove Pages
-      </button>
-      <button class="nav-tab" id="tabSlidesBtn" data-tab="slides">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
-          <line x1="8" y1="21" x2="16" y2="21"></line>
-          <line x1="12" y1="17" x2="12" y2="21"></line>
-        </svg>
-        Slides to A4
-      </button>
-      <button class="nav-tab" id="tabInvertBtn" data-tab="invert">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <circle cx="12" cy="12" r="10"></circle>
-          <path d="M12 2a10 10 0 0 1 0 20z" fill="currentColor"></path>
-        </svg>
-        Invert Colors
-      </button>
-      <button class="nav-tab" id="tabCompressBtn" data-tab="compress">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <polyline points="4 14 10 14 10 20"></polyline>
-          <polyline points="20 10 14 10 14 4"></polyline>
-          <line x1="14" y1="10" x2="21" y2="3"></line>
-          <line x1="3" y1="21" x2="10" y2="14"></line>
-        </svg>
-        Compress PDF
-      </button>
-      <button class="nav-tab" id="tabImagesBtn" data-tab="images">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-          <circle cx="8.5" cy="8.5" r="1.5"></circle>
-          <polyline points="21 15 16 10 5 21"></polyline>
-        </svg>
-        Image to PDF
-      </button>
-      <button class="nav-tab" id="tabPdfToImagesBtn" data-tab="pdftoimages">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M5 3h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"></path>
-          <circle cx="9" cy="9" r="2"></circle>
-          <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"></path>
-        </svg>
-        PDF to Images
-      </button>
-    </nav>
+    <!-- Navigation Tabs Pill Bar -->
+    <div class="w-full overflow-x-auto pb-2 mb-6">
+      <nav class="nav-tabs inline-flex items-center gap-1 p-1 rounded-full bg-surface-container-low dark:bg-slate-900 border border-slate-border/50 dark:border-slate-800 max-w-full" aria-label="Tool selection">
+        <button class="nav-tab active px-4 py-2 rounded-full transition-all whitespace-nowrap bg-surface-container-lowest dark:bg-slate-800 text-primary dark:text-indigo-300 shadow-sm font-semibold text-xs flex items-center gap-1.5" id="tabMergeBtn" data-tab="merge">
+          <span class="material-symbols-outlined text-[16px]">merge</span>
+          Merge PDFs
+        </button>
+        <button class="nav-tab px-4 py-2 rounded-full text-on-surface-variant dark:text-slate-400 hover:text-on-surface dark:hover:text-slate-200 font-medium text-xs transition-all whitespace-nowrap flex items-center gap-1.5" id="tabRemoveBtn" data-tab="remove">
+          <span class="material-symbols-outlined text-[16px]">content_cut</span>
+          Remove Pages
+        </button>
+        <button class="nav-tab px-4 py-2 rounded-full text-on-surface-variant dark:text-slate-400 hover:text-on-surface dark:hover:text-slate-200 font-medium text-xs transition-all whitespace-nowrap flex items-center gap-1.5" id="tabSlidesBtn" data-tab="slides">
+          <span class="material-symbols-outlined text-[16px]">view_agenda</span>
+          Slides to A4
+        </button>
+        <button class="nav-tab px-4 py-2 rounded-full text-on-surface-variant dark:text-slate-400 hover:text-on-surface dark:hover:text-slate-200 font-medium text-xs transition-all whitespace-nowrap flex items-center gap-1.5" id="tabInvertBtn" data-tab="invert">
+          <span class="material-symbols-outlined text-[16px]">invert_colors</span>
+          Invert Colors
+        </button>
+        <button class="nav-tab px-4 py-2 rounded-full text-on-surface-variant dark:text-slate-400 hover:text-on-surface dark:hover:text-slate-200 font-medium text-xs transition-all whitespace-nowrap flex items-center gap-1.5" id="tabCompressBtn" data-tab="compress">
+          <span class="material-symbols-outlined text-[16px]">compress</span>
+          Compress PDF
+        </button>
+        <button class="nav-tab px-4 py-2 rounded-full text-on-surface-variant dark:text-slate-400 hover:text-on-surface dark:hover:text-slate-200 font-medium text-xs transition-all whitespace-nowrap flex items-center gap-1.5" id="tabImagesBtn" data-tab="images">
+          <span class="material-symbols-outlined text-[16px]">image</span>
+          Image to PDF
+        </button>
+        <button class="nav-tab px-4 py-2 rounded-full text-on-surface-variant dark:text-slate-400 hover:text-on-surface dark:hover:text-slate-200 font-medium text-xs transition-all whitespace-nowrap flex items-center gap-1.5" id="tabPdfToImagesBtn" data-tab="pdftoimages">
+          <span class="material-symbols-outlined text-[16px]">photo_library</span>
+          PDF to Images
+        </button>
+      </nav>
+    </div>
+
+    <!-- Security & Engine Banner -->
+    <div id="privacyEngineBanner" class="w-full bg-surface-container-lowest dark:bg-[#131b2e] rounded-xl p-4 shadow-sm border border-slate-border dark:border-slate-800 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
+      <div class="flex items-center gap-3">
+        <div class="w-9 h-9 rounded-full bg-emerald-tint dark:bg-emerald-950/60 text-tertiary-container dark:text-emerald-300 flex items-center justify-center shrink-0">
+          <span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">verified_user</span>
+        </div>
+        <div class="flex flex-col">
+          <div class="flex items-center gap-2">
+            <span class="font-semibold text-sm text-on-surface dark:text-white">Client-side processing engine ready</span>
+            <span class="inline-flex items-center px-1.5 py-0.5 rounded-full bg-tertiary-fixed dark:bg-emerald-900 text-on-tertiary-fixed dark:text-emerald-200 text-[11px] font-bold">WebAssembly</span>
+          </div>
+          <span class="text-xs text-slate-muted dark:text-slate-400">Your files stay strictly inside browser memory — no bytes are ever uploaded to any cloud server.</span>
+        </div>
+      </div>
+      <div class="flex items-center gap-1.5 text-tertiary-container dark:text-emerald-300 text-xs font-semibold whitespace-nowrap bg-emerald-tint/60 dark:bg-emerald-950/60 px-3 py-1 rounded-full border border-transparent dark:border-emerald-800/40">
+        <span class="w-2 h-2 rounded-full bg-[#10b981] animate-ping"></span>
+        <span>Isolated Sandbox Active</span>
+      </div>
+    </div>
 
     <!-- Main Content -->
-    <main class="main-content">
+    <main class="main-content w-full flex flex-col">
       <!-- ============================================== -->
       <!-- TAB 1: MERGE PDFS VIEW                         -->
       <!-- ============================================== -->
       <div id="mergeTabView" class="tab-view active">
         <!-- Upload Drop Zone -->
-        <section class="dropzone-section">
-          <div id="dropzone" class="dropzone" tabindex="0" role="button" aria-label="Drop your PDF files here or browse to merge">
-            <input type="file" id="fileInput" multiple accept=".pdf,application/pdf" class="file-input-hidden" aria-label="Select PDF files to merge">
-            <div class="dropzone-content">
-              <div class="dropzone-icon-wrapper">
-                <svg class="dropzone-icon" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                  <polyline points="17 8 12 3 7 8"></polyline>
-                  <line x1="12" y1="3" x2="12" y2="15"></line>
-                </svg>
+        <section class="dropzone-section mb-6">
+          <div id="dropzone" class="w-full bg-surface-container-lowest dark:bg-[#131b2e] rounded-2xl p-8 sm:p-12 text-center shadow-sm relative overflow-hidden group border-2 border-dashed border-slate-border dark:border-slate-800 hover:border-primary-container dark:hover:border-primary-container transition-all cursor-pointer" tabindex="0" role="button" aria-label="Drop your PDF files here or browse to merge">
+            <!-- Ambient subtle Indigo Glow Backdrop -->
+            <div class="absolute -top-24 left-1/2 -translate-x-1/2 w-96 h-96 bg-primary-container/5 rounded-full blur-3xl pointer-events-none"></div>
+            <input type="file" id="fileInput" multiple accept=".pdf,application/pdf" class="hidden" aria-label="Select PDF files to merge">
+            <div class="relative z-10 flex flex-col items-center justify-center">
+              <!-- Floating Upload Orb -->
+              <div class="w-16 h-16 rounded-full bg-indigo-tint dark:bg-indigo-950/60 text-primary-container dark:text-indigo-400 flex items-center justify-center shadow-sm group-hover:scale-110 group-hover:bg-primary-container group-hover:text-white transition-all duration-300 mb-4">
+                <span class="material-symbols-outlined text-[32px] transition-transform duration-300 group-hover:-translate-y-1">upload_file</span>
               </div>
-              <h2 class="dropzone-title"><span class="drop-text-desktop">Drop your PDF files here</span><span class="drop-text-mobile">Tap to select PDF files</span></h2>
-              <p class="dropzone-desc">or <span class="browse-link">browse from your device</span></p>
-              <p class="dropzone-hint">Supports multiple files &bull; Auto-sorts by timestamp &bull; Drag to reorder</p>
+              <h2 class="text-2xl font-semibold tracking-tight text-on-surface dark:text-white mb-1">
+                <span class="drop-text-desktop">Drop your PDF files here</span>
+                <span class="drop-text-mobile sm:hidden">Tap to select PDF files</span>
+              </h2>
+              <p class="text-sm text-slate-muted dark:text-slate-400 mb-4">
+                or <span class="text-primary-container dark:text-indigo-400 font-semibold underline cursor-pointer hover:text-primary transition-colors browse-link">browse from your device</span>
+              </p>
+              <!-- Helper Metadata Pill -->
+              <div class="inline-flex items-center flex-wrap justify-center gap-2 px-4 py-1.5 rounded-full bg-surface-container dark:bg-slate-800 text-slate-muted dark:text-slate-400 text-xs">
+                <span>Supports multiple files</span>
+                <span>•</span>
+                <span>Auto-sorts by timestamp</span>
+                <span>•</span>
+                <span>Drag &amp; drop to reorder</span>
+              </div>
             </div>
           </div>
         </section>
 
         <!-- Manage & Reorder Section (Hidden when empty) -->
-        <section id="manageSection" class="manage-section hidden">
+        <section id="manageSection" class="manage-section hidden mb-6">
           <!-- Controls & Sort Toolbar -->
-          <div class="toolbar">
-            <div class="toolbar-left">
-              <div class="stats-badge" id="statsBadge">
-                <span id="fileCountBadge">0 files</span>
-                <span class="dot-separator">•</span>
-                <span id="pageCountBadge">0 pages total</span>
+          <div class="toolbar flex flex-col lg:flex-row lg:items-center justify-between gap-4 bg-surface-container-lowest dark:bg-[#131b2e] p-4 rounded-xl shadow-sm border border-slate-border dark:border-slate-800 mb-4">
+            <div class="toolbar-left flex items-center gap-2 sm:gap-3 flex-wrap">
+              <span class="w-2.5 h-2.5 rounded-full bg-primary-container"></span>
+              <div class="stats-badge flex items-center gap-1.5" id="statsBadge">
+                <span id="fileCountBadge" class="text-sm font-semibold text-on-surface dark:text-white">0 files</span>
+                <span class="text-slate-muted dark:text-slate-400">•</span>
+                <span id="pageCountBadge" class="text-xs text-slate-muted dark:text-slate-400">0 pages total</span>
               </div>
             </div>
 
-            <div class="toolbar-right">
-              <!-- Sort dropdown -->
-              <div class="sort-control-group">
-                <label for="sortSelect" class="sort-label">
-                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <line x1="4" y1="6" x2="16" y2="6"></line>
-                    <line x1="4" y1="12" x2="11" y2="12"></line>
-                    <line x1="4" y1="18" x2="7" y2="18"></line>
-                    <polyline points="15 15 18 18 21 15"></polyline>
-                    <line x1="18" y1="9" x2="18" y2="18"></line>
-                  </svg>
-                  Sort:
-                </label>
-                <select id="sortSelect" class="select-dropdown">
-                  <option value="time-asc">⏱️ Timestamp (Oldest first)</option>
-                  <option value="time-desc">⏱️ Timestamp (Newest first)</option>
-                  <option value="name-asc">🔤 Name (A → Z)</option>
-                  <option value="name-desc">🔤 Name (Z → A)</option>
-                  <option value="size-asc">📏 Size (Smallest first)</option>
-                  <option value="size-desc">📏 Size (Largest first)</option>
-                  <option value="custom" disabled>✋ Custom (Drag reordered)</option>
+            <!-- Sorting & Toolbar Controls -->
+            <div class="toolbar-right flex items-center flex-wrap gap-3">
+              <!-- Sort Dropdown -->
+              <div class="sort-control-group flex items-center gap-1.5 bg-slate-bg dark:bg-slate-900 px-2.5 py-1.5 rounded-lg border border-slate-border dark:border-slate-800">
+                <span class="material-symbols-outlined text-slate-muted dark:text-slate-400 text-[16px]">sort</span>
+                <label for="sortSelect" class="sort-label text-xs text-slate-muted dark:text-slate-400 whitespace-nowrap">Sort:</label>
+                <select id="sortSelect" class="select-dropdown bg-transparent text-xs text-on-surface dark:text-slate-200 font-medium focus:outline-none cursor-pointer pr-1">
+                  <option value="time-asc" selected class="dark:bg-[#131b2e] dark:text-slate-200">⏱️ Timestamp (Oldest first)</option>
+                  <option value="time-desc" class="dark:bg-[#131b2e] dark:text-slate-200">⏱️ Timestamp (Newest first)</option>
+                  <option value="name-asc" class="dark:bg-[#131b2e] dark:text-slate-200">🔤 Name (A → Z)</option>
+                  <option value="name-desc" class="dark:bg-[#131b2e] dark:text-slate-200">🔤 Name (Z → A)</option>
+                  <option value="size-asc" class="dark:bg-[#131b2e] dark:text-slate-200">📏 Size (Smallest first)</option>
+                  <option value="size-desc" class="dark:bg-[#131b2e] dark:text-slate-200">📏 Size (Largest first)</option>
+                  <option value="custom" disabled class="dark:bg-[#131b2e] dark:text-slate-200">✋ Custom (Drag reordered)</option>
                 </select>
               </div>
 
-              <!-- Auto-sort toggle -->
-              <label class="toggle-control" title="Automatically sort files by timestamp when added">
-                <input type="checkbox" id="autoSortCheckbox" checked>
-                <span class="toggle-label">Auto-sort on upload</span>
+              <!-- Auto-sort toggle checkbox -->
+              <label class="toggle-control inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg hover:bg-slate-bg dark:hover:bg-slate-800 cursor-pointer select-none border border-transparent hover:border-slate-border dark:hover:border-slate-700" title="Automatically sort files by timestamp when added">
+                <input type="checkbox" id="autoSortCheckbox" checked class="w-4 h-4 rounded text-primary-container focus:ring-primary-container">
+                <span class="toggle-label text-xs text-on-surface dark:text-slate-200 font-medium">Auto-sort on upload</span>
               </label>
 
-              <!-- Add More Button -->
-              <button id="addMoreBtn" class="btn btn-secondary">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <line x1="12" y1="5" x2="12" y2="19"></line>
-                  <line x1="5" y1="12" x2="19" y2="12"></line>
-                </svg>
-                Add Files
-              </button>
+              <div class="h-5 w-px bg-slate-border dark:bg-slate-800 hidden sm:block"></div>
 
-              <!-- Clear All Button -->
-              <button id="clearAllBtn" class="btn btn-danger-outline" title="Remove all files">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <polyline points="3 6 5 6 21 6"></polyline>
-                  <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-                </svg>
-                Clear
+              <!-- Action buttons -->
+              <button id="addMoreBtn" class="btn btn-secondary inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-surface-container dark:bg-slate-800 text-primary dark:text-indigo-300 text-xs font-semibold hover:bg-surface-container-high dark:hover:bg-slate-700 transition-colors" type="button">
+                <span class="material-symbols-outlined text-[16px]">add</span>
+                <span>Add Files</span>
+              </button>
+              <button id="clearAllBtn" class="btn btn-danger-outline inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-error-container/60 dark:bg-red-950/40 text-error dark:text-red-400 text-xs font-semibold hover:bg-error-container dark:hover:bg-red-950/60 transition-colors" type="button" title="Remove all files">
+                <span class="material-symbols-outlined text-[16px]">delete_sweep</span>
+                <span>Clear</span>
               </button>
             </div>
           </div>
 
-          <div class="drag-hint-banner">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <polyline points="5 9 2 12 5 15"></polyline>
-              <polyline points="9 5 12 2 15 5"></polyline>
-              <polyline points="15 19 12 22 9 19"></polyline>
-              <polyline points="19 9 22 12 19 15"></polyline>
-              <line x1="2" y1="12" x2="22" y2="12"></line>
-              <line x1="12" y1="2" x2="12" y2="22"></line>
-            </svg>
-            Drag any card using the grip handle or whole card to reorder your PDFs into your preferred sequence.
+          <!-- Drag Reorder Hint Bar -->
+          <div class="drag-hint-banner flex items-center justify-center gap-2 text-slate-muted dark:text-slate-400 text-xs py-1 mb-3">
+            <span class="material-symbols-outlined text-[18px]">touch_app</span>
+            <span>Drag any card using the grip handle or whole card to reorder your PDFs into your preferred sequence.</span>
           </div>
 
-          <!-- Draggable File Cards List -->
-          <div id="fileList" class="file-list"></div>
+          <!-- Draggable File Cards List (3-column responsive grid) -->
+          <div id="fileList" class="file-list grid grid-cols-1 md:grid-cols-3 gap-4 mb-6"></div>
 
-          <!-- Action / Merge Card -->
-          <div class="merge-action-card">
-            <div class="merge-options">
-              <div class="output-filename-group">
-                <label for="outputFilename" class="filename-label">Output File Name:</label>
-                <div class="filename-input-wrapper">
-                  <input type="text" id="outputFilename" class="input-text" placeholder="merged-document" value="merged-document">
-                  <span class="file-extension">.pdf</span>
+          <!-- Output Configuration & Merge Primary Action Bar -->
+          <div class="merge-action-card w-full bg-surface-container-lowest dark:bg-[#131b2e] rounded-xl p-5 shadow-sm border border-slate-border dark:border-slate-800 flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+            <div class="merge-options flex flex-col sm:flex-row sm:items-center gap-6 flex-1">
+              <!-- Output File Name Configuration -->
+              <div class="output-filename-group flex flex-col gap-1">
+                <label for="outputFilename" class="filename-label text-xs text-slate-muted dark:text-slate-400 font-medium">Output File Name:</label>
+                <div class="filename-input-wrapper flex items-center bg-slate-bg dark:bg-slate-900 rounded-lg overflow-hidden border border-slate-border dark:border-slate-800 focus-within:ring-2 focus-within:ring-primary-container transition-all">
+                  <span class="material-symbols-outlined text-slate-muted dark:text-slate-400 text-[18px] pl-2.5">description</span>
+                  <input type="text" id="outputFilename" class="input-text bg-transparent px-2.5 py-1.5 text-sm text-on-surface dark:text-white font-semibold focus:outline-none w-44" placeholder="merged-document" value="merged-document">
+                  <span class="file-extension bg-surface-container-high dark:bg-slate-800 px-2.5 py-1.5 text-xs text-on-surface-variant dark:text-slate-300 font-mono font-medium">.pdf</span>
                 </div>
               </div>
-              <div class="merge-compress-row">
-                <input type="checkbox" id="mergeCompressToggle" checked>
-                <label for="mergeCompressToggle" style="cursor: pointer;">
-                  <strong>Compress &amp; Optimize output</strong> (Lossless Object Streams &mdash; prevents large file bloat)
+
+              <!-- Lossless Compression Option -->
+              <div class="merge-compress-row flex items-center gap-3 pt-1">
+                <label class="relative inline-flex items-center cursor-pointer">
+                  <input type="checkbox" id="mergeCompressToggle" checked class="sr-only peer">
+                  <div class="w-10 h-6 bg-surface-container-high dark:bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-container"></div>
                 </label>
+                <div class="flex flex-col">
+                  <span class="text-xs font-semibold text-on-surface dark:text-slate-200 flex items-center gap-1">
+                    Compress &amp; Optimize output
+                    <span class="material-symbols-outlined text-[15px] text-slate-muted dark:text-slate-400 cursor-help" title="Lossless compression removes duplicate font subsets and unifies internal object streams without quality reduction">info</span>
+                  </span>
+                  <span class="text-[11px] text-slate-muted dark:text-slate-400 leading-tight">Lossless Object Streams — prevents large file bloat</span>
+                </div>
               </div>
             </div>
 
-            <div class="merge-button-wrapper">
-              <button id="mergeBtn" class="btn btn-primary btn-lg">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M8 3H5a2 2 0 0 0-2 2v14c0 1.1.9 2 2 2h14a2 2 0 0 0 2-2v-3"></path>
-                  <path d="M18 9l4-4-4-4"></path>
-                  <path d="M14 5h7v7"></path>
-                  <line x1="12" y1="12" x2="21" y2="3"></line>
-                </svg>
-                Merge PDFs Now
+            <!-- Execution Primary CTA Button -->
+            <div class="merge-button-wrapper flex items-center justify-end shrink-0">
+              <button id="mergeBtn" class="btn btn-primary w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-primary-container text-white text-sm font-semibold shadow hover:bg-primary hover:shadow-md transition-all transform hover:-translate-y-0.5 active:translate-y-0" type="button">
+                <span class="material-symbols-outlined text-[20px]">auto_fix_high</span>
+                <span>Merge PDFs Now</span>
+                <span class="px-2 py-0.5 rounded-full bg-white/20 text-white text-[11px] ml-1 font-mono">⌘↵</span>
               </button>
             </div>
           </div>
 
           <!-- Progress Overlay / Bar -->
-          <div id="progressContainer" class="progress-container hidden">
-            <div class="progress-header">
-              <span id="progressText" class="progress-text">Merging PDF files...</span>
-              <div class="progress-right-controls">
-                <span id="progressPercent" class="progress-percent">0%</span>
-                <button type="button" id="mergeCancelBtn" class="btn-cancel-task" title="Cancel operation">Cancel</button>
+          <div id="progressContainer" class="progress-container hidden w-full bg-surface-container-lowest rounded-xl p-5 shadow-sm border border-slate-border mb-6">
+            <div class="progress-header flex justify-between items-center text-sm font-semibold mb-2">
+              <span id="progressText" class="progress-text text-on-surface">Merging PDF files...</span>
+              <div class="progress-right-controls flex items-center gap-3">
+                <span id="progressPercent" class="progress-percent text-primary font-bold">0%</span>
+                <button type="button" id="mergeCancelBtn" class="btn-cancel-task text-xs text-error font-medium hover:underline" title="Cancel operation">Cancel</button>
               </div>
             </div>
-            <div class="progress-bar-bg">
-              <div id="progressBar" class="progress-bar-fill"></div>
+            <div class="progress-bar-bg w-full bg-surface-container rounded-full h-2.5 overflow-hidden">
+              <div id="progressBar" class="progress-bar-fill bg-primary-container h-2.5 rounded-full transition-all duration-200" style="width: 0%"></div>
             </div>
           </div>
 
           <!-- Success Result Card -->
-          <div id="resultCard" class="result-card hidden">
-            <div class="result-icon">
-              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-                <polyline points="22 4 12 14.01 9 11.01"></polyline>
-              </svg>
+          <div id="resultCard" class="result-card hidden w-full bg-emerald-tint rounded-xl p-5 shadow-sm border border-emerald-200 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mb-6">
+            <div class="flex items-center gap-3">
+              <div class="result-icon w-10 h-10 rounded-full bg-tertiary-container text-white flex items-center justify-center shrink-0">
+                <span class="material-symbols-outlined text-[24px]">task_alt</span>
+              </div>
+              <div class="result-details">
+                <h3 class="result-title text-sm font-bold text-tertiary-container">Merge Complete!</h3>
+                <p id="resultSummary" class="result-summary text-xs text-tertiary">Successfully combined into a single PDF.</p>
+              </div>
             </div>
-            <div class="result-details">
-              <h3 class="result-title">Merge Complete!</h3>
-              <p id="resultSummary" class="result-summary">Successfully combined into a single PDF.</p>
-            </div>
-            <div class="result-actions">
-              <a id="downloadBtn" class="btn btn-success btn-lg" download="merged-document.pdf">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                  <polyline points="7 10 12 15 17 10"></polyline>
-                  <line x1="12" y1="15" x2="12" y2="3"></line>
-                </svg>
-                Download PDF
+            <div class="result-actions flex items-center gap-2 flex-wrap">
+              <a id="downloadBtn" class="btn btn-success inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-primary-container text-white text-xs font-semibold shadow hover:bg-primary transition-all" download="merged-document.pdf">
+                <span class="material-symbols-outlined text-[16px]">download</span>
+                <span>Download PDF</span>
               </a>
-              <button id="previewBtn" class="btn btn-secondary btn-lg">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                  <circle cx="12" cy="12" r="3"></circle>
-                </svg>
-                Preview
+              <button id="previewBtn" class="btn btn-secondary inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-white text-on-surface text-xs font-semibold shadow-sm hover:bg-slate-50 transition-all border border-slate-200" type="button">
+                <span class="material-symbols-outlined text-[16px]">visibility</span>
+                <span>Preview</span>
               </button>
-              <button type="button" id="shareBtn" class="btn btn-secondary btn-lg btn-share-pdf hidden" title="Share PDF via WhatsApp, Gmail, Slack, AirDrop">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <circle cx="18" cy="5" r="3"></circle>
-                  <circle cx="6" cy="12" r="3"></circle>
-                  <circle cx="18" cy="19" r="3"></circle>
-                  <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
-                  <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
-                </svg>
-                Share
+              <button type="button" id="shareBtn" class="btn btn-secondary btn-share-pdf hidden inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-white text-on-surface text-xs font-semibold shadow-sm hover:bg-slate-50 transition-all border border-slate-200" title="Share PDF via WhatsApp, Gmail, Slack, AirDrop">
+                <span class="material-symbols-outlined text-[16px]">share</span>
+                <span>Share</span>
               </button>
-              <button type="button" id="mergeSendToCompressBtn" class="btn btn-secondary btn-lg btn-flow-jump" title="Send this merged PDF directly to Compress tool without re-uploading">
-                🗜️ Compress PDF
+              <button type="button" id="mergeSendToCompressBtn" class="btn btn-secondary btn-flow-jump inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-white text-on-surface text-xs font-semibold shadow-sm hover:bg-slate-50 transition-all border border-slate-200" title="Send this merged PDF directly to Compress tool without re-uploading">
+                <span class="material-symbols-outlined text-[16px]">compress</span>
+                <span>Compress PDF</span>
               </button>
             </div>
           </div>
@@ -1639,51 +1709,104 @@
       </div>
     </main>
 
-    <!-- Mobile PWA Install Banner -->
-    <div id="pwaInstallBanner" class="pwa-install-banner hidden">
-      <div class="pwa-install-content">
-        <div class="pwa-install-icon">📲</div>
-        <div class="pwa-install-text">
-          <strong class="pwa-install-title">Install PDF Tools App</strong>
-          <span class="pwa-install-desc">Fast, 100% private offline access from your home screen</span>
+    <!-- 4-Card Feature Mosaic -->
+    <div class="w-full grid grid-cols-2 md:grid-cols-4 gap-4 mb-6 pt-2">
+      <div class="bg-surface-container-lowest dark:bg-[#131b2e] p-4 rounded-xl shadow-sm border border-slate-border dark:border-slate-800 flex flex-col gap-1">
+        <div class="w-8 h-8 rounded-lg bg-surface-container dark:bg-slate-800 text-primary dark:text-indigo-400 flex items-center justify-center mb-1">
+          <span class="material-symbols-outlined text-[18px]">layers</span>
+        </div>
+        <span class="text-xs font-semibold text-on-surface dark:text-white">Unlimited Batching</span>
+        <span class="text-[11px] text-slate-muted dark:text-slate-400 leading-tight">Combine as many documents as your RAM supports.</span>
+      </div>
+      <div class="bg-surface-container-lowest dark:bg-[#131b2e] p-4 rounded-xl shadow-sm border border-slate-border dark:border-slate-800 flex flex-col gap-1">
+        <div class="w-8 h-8 rounded-lg bg-surface-container dark:bg-slate-800 text-tertiary-container dark:text-emerald-400 flex items-center justify-center mb-1">
+          <span class="material-symbols-outlined text-[18px]">lock_clock</span>
+        </div>
+        <span class="text-xs font-semibold text-on-surface dark:text-white">Immediate RAM Purge</span>
+        <span class="text-[11px] text-slate-muted dark:text-slate-400 leading-tight">Cached buffers clear as soon as the tab closes.</span>
+      </div>
+      <div class="bg-surface-container-lowest dark:bg-[#131b2e] p-4 rounded-xl shadow-sm border border-slate-border dark:border-slate-800 flex flex-col gap-1">
+        <div class="w-8 h-8 rounded-lg bg-surface-container dark:bg-slate-800 text-secondary dark:text-indigo-400 flex items-center justify-center mb-1">
+          <span class="material-symbols-outlined text-[18px]">speed</span>
+        </div>
+        <span class="text-xs font-semibold text-on-surface dark:text-white">Instant Export</span>
+        <span class="text-[11px] text-slate-muted dark:text-slate-400 leading-tight">No upload queues or remote render wait times.</span>
+      </div>
+      <div class="bg-surface-container-lowest dark:bg-[#131b2e] p-4 rounded-xl shadow-sm border border-slate-border dark:border-slate-800 flex flex-col gap-1">
+        <div class="w-8 h-8 rounded-lg bg-surface-container dark:bg-slate-800 text-on-surface-variant dark:text-slate-300 flex items-center justify-center mb-1">
+          <span class="material-symbols-outlined text-[18px]">offline_pin</span>
+        </div>
+        <span class="text-xs font-semibold text-on-surface dark:text-white">PWA Ready</span>
+        <span class="text-[11px] text-slate-muted dark:text-slate-400 leading-tight">Works flawlessly without active Wi-Fi connection.</span>
+      </div>
+    </div>
+
+    <!-- Live Global Impact & Privacy Telemetry Section -->
+    <section id="footerStatsCard" class="w-full bg-surface-container-lowest/80 dark:bg-[#131b2e]/80 backdrop-blur-md rounded-2xl p-6 shadow-sm border border-slate-border dark:border-slate-800 mb-6">
+      <div class="flex flex-col items-center max-w-2xl mx-auto text-center">
+        <!-- Top Status Indicators -->
+        <div class="flex items-center justify-between w-full mb-4">
+          <div class="flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-[#10b981] animate-ping"></span>
+            <span class="text-[11px] uppercase tracking-wider text-on-surface-variant dark:text-slate-300 font-bold">LIVE GLOBAL IMPACT</span>
+          </div>
+          <span class="px-2.5 py-0.5 rounded-full bg-emerald-tint dark:bg-emerald-950/60 text-tertiary-container dark:text-emerald-300 border border-transparent dark:border-emerald-800/40 text-[11px] font-bold">100% Private</span>
+        </div>
+        <!-- 2-Metric Dual Showcase -->
+        <div class="w-full grid grid-cols-1 sm:grid-cols-2 gap-4 bg-slate-bg/70 dark:bg-slate-900/60 p-4 rounded-xl mb-3 border border-slate-border dark:border-slate-800">
+          <!-- Metric 1: Visitors -->
+          <div class="flex items-center justify-center gap-4 py-2 sm:border-r border-slate-border dark:border-slate-800">
+            <div class="w-12 h-12 rounded-xl bg-indigo-tint dark:bg-indigo-950/60 text-primary-container dark:text-indigo-400 flex items-center justify-center shrink-0 shadow-sm">
+              <span class="material-symbols-outlined text-[26px]">groups</span>
+            </div>
+            <div class="flex flex-col text-left">
+              <span class="text-2xl font-bold tracking-tight text-on-surface dark:text-white" id="statVisitorsCount">1,480+</span>
+              <span class="text-xs text-slate-muted dark:text-slate-400">Visitors Worldwide</span>
+            </div>
+          </div>
+          <!-- Metric 2: Processed Documents -->
+          <div class="flex items-center justify-center gap-4 py-2">
+            <div class="w-12 h-12 rounded-xl bg-emerald-tint dark:bg-emerald-950/60 text-tertiary-container dark:text-emerald-400 flex items-center justify-center shrink-0 shadow-sm">
+              <span class="material-symbols-outlined text-[26px]">enhanced_encryption</span>
+            </div>
+            <div class="flex flex-col text-left">
+              <span class="text-2xl font-bold tracking-tight text-on-surface dark:text-white" id="statProcessedCount">3,920+</span>
+              <span class="text-xs text-slate-muted dark:text-slate-400">PDFs Processed Privately</span>
+            </div>
+          </div>
+        </div>
+        <!-- Footnote Verification -->
+        <div class="flex items-center justify-center gap-1.5 text-slate-muted dark:text-slate-400 text-xs mt-1">
+          <span class="material-symbols-outlined text-[16px] text-amber-500" style="font-variation-settings: 'FILL' 1;">bolt</span>
+          <span>Counters update anonymously • Zero file bytes are ever uploaded to any server</span>
         </div>
       </div>
-      <div class="pwa-install-actions">
-        <button id="pwaInstallBtn" class="btn btn-primary btn-sm">Install</button>
-        <button id="pwaDismissBtn" class="btn-pwa-dismiss" aria-label="Dismiss banner">&times;</button>
+    </section>
+
+    <!-- Mobile PWA Install Banner -->
+    <div id="pwaInstallBanner" class="pwa-install-banner hidden mb-6 bg-surface-container-lowest dark:bg-[#131b2e] border border-slate-border dark:border-slate-800 rounded-xl p-4 shadow-sm flex items-center justify-between gap-3">
+      <div class="pwa-install-content flex items-center gap-3">
+        <div class="pwa-install-icon text-2xl">📲</div>
+        <div class="pwa-install-text flex flex-col">
+          <strong class="pwa-install-title text-sm font-semibold text-on-surface dark:text-white">Install PDF Tools App</strong>
+          <span class="pwa-install-desc text-xs text-slate-muted dark:text-slate-400">Fast, 100% private offline access from your home screen</span>
+        </div>
+      </div>
+      <div class="pwa-install-actions flex items-center gap-2">
+        <button id="pwaInstallBtn" class="btn btn-primary btn-sm px-3 py-1.5 rounded-lg bg-primary text-white text-xs font-semibold shadow hover:bg-primary-container transition-all">Install</button>
+        <button id="pwaDismissBtn" class="btn-pwa-dismiss text-slate-muted dark:text-slate-400 hover:text-on-surface dark:hover:text-white p-1 text-lg" aria-label="Dismiss banner">&times;</button>
       </div>
     </div>
 
     <!-- Footer -->
-    <footer class="app-footer">
-      <div class="footer-stats-card" id="footerStatsCard">
-        <div class="footer-stats-header">
-          <div class="live-indicator-wrapper">
-            <span class="live-pulse-dot"></span>
-            <span class="footer-stats-title">Live Global Impact</span>
-          </div>
-          <span class="footer-stats-badge">100% Private</span>
+    <footer class="w-full bg-surface-container-lowest dark:bg-[#131b2e] border-t border-slate-border dark:border-slate-800 py-4 px-4 sm:px-6 rounded-2xl shadow-sm mt-auto mb-2">
+      <div class="flex flex-col md:flex-row items-center justify-between gap-3 text-xs text-slate-muted dark:text-slate-400">
+        <div class="inline-flex items-center gap-1.5 font-semibold text-tertiary-container dark:text-emerald-300 bg-emerald-tint dark:bg-emerald-950/60 border border-transparent dark:border-emerald-800/40 px-3 py-1 rounded-full">
+          <span class="material-symbols-outlined text-[16px]">verified_user</span>
+          <span>Zero Server Processing Guarantee</span>
         </div>
-        <div class="footer-stats-grid">
-          <div class="footer-stat-item">
-            <span class="footer-stat-icon">👥</span>
-            <div class="footer-stat-content">
-              <span class="footer-stat-val" id="statVisitorsCount">1,480+</span>
-              <span class="footer-stat-lbl">Visitors Worldwide</span>
-            </div>
-          </div>
-          <div class="footer-stat-divider"></div>
-          <div class="footer-stat-item">
-            <span class="footer-stat-icon">📄</span>
-            <div class="footer-stat-content">
-              <span class="footer-stat-val" id="statProcessedCount">3,920+</span>
-              <span class="footer-stat-lbl">PDFs Processed Privately</span>
-            </div>
-          </div>
-        </div>
-        <p class="footer-stats-note">⚡ Counters update anonymously • Zero file bytes are ever uploaded to any server</p>
+        <p class="text-center md:text-right">100% Free &amp; Private in Browser • No downloads or accounts required • Files never leave your device</p>
       </div>
-      <p class="footer-copy">PDF Tools &bull; 100% Free &amp; Private in Browser &bull; No downloads or accounts required &bull; Files never leave your device</p>
     </footer>
   </div>
 

@@ -194,13 +194,21 @@ export function trackToolUsage(toolName, eventType = 'used', count = 1) {
  */
 export function initTheme() {
   const savedTheme = localStorage.getItem('pdf_merger_theme') || 'theme-light';
-  document.body.className = savedTheme;
+  document.body.classList.toggle('theme-dark', savedTheme === 'theme-dark');
+  document.body.classList.toggle('theme-light', savedTheme !== 'theme-dark');
+  if (typeof document !== 'undefined' && document.documentElement) {
+    document.documentElement.classList.toggle('dark', savedTheme === 'theme-dark');
+  }
   const themeToggleBtn = document.getElementById('themeToggleBtn');
   if (themeToggleBtn) {
     themeToggleBtn.addEventListener('click', () => {
       const isLight = document.body.classList.contains('theme-light');
       const newTheme = isLight ? 'theme-dark' : 'theme-light';
-      document.body.className = newTheme;
+      document.body.classList.toggle('theme-dark', newTheme === 'theme-dark');
+      document.body.classList.toggle('theme-light', newTheme !== 'theme-dark');
+      if (document.documentElement) {
+        document.documentElement.classList.toggle('dark', newTheme === 'theme-dark');
+      }
       localStorage.setItem('pdf_merger_theme', newTheme);
     });
   }

@@ -57,7 +57,7 @@ export function updateStatsUI(stats, animateProcessed = false) {
  * Get active API endpoint
  */
 function getEndpoint() {
-  if (typeof window !== 'undefined' && window.PDF_TOOLS_COUNTER_ENDPOINT) {
+  if (typeof window !== 'undefined' && window.PDF_TOOLS_COUNTER_ENDPOINT !== undefined) {
     return window.PDF_TOOLS_COUNTER_ENDPOINT;
   }
   return DEFAULT_ENDPOINT;

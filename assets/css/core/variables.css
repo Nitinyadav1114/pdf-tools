@@ -46,7 +46,8 @@ body.theme-light {
   --dropzone-border: #cbd5e1;
 }
 
-body.theme-dark {
+body.theme-dark,
+html.dark {
   --primary: #818cf8;
   --primary-hover: #a5b4fc;
   --bg-app: #0a0f1d;

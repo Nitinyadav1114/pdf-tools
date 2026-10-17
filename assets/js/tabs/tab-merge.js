@@ -134,9 +134,14 @@ function updateMergeCardMetadata(item) {
     pageBadge.textContent = `${item.pageCount} ${item.pageCount === 1 ? 'page' : 'pages'}`;
   }
 
+  const rangeBadge = card.querySelector('.page-range-pill');
+  if (rangeBadge && item.pageCount) {
+    rangeBadge.textContent = `Pages 1–${item.pageCount}`;
+  }
+
   const thumbContainer = card.querySelector('.file-thumb-container');
   if (thumbContainer && item.thumbnailUrl) {
-    thumbContainer.innerHTML = `<img src="${item.thumbnailUrl}" class="file-thumb-canvas" alt="Page 1 preview">`;
+    thumbContainer.innerHTML = `<img src="${item.thumbnailUrl}" class="w-full h-full object-cover" alt="Page 1 preview">`;
   }
 }
 
@@ -226,7 +231,7 @@ export function renderMergeFileList() {
 
   mergeState.files.forEach((item, index) => {
     const card = document.createElement('div');
-    card.className = 'file-card';
+    card.className = 'file-card reorder-card bg-surface-container-lowest dark:bg-[#131b2e] rounded-xl p-4 shadow-sm hover:shadow-md transition-all border border-slate-border dark:border-slate-800 flex flex-col justify-between group cursor-grab active:cursor-grabbing';
     card.dataset.id = item.id;
 
     const formattedDate = formatTimestamp(item.lastModified);
@@ -234,64 +239,49 @@ export function renderMergeFileList() {
     const pageStr = item.pageCount !== null ? `${item.pageCount} ${item.pageCount === 1 ? 'page' : 'pages'}` : 'Loading pages...';
 
     const thumbHtml = item.thumbnailUrl
-      ? `<img src="${item.thumbnailUrl}" class="file-thumb-canvas" alt="Page 1 preview">`
-      : `<div class="thumb-placeholder">📄</div>`;
+      ? `<img src="${item.thumbnailUrl}" class="w-full h-full object-cover" alt="Page 1 preview">`
+      : `<span class="material-symbols-outlined text-[22px]">picture_as_pdf</span>`;
 
     card.innerHTML = `
-      <div class="drag-handle" title="Drag to reorder" aria-label="Drag handle">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-          <circle cx="9" cy="5" r="1"></circle>
-          <circle cx="9" cy="12" r="1"></circle>
-          <circle cx="9" cy="19" r="1"></circle>
-          <circle cx="15" cy="5" r="1"></circle>
-          <circle cx="15" cy="12" r="1"></circle>
-          <circle cx="15" cy="19" r="1"></circle>
-        </svg>
-      </div>
-      <div class="index-pill" title="Order position">${index + 1}</div>
-      <div class="file-thumb-container">${thumbHtml}</div>
-      <div class="file-info">
-        <div class="file-name" title="${item.name}">${escapeHtml(item.name)}</div>
-        <div class="file-meta-row">
-          <span class="meta-badge timestamp-badge" title="File last modified timestamp">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <circle cx="12" cy="12" r="10"></circle>
-              <polyline points="12 6 12 12 16 14"></polyline>
-            </svg>
-            ${formattedDate}
+      <!-- Card Header Row -->
+      <div class="flex items-start justify-between gap-2 mb-3">
+        <div class="flex items-center gap-2">
+          <span class="drag-handle text-slate-muted dark:text-slate-500 group-hover:text-primary dark:group-hover:text-indigo-400 transition-colors cursor-grab" title="Drag to reorder" aria-label="Drag handle">
+            <span class="material-symbols-outlined text-[20px]">drag_indicator</span>
           </span>
-          <span class="meta-badge" title="Page count">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-              <polyline points="14 2 14 8 20 8"></polyline>
-            </svg>
-            <span class="page-badge-text">${pageStr}</span>
-          </span>
-          <span class="meta-badge" title="File size">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-            </svg>
-            ${sizeStr}
-          </span>
+          <span class="index-pill w-6 h-6 rounded-full bg-primary-fixed dark:bg-indigo-950 text-primary dark:text-indigo-300 text-[11px] font-bold flex items-center justify-center">${index + 1}</span>
+        </div>
+        <div class="card-header-actions file-actions flex items-center gap-1">
+          <button class="btn-card-action btn-up w-7 h-7 rounded-full flex items-center justify-center text-slate-muted dark:text-slate-400 hover:text-on-surface dark:hover:text-white hover:bg-surface-container dark:hover:bg-slate-800 transition-colors" title="Move Up" ${index === 0 ? 'disabled style="opacity: 0.3; cursor: not-allowed;"' : ''}>
+            <span class="material-symbols-outlined text-[16px]">expand_less</span>
+          </button>
+          <button class="btn-card-action btn-down w-7 h-7 rounded-full flex items-center justify-center text-slate-muted dark:text-slate-400 hover:text-on-surface dark:hover:text-white hover:bg-surface-container dark:hover:bg-slate-800 transition-colors" title="Move Down" ${index === mergeState.files.length - 1 ? 'disabled style="opacity: 0.3; cursor: not-allowed;"' : ''}>
+            <span class="material-symbols-outlined text-[16px]">expand_more</span>
+          </button>
+          <button class="btn-card-action btn-delete w-7 h-7 rounded-full flex items-center justify-center text-slate-muted dark:text-slate-400 hover:text-error dark:hover:text-red-400 hover:bg-error-container/40 dark:hover:bg-red-950/50 transition-colors" title="Remove PDF">
+            <span class="material-symbols-outlined text-[16px]">close</span>
+          </button>
         </div>
       </div>
-      <div class="file-actions">
-        <button class="btn-card-action btn-up" title="Move Up" ${index === 0 ? 'disabled style="opacity: 0.3; cursor: not-allowed;"' : ''}>
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="18 15 12 9 6 15"></polyline>
-          </svg>
-        </button>
-        <button class="btn-card-action btn-down" title="Move Down" ${index === mergeState.files.length - 1 ? 'disabled style="opacity: 0.3; cursor: not-allowed;"' : ''}>
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="6 9 12 15 18 9"></polyline>
-          </svg>
-        </button>
-        <button class="btn-card-action btn-delete" title="Remove PDF">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <line x1="18" y1="6" x2="6" y2="18"></line>
-            <line x1="6" y1="6" x2="18" y2="18"></line>
-          </svg>
-        </button>
+
+      <!-- Card Body Row -->
+      <div class="flex items-start gap-3 mb-4">
+        <div class="file-thumb-container w-10 h-10 rounded-lg bg-error-container/50 dark:bg-red-950/40 text-error dark:text-red-400 flex items-center justify-center shrink-0 overflow-hidden">
+          ${thumbHtml}
+        </div>
+        <div class="file-info flex flex-col min-w-0 flex-1">
+          <span class="file-name font-semibold text-sm text-on-surface dark:text-white truncate" title="${escapeHtml(item.name)}">${escapeHtml(item.name)}</span>
+          <span class="file-submeta text-xs text-slate-muted dark:text-slate-400"><span class="page-badge-text">${pageStr}</span> &bull; ${sizeStr}</span>
+        </div>
+      </div>
+
+      <!-- Card Footer Row -->
+      <div class="card-footer-row flex items-center justify-between pt-2 border-t border-slate-border-subtle dark:border-slate-800">
+        <div class="inline-flex items-center gap-1 text-[11px] text-slate-muted dark:text-slate-400 bg-slate-bg dark:bg-slate-900 px-2 py-0.5 rounded border border-slate-border dark:border-slate-800">
+          <span class="material-symbols-outlined text-[12px]">schedule</span>
+          <span>${formattedDate}</span>
+        </div>
+        <span class="page-range-pill text-[11px] font-semibold text-primary-container dark:text-indigo-300 bg-indigo-tint dark:bg-indigo-950/60 px-2 py-0.5 rounded">${item.pageCount ? `Pages 1–${item.pageCount}` : 'Pages 1+'}</span>
       </div>
     `;
 
