@@ -12,7 +12,7 @@ const SESSION_VISIT_KEY = 'pdf_tools_visited_session';
 const LOCAL_CACHE_KEY = 'pdf_tools_stats_cache';
 
 // Configurable endpoint (can be overridden via window.PDF_TOOLS_COUNTER_ENDPOINT)
-const DEFAULT_ENDPOINT = 'https://pdf-counter.nitinyadav1114.workers.dev';
+const DEFAULT_ENDPOINT = 'https://pdf-counter.nitinyadav0dev.workers.dev';
 
 // Baseline fallback numbers if worker is unconfigured or user is completely offline
 const FALLBACK_STATS = {
