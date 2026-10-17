@@ -187,8 +187,8 @@
           <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-tint dark:bg-emerald-950/60 text-tertiary-container dark:text-emerald-300 shadow-sm border border-transparent dark:border-emerald-800/40">
             <span class="w-2 h-2 rounded-full bg-[#10b981] animate-pulse"></span>
             <span class="material-symbols-outlined text-[15px]">lock</span>
-            <span class="text-xs font-semibold whitespace-nowrap hidden sm:inline">100% In-Browser &amp; Private</span>
-            <span class="text-xs font-semibold whitespace-nowrap sm:hidden">100% Private</span>
+            <span class="text-xs font-semibold whitespace-nowrap hidden sm:inline">100% Private &amp; Offline</span>
+            <span class="text-xs font-semibold whitespace-nowrap sm:hidden">Private &amp; Offline</span>
           </div>
           <button id="themeToggleBtn" class="w-8 h-8 rounded-full bg-surface-container dark:bg-slate-800 flex items-center justify-center text-on-surface-variant dark:text-slate-300 hover:bg-surface-container-high dark:hover:bg-slate-700 transition-colors" type="button" aria-label="Toggle dark/light mode" title="Toggle theme">
             <span class="theme-icon light-icon text-sm">🌙</span>
@@ -1810,7 +1810,7 @@
     </footer>
   </div>
 
-  <script type="module" src="assets/js/app.js?v=5"></script>
+  <script type="module" src="assets/js/app.js?v=8"></script>
   <script>
     // Register Service Worker for fast browser caching & offline access
     if ('serviceWorker' in navigator) {
@@ -1829,6 +1829,56 @@
       });
     }
   </script>
+
+    <!-- PWA Install Instructions Modal -->
+    <div id="pwaInstallModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm hidden" role="dialog" aria-modal="true" aria-labelledby="installModalTitle">
+      <div class="w-full max-w-md bg-surface-container-lowest dark:bg-[#131b2e] border border-slate-border dark:border-slate-800 rounded-2xl shadow-2xl overflow-hidden p-6">
+        <div class="flex items-start justify-between gap-3 mb-4">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-primary-container text-white flex items-center justify-center shrink-0 shadow-sm">
+              <span class="material-symbols-outlined text-[24px]">download_for_offline</span>
+            </div>
+            <div>
+              <h3 id="installModalTitle" class="text-base font-bold text-on-surface dark:text-white">Install PDF Tools App</h3>
+              <p class="text-xs text-slate-muted dark:text-slate-400">100% Private &amp; Offline Desktop Experience</p>
+            </div>
+          </div>
+          <button type="button" id="closeInstallModalBtn" class="text-slate-muted dark:text-slate-400 hover:text-on-surface dark:hover:text-white p-1 rounded-lg" aria-label="Close dialog">
+            <span class="material-symbols-outlined text-[20px]">close</span>
+          </button>
+        </div>
+
+        <div class="space-y-3 mb-5 text-xs text-slate-muted dark:text-slate-300">
+          <div class="p-3 rounded-xl bg-slate-bg dark:bg-slate-900 border border-slate-border dark:border-slate-800 flex items-start gap-2.5">
+            <span class="text-base">💻</span>
+            <div>
+              <strong class="text-on-surface dark:text-white block font-semibold mb-0.5">Desktop (Chrome / Edge / Brave):</strong>
+              Click the <span class="px-1.5 py-0.5 bg-surface-container dark:bg-slate-800 rounded font-semibold text-primary dark:text-indigo-300">Install</span> icon in your address bar (top-right), or open Menu <span class="font-mono">⋮</span> &rarr; <strong>Apps</strong> &rarr; <strong>Install PDF Tools</strong>.
+            </div>
+          </div>
+          <div class="p-3 rounded-xl bg-slate-bg dark:bg-slate-900 border border-slate-border dark:border-slate-800 flex items-start gap-2.5">
+            <span class="text-base">🍎</span>
+            <div>
+              <strong class="text-on-surface dark:text-white block font-semibold mb-0.5">iPhone &amp; iPad (Safari):</strong>
+              Tap the <span class="px-1.5 py-0.5 bg-surface-container dark:bg-slate-800 rounded font-semibold text-primary dark:text-indigo-300">Share</span> button at the bottom, then choose <strong>"Add to Home Screen"</strong>.
+            </div>
+          </div>
+          <div class="p-3 rounded-xl bg-slate-bg dark:bg-slate-900 border border-slate-border dark:border-slate-800 flex items-start gap-2.5">
+            <span class="text-base">🤖</span>
+            <div>
+              <strong class="text-on-surface dark:text-white block font-semibold mb-0.5">Android (Chrome / Edge):</strong>
+              Tap the Menu <span class="font-mono">⋮</span> at the top-right and select <strong>"Install app"</strong> or <strong>"Add to Home screen"</strong>.
+            </div>
+          </div>
+        </div>
+
+        <div class="flex items-center justify-end gap-2">
+          <button type="button" id="confirmInstallModalBtn" class="px-5 py-2 rounded-full bg-primary-container text-white text-xs font-semibold shadow hover:bg-primary transition-all">
+            Got it
+          </button>
+        </div>
+      </div>
+    </div>
 
   <!-- Cloudflare Web Analytics -->
   <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "0ffab1040573429cadd41caeceb23db9"}'></script>

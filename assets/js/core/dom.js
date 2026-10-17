@@ -240,7 +240,11 @@ const elIds = {
   // PWA
   pwaInstallBanner: 'pwaInstallBanner',
   pwaInstallBtn: 'pwaInstallBtn',
-  pwaDismissBtn: 'pwaDismissBtn'
+  pwaDismissBtn: 'pwaDismissBtn',
+  headerInstallBtn: 'headerInstallBtn',
+  pwaInstallModal: 'pwaInstallModal',
+  closeInstallModalBtn: 'closeInstallModalBtn',
+  confirmInstallModalBtn: 'confirmInstallModalBtn'
 };
 
 export const elements = {};
