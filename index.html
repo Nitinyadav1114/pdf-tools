@@ -29,10 +29,10 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=block" rel="stylesheet">
 
-  <!-- Compiled Static Tailwind CSS (Zero Runtime JS Overhead) -->
-  <link rel="stylesheet" href="assets/css/tailwind.dist.css?v=1">
+  <!-- Production Single Minified Stylesheet (Zero-Waterfall Pre-bundled Architecture) -->
+  <link rel="stylesheet" href="assets/css/bundle.min.css?v=11">
 
   <!-- Canonical URL -->
   <link rel="canonical" href="https://nitinyadav1114.github.io/pdf-tools/">
@@ -78,11 +78,6 @@
   <link rel="apple-touch-icon" href="assets/icon.png">
   <link rel="manifest" href="manifest.json">
 
-  <!-- Styles & Scripts (Modular Architecture & Subresource Integrity) -->
-  <link rel="stylesheet" href="assets/css/styles.css?v=7">
-  <script defer src="assets/vendor/pdf-lib.min.js" integrity="sha384-weMABwrltA6jWR8DDe9Jp5blk+tZQh7ugpCsF3JwSA53WZM9/14PjS5LAJNHNjAI" crossorigin="anonymous"></script>
-  <script defer src="assets/vendor/pdf.min.js" integrity="sha384-/1qUCSGwTur9vjf/z9lmu/eCUYbpOTgSjmpbMQZ1/CtX2v/WcAIKqRv+U1DUCG6e" crossorigin="anonymous"></script>
-  <script defer src="assets/vendor/sortable.min.js" integrity="sha384-BSxuMLxX+FCbTdYec3TbXlnMGEEM2QXTFdtDaveen71o+jswm2J36+xFqp8k4VHM" crossorigin="anonymous"></script>
 </head>
 <body class="theme-light bg-slate-bg dark:bg-[#0a0f1d] font-sans text-on-surface dark:text-slate-100 antialiased min-h-screen flex flex-col">
   <div class="app-container w-full max-w-6xl mx-auto px-4 sm:px-6 py-6 flex flex-col flex-1">
@@ -111,8 +106,8 @@
           <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-tint dark:bg-emerald-950/60 text-tertiary-container dark:text-emerald-300 shadow-sm border border-transparent dark:border-emerald-800/40">
             <span class="w-2 h-2 rounded-full bg-[#10b981] animate-pulse"></span>
             <span class="material-symbols-outlined text-[15px]">lock</span>
-            <span class="text-xs font-semibold whitespace-nowrap hidden sm:inline">100% Private &amp; Offline</span>
-            <span class="text-xs font-semibold whitespace-nowrap sm:hidden">Private &amp; Offline</span>
+            <span class="text-xs font-semibold whitespace-nowrap privacy-text-full">100% Private &amp; Offline</span>
+            <span class="text-xs font-semibold whitespace-nowrap privacy-text-short">Private &amp; Offline</span>
           </div>
           <button id="themeToggleBtn" class="w-8 h-8 rounded-full bg-surface-container dark:bg-slate-800 flex items-center justify-center text-on-surface-variant dark:text-slate-300 hover:bg-surface-container-high dark:hover:bg-slate-700 transition-colors" type="button" aria-label="Toggle dark/light mode" title="Toggle theme">
             <span class="theme-icon light-icon text-sm">🌙</span>
@@ -248,7 +243,7 @@
 
               <!-- Auto-sort toggle checkbox -->
               <label class="toggle-control inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg hover:bg-slate-bg dark:hover:bg-slate-800 cursor-pointer select-none border border-transparent hover:border-slate-border dark:hover:border-slate-700" title="Automatically sort files by timestamp when added">
-                <input type="checkbox" id="autoSortCheckbox" checked class="w-4 h-4 rounded text-primary-container focus:ring-primary-container">
+                <input type="checkbox" id="autoSortCheckbox" checked class="w-4 h-4 rounded text-primary-container focus:ring-primary-container" aria-label="Auto-sort files by timestamp on upload">
                 <span class="toggle-label text-xs text-on-surface dark:text-slate-200 font-medium">Auto-sort on upload</span>
               </label>
 
@@ -291,7 +286,7 @@
               <!-- Lossless Compression Option -->
               <div class="merge-compress-row flex items-center gap-3 pt-1">
                 <label class="relative inline-flex items-center cursor-pointer">
-                  <input type="checkbox" id="mergeCompressToggle" checked class="sr-only peer">
+                  <input type="checkbox" id="mergeCompressToggle" checked class="sr-only peer" aria-label="Compress and optimize output PDF">
                   <div class="w-10 h-6 bg-surface-container-high dark:bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-container"></div>
                 </label>
                 <div class="flex flex-col">
@@ -598,11 +593,11 @@
 
               <div class="setting-item-options">
                 <label class="toggle-control" title="Draw clean border around each slide">
-                  <input type="checkbox" id="slideBorderCheckbox" checked>
+                  <input type="checkbox" id="slideBorderCheckbox" checked aria-label="Draw clean border around each slide">
                   <span class="toggle-label">Slide borders</span>
                 </label>
                 <label class="toggle-control" title="Include small slide numbers (e.g. Slide 1)">
-                  <input type="checkbox" id="slideNumbersCheckbox" checked>
+                  <input type="checkbox" id="slideNumbersCheckbox" checked aria-label="Include small slide numbers">
                   <span class="toggle-label">Slide numbers</span>
                 </label>
               </div>
@@ -770,7 +765,7 @@
             <div class="preset-choice-grid">
               <!-- Option 1: Clean White Paper (Default) -->
               <label class="preset-choice-card active" id="invertModeNegativeCard" data-mode="negative">
-                <input type="radio" name="invertModeRadio" value="negative" checked>
+                <input type="radio" name="invertModeRadio" value="negative" checked aria-label="Ink Saver Style: Clean White Paper">
                 <div class="preset-choice-header">
                   <span class="preset-choice-title">📄 Clean White Paper</span>
                   <span class="preset-tag tag-recommended">Recommended</span>
@@ -783,7 +778,7 @@
 
               <!-- Option 2: Pure Monochrome -->
               <label class="preset-choice-card" id="invertModeGrayscaleCard" data-mode="grayscale-invert">
-                <input type="radio" name="invertModeRadio" value="grayscale-invert">
+                <input type="radio" name="invertModeRadio" value="grayscale-invert" aria-label="Ink Saver Style: Pure Black and White">
                 <div class="preset-choice-header">
                   <span class="preset-choice-title">🖨️ Pure Black &amp; White</span>
                   <span class="preset-tag tag-lossless">Max Ink Saver</span>
@@ -796,7 +791,7 @@
 
               <!-- Option 3: Keep Colors -->
               <label class="preset-choice-card" id="invertModeHueCard" data-mode="preserve-hue">
-                <input type="radio" name="invertModeRadio" value="preserve-hue">
+                <input type="radio" name="invertModeRadio" value="preserve-hue" aria-label="Ink Saver Style: Keep Theme Colors">
                 <div class="preset-choice-header">
                   <span class="preset-choice-title">🎨 Keep Theme Colors</span>
                   <span class="preset-tag tag-balanced">Colors Retained</span>
@@ -809,7 +804,7 @@
             </div>
 
             <!-- Hidden Mode Select for backward compatibility with tests/scripts -->
-            <select id="invertModeSelect" style="display: none;">
+            <select id="invertModeSelect" style="display: none;" aria-label="Invert Color Mode">
               <option value="negative" selected>Smart Invert</option>
               <option value="grayscale-invert">Grayscale Invert</option>
               <option value="preserve-hue">Preserve Color Hues</option>
@@ -1734,7 +1729,12 @@
     </footer>
   </div>
 
-  <script type="module" src="assets/js/app.js?v=8"></script>
+  <!-- Deferred Heavy Vendor PDF Engines (Loaded at bottom of body to ensure zero head-blocking) -->
+  <script defer src="assets/vendor/pdf-lib.min.js" integrity="sha384-weMABwrltA6jWR8DDe9Jp5blk+tZQh7ugpCsF3JwSA53WZM9/14PjS5LAJNHNjAI" crossorigin="anonymous"></script>
+  <script defer src="assets/vendor/pdf.min.js" integrity="sha384-/1qUCSGwTur9vjf/z9lmu/eCUYbpOTgSjmpbMQZ1/CtX2v/WcAIKqRv+U1DUCG6e" crossorigin="anonymous"></script>
+  <script defer src="assets/vendor/sortable.min.js" integrity="sha384-BSxuMLxX+FCbTdYec3TbXlnMGEEM2QXTFdtDaveen71o+jswm2J36+xFqp8k4VHM" crossorigin="anonymous"></script>
+
+  <script type="module" src="assets/js/app.js?v=9"></script>
   <script>
     // Register Service Worker for fast browser caching & offline access
     if ('serviceWorker' in navigator) {
@@ -1744,9 +1744,12 @@
         }).catch(() => {});
       });
 
+      // Prevent first-time visitors from experiencing an abrupt auto-refresh:
+      // Only reload if the page was ALREADY controlled by an older service worker (an upgrade).
+      const hadController = Boolean(navigator.serviceWorker.controller);
       let refreshing = false;
       navigator.serviceWorker.addEventListener('controllerchange', () => {
-        if (!refreshing) {
+        if (hadController && !refreshing) {
           refreshing = true;
           window.location.reload();
         }
@@ -1804,8 +1807,16 @@
       </div>
     </div>
 
-  <!-- Cloudflare Web Analytics -->
-  <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "0ffab1040573429cadd41caeceb23db9"}'></script>
+  <!-- Cloudflare Web Analytics (Production Only - Prevents Localhost CORS Preflight Failures) -->
+  <script>
+    if (!['localhost', '127.0.0.1'].includes(window.location.hostname)) {
+      const s = document.createElement('script');
+      s.defer = true;
+      s.src = 'https://static.cloudflareinsights.com/beacon.min.js';
+      s.setAttribute('data-cf-beacon', '{"token": "0ffab1040573429cadd41caeceb23db9"}');
+      document.body.appendChild(s);
+    }
+  </script>
   <!-- End Cloudflare Web Analytics -->
 </body>
 </html>

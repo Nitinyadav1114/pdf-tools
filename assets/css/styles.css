@@ -4,7 +4,7 @@
    ========================================================================== */
 
 
-/* Material Symbols Outlined Icon Font Baseline */
+/* Material Symbols Outlined Icon Font Baseline with Containment */
 .material-symbols-outlined {
   font-family: 'Material Symbols Outlined';
   font-weight: normal;
@@ -19,6 +19,11 @@
   direction: ltr;
   -webkit-font-feature-settings: 'liga';
   -webkit-font-smoothing: antialiased;
+  width: 1em;
+  height: 1em;
+  overflow: hidden;
+  vertical-align: middle;
+  font-display: block;
 }
 
 
