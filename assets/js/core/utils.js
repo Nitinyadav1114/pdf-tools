@@ -146,9 +146,10 @@ export async function handleSharePdf(blob, filename) {
 /**
  * Privacy-preserving tool usage analytics
  */
-export function trackToolUsage(toolName, eventType = 'used') {
+export function trackToolUsage(toolName, eventType = 'used', count = 1) {
+  const safeCount = Math.max(1, parseInt(count, 10) || 1);
   const eventPath = `/tool-${toolName}`;
-  const eventTitle = `${eventType === 'used' ? 'Used' : 'Viewed'} ${toolName}`;
+  const eventTitle = `${eventType === 'used' ? 'Used' : 'Viewed'} ${toolName}${safeCount > 1 ? ` (${safeCount} files)` : ''}`;
 
   // 1. GoatCounter Event Tracking (if configured)
   try {
@@ -168,7 +169,8 @@ export function trackToolUsage(toolName, eventType = 'used') {
     if (typeof window !== 'undefined' && typeof window.gtag === 'function') {
       window.gtag('event', 'tool_usage', {
         tool_name: toolName,
-        event_type: eventType
+        event_type: eventType,
+        count: safeCount
       });
     }
   } catch (e) {
@@ -179,7 +181,7 @@ export function trackToolUsage(toolName, eventType = 'used') {
   try {
     if (typeof window !== 'undefined' && typeof window.dispatchEvent === 'function') {
       window.dispatchEvent(new CustomEvent('tool_usage', {
-        detail: { toolName, eventType, timestamp: Date.now() }
+        detail: { toolName, eventType, count: safeCount, timestamp: Date.now() }
       }));
     }
   } catch (e) {

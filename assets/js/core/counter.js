@@ -96,8 +96,10 @@ function getCachedStats() {
  * Increment the global processed PDF counter
  */
 export async function incrementProcessedCounter(amount = 1) {
+  const safeAmount = Math.max(1, Math.min(100, parseInt(amount, 10) || 1));
+
   // Optimistic UI update: increment locally first for instant feedback
-  currentStats.processed += amount;
+  currentStats.processed += safeAmount;
   updateStatsUI(currentStats, true);
   cacheStats(currentStats);
 
@@ -113,7 +115,7 @@ export async function incrementProcessedCounter(amount = 1) {
     const res = await fetch(`${endpoint}/api/processed`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ amount }),
+      body: JSON.stringify({ amount: safeAmount }),
       // Short timeout to avoid hanging when network is sluggish
       signal: AbortSignal.timeout(4000)
     });
@@ -147,7 +149,8 @@ if (typeof window !== 'undefined') {
   // Listen to internal tool_usage events dispatched across tabs
   window.addEventListener('tool_usage', (event) => {
     if (event && event.detail && event.detail.eventType === 'used') {
-      incrementProcessedCounter(1);
+      const count = Math.max(1, parseInt(event.detail.count, 10) || 1);
+      incrementProcessedCounter(count);
     }
   });
 }

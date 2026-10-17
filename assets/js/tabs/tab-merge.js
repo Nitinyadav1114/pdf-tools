@@ -455,7 +455,7 @@ export async function mergePdfs() {
       elements.resultCard.classList.remove('hidden');
       elements.resultCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     }
-    trackToolUsage('merge_pdfs');
+    trackToolUsage('merge_pdfs', 'used', totalFiles || mergeState.files.length);
   } catch (err) {
     if (err.message === 'OPERATION_CANCELLED') {
       setMergeProgress(0, 'Merge cancelled.');

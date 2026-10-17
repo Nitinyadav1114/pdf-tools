@@ -369,7 +369,7 @@ export async function executeImagesToPDF() {
       elements.imagesResultCard.classList.remove('hidden');
       elements.imagesResultCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     }
-    trackToolUsage('images_to_pdf');
+    trackToolUsage('images_to_pdf', 'used', total || (imagesState.images ? imagesState.images.length : 1));
   } catch (err) {
     if (err.message === 'OPERATION_CANCELLED') {
       setImagesProgress(0, 'Conversion cancelled.');
