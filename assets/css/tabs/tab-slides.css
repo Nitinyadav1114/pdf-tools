@@ -1,0 +1,222 @@
+/* ========================================= */
+/* TAB 3: SLIDES TO A4 HANDOUT SPECIFIC      */
+/* ========================================= */
+
+.handout-settings-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  padding: 1.25rem 1.5rem;
+  margin-bottom: 1.25rem;
+  box-shadow: var(--card-shadow);
+}
+
+.settings-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 0.85rem;
+}
+
+.setting-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.setting-label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-main);
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.setting-item-options {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  flex-wrap: wrap;
+}
+
+.slides-calc-banner {
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  color: #166534;
+  border-radius: 8px;
+  padding: 0.65rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+body.theme-dark .slides-calc-banner {
+  background: #052e16;
+  border-color: #14532d;
+  color: #86efac;
+}
+
+.handout-preview-wrapper {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  padding: 1.25rem 1.5rem;
+  margin-bottom: 1.25rem;
+  box-shadow: var(--card-shadow);
+}
+
+.handout-preview-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.preview-title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.preview-badge {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--primary);
+  background: var(--primary-light);
+  padding: 0.2rem 0.6rem;
+  border-radius: 6px;
+}
+
+.a4-sheet-preview-container {
+  display: flex;
+  justify-content: center;
+  padding: 1.25rem;
+  background: var(--bg-card-secondary);
+  border-radius: 10px;
+  border: 1px solid var(--border-color);
+  overflow-x: auto;
+}
+
+.a4-sheet-preview {
+  width: 270px;
+  height: 382px; /* 210 x 297 ratio */
+  background: #ffffff;
+  color: #1e293b;
+  border-radius: 4px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15), 0 2px 6px rgba(0, 0, 0, 0.08);
+  padding: 14px 14px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+  box-sizing: border-box;
+}
+
+/* 3-centered layout mockup */
+.mockup-slot-centered {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.mockup-slide-box {
+  width: 90%;
+  aspect-ratio: 16 / 9;
+  max-height: 88px;
+  background: #f8fafc;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: #64748b;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+  overflow: hidden;
+  position: relative;
+}
+
+.mockup-slide-canvas {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.mockup-slide-label {
+  font-size: 0.6rem;
+  color: #94a3b8;
+  font-weight: 600;
+}
+
+/* 3-notes layout mockup */
+.mockup-slot-notes {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.mockup-slot-notes .mockup-slide-box {
+  width: 52%;
+}
+
+.mockup-lines-box {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 8px;
+  padding: 4px 0;
+}
+
+.mockup-note-line {
+  width: 100%;
+  height: 1px;
+  background-color: #cbd5e1;
+}
+
+/* 2-centered layout mockup */
+.mockup-slot-2centered {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.mockup-slot-2centered .mockup-slide-box {
+  width: 95%;
+  height: 130px;
+}
+
+/* 4-grid layout mockup */
+.mockup-grid-4 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  height: 100%;
+  align-content: center;
+}
+
+.mockup-grid-4 .mockup-slide-box {
+  width: 100%;
+}
+
+/* 6-grid layout mockup */
+.mockup-grid-6 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr 1fr;
+  gap: 6px;
+  height: 100%;
+}
+
+.mockup-grid-6 .mockup-slide-box {
+  width: 100%;
+}

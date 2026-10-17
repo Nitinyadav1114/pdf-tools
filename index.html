@@ -25,17 +25,41 @@
     }
   </script>
 
+  <!-- Canonical URL -->
+  <link rel="canonical" href="https://nitinyadav1114.github.io/pdf-tools/">
+
   <!-- Open Graph / WhatsApp / Facebook / Telegram -->
   <meta property="og:type" content="website">
+  <meta property="og:url" content="https://nitinyadav1114.github.io/pdf-tools/">
   <meta property="og:title" content="PDF Tools — All-in-One Private Browser PDF Suite">
   <meta property="og:description" content="Merge, compress, remove pages, convert slides to A4, invert colors, and convert images to PDF. 100% private in your browser — zero file uploads, no app downloads required.">
-  <meta property="og:image" content="assets/og-preview.png">
+  <meta property="og:image" content="https://nitinyadav1114.github.io/pdf-tools/assets/og-preview.png">
 
   <!-- Twitter / X -->
   <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:url" content="https://nitinyadav1114.github.io/pdf-tools/">
   <meta name="twitter:title" content="PDF Tools — All-in-One Private Browser PDF Suite">
   <meta name="twitter:description" content="Merge, compress, remove pages, convert slides to A4, invert colors, and convert images to PDF. 100% private in your browser.">
-  <meta name="twitter:image" content="assets/og-preview.png">
+  <meta name="twitter:image" content="https://nitinyadav1114.github.io/pdf-tools/assets/og-preview.png">
+
+  <!-- JSON-LD Structured Data Schema -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "PDF Tools",
+    "url": "https://nitinyadav1114.github.io/pdf-tools/",
+    "description": "All-in-one free browser PDF tools. Merge PDFs, compress files up to 90%, remove pages, convert slides to A4 handouts, invert colors to save ink, and convert images to PDF. 100% private in browser.",
+    "applicationCategory": "UtilitiesApplication",
+    "operatingSystem": "All",
+    "browserRequirements": "Requires JavaScript. Requires HTML5.",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    }
+  }
+  </script>
 
   <!-- Theme & Icons -->
   <meta name="theme-color" content="#4f46e5" media="(prefers-color-scheme: light)">
@@ -45,11 +69,11 @@
   <link rel="apple-touch-icon" href="assets/icon.png">
   <link rel="manifest" href="manifest.json">
 
-  <!-- Styles & Scripts -->
-  <link rel="stylesheet" href="assets/css/styles.css?v=3">
-  <script src="assets/vendor/pdf-lib.min.js"></script>
-  <script src="assets/vendor/pdf.min.js"></script>
-  <script src="assets/vendor/sortable.min.js"></script>
+  <!-- Styles & Scripts (Modular Architecture & Subresource Integrity) -->
+  <link rel="stylesheet" href="assets/css/styles.css?v=5">
+  <script src="assets/vendor/pdf-lib.min.js" integrity="sha384-weMABwrltA6jWR8DDe9Jp5blk+tZQh7ugpCsF3JwSA53WZM9/14PjS5LAJNHNjAI" crossorigin="anonymous"></script>
+  <script src="assets/vendor/pdf.min.js" integrity="sha384-/1qUCSGwTur9vjf/z9lmu/eCUYbpOTgSjmpbMQZ1/CtX2v/WcAIKqRv+U1DUCG6e" crossorigin="anonymous"></script>
+  <script src="assets/vendor/sortable.min.js" integrity="sha384-BSxuMLxX+FCbTdYec3TbXlnMGEEM2QXTFdtDaveen71o+jswm2J36+xFqp8k4VHM" crossorigin="anonymous"></script>
 </head>
 <body class="theme-light">
   <div class="app-container">
@@ -158,7 +182,7 @@
       <div id="mergeTabView" class="tab-view active">
         <!-- Upload Drop Zone -->
         <section class="dropzone-section">
-          <div id="dropzone" class="dropzone" tabindex="0" role="button" aria-label="Drop PDF files here or browse to merge">
+          <div id="dropzone" class="dropzone" tabindex="0" role="button" aria-label="Drop your PDF files here or browse to merge">
             <input type="file" id="fileInput" multiple accept=".pdf,application/pdf" class="file-input-hidden" aria-label="Select PDF files to merge">
             <div class="dropzone-content">
               <div class="dropzone-icon-wrapper">
@@ -349,7 +373,7 @@
       <div id="removeTabView" class="tab-view hidden">
         <!-- Single PDF Upload Dropzone -->
         <section class="dropzone-section" id="removeDropzoneSection">
-          <div id="removeDropzone" class="dropzone" tabindex="0" role="button" aria-label="Drop a PDF file here or browse to remove pages">
+          <div id="removeDropzone" class="dropzone" tabindex="0" role="button" aria-label="Select a PDF to Remove Pages or browse from your device">
             <input type="file" id="removeFileInput" accept=".pdf,application/pdf" class="file-input-hidden" aria-label="Select PDF file to remove pages">
             <div class="dropzone-content">
               <div class="dropzone-icon-wrapper" style="background-color: var(--danger-light); color: var(--danger);">
@@ -504,7 +528,7 @@
       <div id="slidesTabView" class="tab-view hidden">
         <!-- Presentation Upload Drop Zone -->
         <section class="dropzone-section" id="slidesDropzoneSection">
-          <div id="slidesDropzone" class="dropzone" tabindex="0" role="button" aria-label="Drop a presentation PDF here or browse to generate handout">
+          <div id="slidesDropzone" class="dropzone" tabindex="0" role="button" aria-label="Upload Presentation PDF or browse from your device">
             <input type="file" id="slidesFileInput" accept=".pdf,application/pdf" class="file-input-hidden" aria-label="Select presentation PDF to format as A4 handout">
             <div class="dropzone-content">
               <div class="dropzone-icon-wrapper" style="background-color: rgba(37, 99, 235, 0.1); color: var(--tool-slides);">
@@ -701,7 +725,7 @@
       <div id="invertTabView" class="tab-view hidden">
         <!-- Invert Upload Drop Zone -->
         <section class="dropzone-section" id="invertDropzoneSection">
-          <div id="invertDropzone" class="dropzone" tabindex="0" role="button" aria-label="Drop a PDF document here or browse to invert colors">
+          <div id="invertDropzone" class="dropzone" tabindex="0" role="button" aria-label="Select a PDF to Invert Colors or browse from your device">
             <input type="file" id="invertFileInput" accept=".pdf,application/pdf" class="file-input-hidden" aria-label="Select PDF file to invert colors">
             <div class="dropzone-content">
               <div class="dropzone-icon-wrapper" style="background-color: rgba(124, 58, 237, 0.1); color: var(--tool-invert);">
@@ -937,7 +961,7 @@
       <div id="compressTabView" class="tab-view hidden">
         <!-- Upload Drop Zone -->
         <section class="dropzone-section">
-          <div id="compressDropzone" class="dropzone" tabindex="0" role="button" aria-label="Drop a PDF document here or browse to compress">
+          <div id="compressDropzone" class="dropzone" tabindex="0" role="button" aria-label="Drop PDF to Compress or browse from your device">
             <input type="file" id="compressFileInput" accept=".pdf,application/pdf" class="file-input-hidden" aria-label="Select PDF file to compress">
             <div class="dropzone-content">
               <div class="dropzone-icon-wrapper" style="background-color: rgba(5, 150, 105, 0.1); color: var(--tool-compress);">
@@ -1180,7 +1204,7 @@
       <div id="imagesTabView" class="tab-view hidden">
         <!-- Upload Drop Zone -->
         <section class="dropzone-section" id="imagesDropzoneSection">
-          <div id="imagesDropzone" class="dropzone" tabindex="0" role="button" aria-label="Drop image files here or browse to convert to PDF">
+          <div id="imagesDropzone" class="dropzone" tabindex="0" role="button" aria-label="Drop your image files here or browse from your device">
             <input type="file" id="imagesFileInput" multiple accept="image/*,.jpg,.jpeg,.png,.webp,.gif,.bmp" class="file-input-hidden" aria-label="Select image files to convert to PDF">
             <div class="dropzone-content">
               <div class="dropzone-icon-wrapper" style="background-color: rgba(13, 148, 136, 0.1); color: var(--tool-images);">
@@ -1390,7 +1414,7 @@
       <div id="pdfToImagesTabView" class="tab-view hidden">
         <!-- Dropzone Section -->
         <section id="pdfToImagesDropzoneSection" class="dropzone-section">
-          <div id="pdfToImagesDropzone" class="dropzone" role="button" tabindex="0" aria-label="Drop a PDF document here or browse to convert to images">
+          <div id="pdfToImagesDropzone" class="dropzone" role="button" tabindex="0" aria-label="Select a PDF to Convert to Images or browse from your device">
             <input type="file" id="pdfToImagesFileInput" class="file-input-hidden" accept=".pdf,application/pdf" aria-label="Select PDF document to convert to images">
             <div class="dropzone-content">
               <div class="dropzone-icon-wrapper" style="background-color: rgba(2, 132, 199, 0.1); color: var(--tool-pdftoimages);">

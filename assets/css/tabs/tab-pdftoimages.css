@@ -1,0 +1,131 @@
+/* ============================================== */
+/* TAB 7: PDF TO IMAGES GALLERY & CARDS           */
+/* ============================================== */
+
+.pdftoimages-gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+  gap: 1.25rem;
+  margin-top: 1.25rem;
+}
+
+.pdftoimages-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  box-shadow: var(--card-shadow);
+}
+
+.pdftoimages-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(2, 132, 199, 0.16);
+  border-color: #0284c7;
+}
+
+body.theme-dark .pdftoimages-card:hover {
+  border-color: #38bdf8;
+  box-shadow: 0 8px 24px rgba(56, 189, 248, 0.2);
+}
+
+.pdftoimages-thumb-wrapper {
+  position: relative;
+  background: var(--bg-hover);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 180px;
+  max-height: 240px;
+  overflow: hidden;
+  padding: 0.75rem;
+  cursor: pointer;
+}
+
+.pdftoimages-thumb {
+  max-width: 100%;
+  max-height: 210px;
+  object-fit: contain;
+  border-radius: 4px;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+  transition: transform 0.2s ease;
+}
+
+.pdftoimages-card:hover .pdftoimages-thumb {
+  transform: scale(1.02);
+}
+
+.pdftoimages-page-badge {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  background: rgba(15, 23, 42, 0.82);
+  color: #ffffff;
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 999px;
+  backdrop-filter: blur(4px);
+  letter-spacing: 0.02em;
+}
+
+.pdftoimages-card-meta {
+  padding: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  border-top: 1px solid var(--border-color);
+  background: var(--bg-card);
+  flex-grow: 1;
+}
+
+.pdftoimages-card-title {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text-main);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.pdftoimages-card-details {
+  font-size: 0.72rem;
+  color: var(--text-sub);
+}
+
+.pdftoimages-card-actions {
+  display: flex;
+  gap: 0.5rem;
+  padding: 0 0.75rem 0.75rem;
+  background: var(--bg-card);
+}
+
+.pdftoimages-card-actions .btn {
+  flex: 1;
+  text-align: center;
+  justify-content: center;
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 0.45rem 0.65rem;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+  color: #ffffff;
+  border: none;
+  box-shadow: 0 2px 6px rgba(2, 132, 199, 0.25);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.pdftoimages-card-actions .btn:hover {
+  background: linear-gradient(135deg, #0369a1 0%, #075985 100%);
+  box-shadow: 0 4px 12px rgba(2, 132, 199, 0.35);
+  transform: translateY(-1px);
+}
+
+@media (max-width: 640px) {
+  .pdftoimages-gallery {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+  }
+}

@@ -1,0 +1,69 @@
+:root {
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Inter", "Helvetica Neue", Arial, sans-serif;
+  --primary: #4f46e5;
+  --primary-hover: #4338ca;
+  --primary-light: #eef2ff;
+  --success: #10b981;
+  --success-hover: #059669;
+  --danger: #ef4444;
+  --danger-hover: #dc2626;
+  --danger-light: #fef2f2;
+  --border-radius: 14px;
+  --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Tool Accent Tokens */
+  --tool-merge: #4f46e5;
+  --tool-merge-glow: rgba(79, 70, 229, 0.25);
+  --tool-remove: #e11d48;
+  --tool-remove-glow: rgba(225, 29, 72, 0.25);
+  --tool-slides: #2563eb;
+  --tool-slides-glow: rgba(37, 99, 235, 0.25);
+  --tool-invert: #7c3aed;
+  --tool-invert-glow: rgba(124, 58, 237, 0.25);
+  --tool-compress: #059669;
+  --tool-compress-glow: rgba(5, 150, 105, 0.25);
+  --tool-images: #0d9488;
+  --tool-images-glow: rgba(13, 148, 136, 0.25);
+  --tool-pdftoimages: #0284c7;
+  --tool-pdftoimages-glow: rgba(2, 132, 199, 0.25);
+}
+
+body.theme-light {
+  --bg-app: #f8fafc;
+  --bg-main: #f8fafc;
+  --bg-card: #ffffff;
+  --bg-card-secondary: #f1f5f9;
+  --bg-secondary: #f1f5f9;
+  --border-color: #e2e8f0;
+  --border-hover: #cbd5e1;
+  --text-main: #0f172a;
+  --text-sub: #475569;
+  --text-muted: #94a3b8;
+  --card-shadow: 0 4px 12px -2px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.03);
+  --card-shadow-hover: 0 12px 24px -4px rgba(0, 0, 0, 0.08), 0 4px 8px -2px rgba(0, 0, 0, 0.04);
+  --dropzone-bg: #ffffff;
+  --dropzone-hover: #f8faff;
+  --dropzone-border: #cbd5e1;
+}
+
+body.theme-dark {
+  --primary: #818cf8;
+  --primary-hover: #a5b4fc;
+  --bg-app: #0a0f1d;
+  --bg-main: #0a0f1d;
+  --bg-card: #12192b;
+  --bg-card-secondary: #1a233a;
+  --bg-secondary: #1a233a;
+  --border-color: #23304d;
+  --border-hover: #364872;
+  --text-main: #f8fafc;
+  --text-sub: #cbd5e1;
+  --text-muted: #94a3b8;
+  --card-shadow: 0 4px 14px -2px rgba(0, 0, 0, 0.4), 0 2px 4px -2px rgba(0, 0, 0, 0.25);
+  --card-shadow-hover: 0 14px 28px -4px rgba(0, 0, 0, 0.6);
+  --dropzone-bg: #12192b;
+  --dropzone-hover: #172138;
+  --dropzone-border: #314269;
+  --primary-light: rgba(129, 140, 248, 0.18);
+  --danger-light: rgba(239, 68, 68, 0.18);
+}

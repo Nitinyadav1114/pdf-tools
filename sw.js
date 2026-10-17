@@ -1,9 +1,21 @@
-const CACHE_NAME = 'pdf-tools-v4';
+const CACHE_NAME = 'pdf-tools-v5';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
   './manifest.json',
   './assets/css/styles.css',
+  './assets/css/core/variables.css',
+  './assets/css/core/base.css',
+  './assets/css/core/responsive.css',
+  './assets/css/components/nav.css',
+  './assets/css/components/dropzone.css',
+  './assets/css/components/cards.css',
+  './assets/css/tabs/tab-remove.css',
+  './assets/css/tabs/tab-slides.css',
+  './assets/css/tabs/tab-invert.css',
+  './assets/css/tabs/tab-compress.css',
+  './assets/css/tabs/tab-images.css',
+  './assets/css/tabs/tab-pdftoimages.css',
   './assets/js/app.js',
   './assets/js/worker.js',
   './assets/js/core/worker-pool.js',

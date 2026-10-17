@@ -1,0 +1,125 @@
+/* ========================================= */
+/* Modern Segmented Navigation Tabs          */
+/* ========================================= */
+.nav-tabs {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  background-color: var(--bg-card-secondary);
+  padding: 0.35rem;
+  border-radius: 14px;
+  border: 1px solid var(--border-color);
+  margin-bottom: 1.5rem;
+  width: 100%;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.03);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.nav-tabs::-webkit-scrollbar {
+  display: none;
+}
+
+.nav-tab {
+  flex: 1;
+  min-width: max-content;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.625rem 0.85rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-sub);
+  background: transparent;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  user-select: none;
+  white-space: nowrap;
+}
+
+.nav-tab * {
+  pointer-events: none;
+}
+
+.nav-tab:hover {
+  color: var(--text-main);
+  background: rgba(0, 0, 0, 0.03);
+}
+
+body.theme-dark .nav-tab:hover {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.nav-tab.active {
+  background: var(--bg-card);
+  color: var(--text-main);
+  font-weight: 700;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.04);
+}
+
+body.theme-dark .nav-tab.active {
+  background: var(--bg-card);
+  color: #f8fafc;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+/* Tool-specific active tab icons and accents */
+.nav-tab[data-tab="merge"].active {
+  color: var(--tool-merge);
+}
+body.theme-dark .nav-tab[data-tab="merge"].active {
+  color: #818cf8;
+}
+
+.nav-tab[data-tab="remove"].active {
+  color: var(--tool-remove);
+}
+body.theme-dark .nav-tab[data-tab="remove"].active {
+  color: #fb7185;
+}
+
+.nav-tab[data-tab="slides"].active {
+  color: var(--tool-slides);
+}
+body.theme-dark .nav-tab[data-tab="slides"].active {
+  color: #60a5fa;
+}
+
+.nav-tab[data-tab="invert"].active {
+  color: var(--tool-invert);
+}
+body.theme-dark .nav-tab[data-tab="invert"].active {
+  color: #c084fc;
+}
+
+.nav-tab[data-tab="compress"].active {
+  color: var(--tool-compress);
+}
+body.theme-dark .nav-tab[data-tab="compress"].active {
+  color: #34d399;
+}
+
+.nav-tab[data-tab="images"].active {
+  color: var(--tool-images);
+}
+body.theme-dark .nav-tab[data-tab="images"].active {
+  color: #2dd4bf;
+}
+
+.nav-tab[data-tab="pdftoimages"].active {
+  color: var(--tool-pdftoimages);
+}
+body.theme-dark .nav-tab[data-tab="pdftoimages"].active {
+  color: #38bdf8;
+}
+
+.tab-view {
+  display: block;
+}
+
+.tab-view.hidden {
+  display: none !important;
+}
