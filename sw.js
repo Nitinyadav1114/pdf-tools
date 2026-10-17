@@ -1,8 +1,9 @@
-const CACHE_NAME = 'pdf-tools-v8';
+const CACHE_NAME = 'pdf-tools-v10';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
   './manifest.json',
+  './assets/css/tailwind.dist.css',
   './assets/css/styles.css',
   './assets/css/core/variables.css',
   './assets/css/core/base.css',
