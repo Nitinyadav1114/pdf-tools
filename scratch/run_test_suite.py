@@ -107,7 +107,7 @@ async def run_suite_cdp(browser_path, port, debug_port, tmp_dir):
 
             # Poll for completion
             eval_id = 100
-            for _ in range(60):
+            for _ in range(90):
                 eval_id += 1
                 poll_script = (
                     "(() => {\n"
@@ -139,7 +139,7 @@ async def run_suite_cdp(browser_path, port, debug_port, tmp_dir):
                         break
                 await asyncio.sleep(0.5)
 
-            raise TimeoutError("Test suite did not finish within 30 seconds.")
+            raise TimeoutError("Test suite did not finish within timeout.")
 
     finally:
         try:

@@ -27,7 +27,7 @@
 }
 
 
-/* --- Bundled: assets/css/core/variables.css ---
+/* --- Bundled: assets/css/core/variables.css --- */
 
 :root {
   --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Inter", "Helvetica Neue", Arial, sans-serif;
@@ -103,7 +103,7 @@ html.dark {
 }
 
 
-/* --- Bundled: assets/css/core/base.css ---
+/* --- Bundled: assets/css/core/base.css --- */
 
 * {
   box-sizing: border-box;
@@ -424,7 +424,7 @@ body.theme-dark .footer-stats-badge {
 }
 
 
-/* --- Bundled: assets/css/components/nav.css ---
+/* --- Bundled: assets/css/components/nav.css --- */
 
 /* ========================================= */
 /* Modern Segmented Navigation Tabs          */
@@ -511,49 +511,56 @@ html.dark .nav-tab.active {
 .nav-tab[data-tab="merge"].active {
   color: var(--tool-merge);
 }
-body.theme-dark .nav-tab[data-tab="merge"].active {
+body.theme-dark .nav-tab[data-tab="merge"].active,
+html.dark .nav-tab[data-tab="merge"].active {
   color: #818cf8;
 }
 
 .nav-tab[data-tab="remove"].active {
   color: var(--tool-remove);
 }
-body.theme-dark .nav-tab[data-tab="remove"].active {
+body.theme-dark .nav-tab[data-tab="remove"].active,
+html.dark .nav-tab[data-tab="remove"].active {
   color: #fb7185;
 }
 
 .nav-tab[data-tab="slides"].active {
   color: var(--tool-slides);
 }
-body.theme-dark .nav-tab[data-tab="slides"].active {
+body.theme-dark .nav-tab[data-tab="slides"].active,
+html.dark .nav-tab[data-tab="slides"].active {
   color: #60a5fa;
 }
 
 .nav-tab[data-tab="invert"].active {
   color: var(--tool-invert);
 }
-body.theme-dark .nav-tab[data-tab="invert"].active {
+body.theme-dark .nav-tab[data-tab="invert"].active,
+html.dark .nav-tab[data-tab="invert"].active {
   color: #c084fc;
 }
 
 .nav-tab[data-tab="compress"].active {
   color: var(--tool-compress);
 }
-body.theme-dark .nav-tab[data-tab="compress"].active {
+body.theme-dark .nav-tab[data-tab="compress"].active,
+html.dark .nav-tab[data-tab="compress"].active {
   color: #34d399;
 }
 
 .nav-tab[data-tab="images"].active {
   color: var(--tool-images);
 }
-body.theme-dark .nav-tab[data-tab="images"].active {
+body.theme-dark .nav-tab[data-tab="images"].active,
+html.dark .nav-tab[data-tab="images"].active {
   color: #2dd4bf;
 }
 
 .nav-tab[data-tab="pdftoimages"].active {
   color: var(--tool-pdftoimages);
 }
-body.theme-dark .nav-tab[data-tab="pdftoimages"].active {
+body.theme-dark .nav-tab[data-tab="pdftoimages"].active,
+html.dark .nav-tab[data-tab="pdftoimages"].active {
   color: #38bdf8;
 }
 
@@ -566,7 +573,7 @@ body.theme-dark .nav-tab[data-tab="pdftoimages"].active {
 }
 
 
-/* --- Bundled: assets/css/components/dropzone.css ---
+/* --- Bundled: assets/css/components/dropzone.css --- */
 
 /* ========================================= */
 /* Dropzone Styles                           */
@@ -726,7 +733,7 @@ html.dark .dropzone.drag-active {
 }
 
 
-/* --- Bundled: assets/css/components/cards.css ---
+/* --- Bundled: assets/css/components/cards.css --- */
 
 /* ========================================= */
 /* Reusable Cards, Buttons & Interactive UI  */
@@ -1908,7 +1915,7 @@ body.theme-dark #compressWorkspaceSection .toggle-pill-btn.active {
 }
 
 
-/* --- Bundled: assets/css/tabs/tab-remove.css ---
+/* --- Bundled: assets/css/tabs/tab-remove.css --- */
 
 /* ========================================= */
 /* TAB 2: REMOVE PAGES SPECIFIC STYLES       */
@@ -2247,7 +2254,7 @@ html.dark .page-canvas-wrapper {
 }
 
 
-/* --- Bundled: assets/css/tabs/tab-slides.css ---
+/* --- Bundled: assets/css/tabs/tab-slides.css --- */
 
 /* ========================================= */
 /* TAB 3: SLIDES TO A4 HANDOUT SPECIFIC      */
@@ -2493,7 +2500,7 @@ html.dark .a4-sheet-preview-container {
 }
 
 
-/* --- Bundled: assets/css/tabs/tab-invert.css ---
+/* --- Bundled: assets/css/tabs/tab-invert.css --- */
 
 /* ============================================== */
 /* TAB 4: INVERT COLORS COMPARISON PREVIEW STYLES  */
@@ -2677,7 +2684,7 @@ html.dark .comparison-spinner {
 }
 
 
-/* --- Bundled: assets/css/tabs/tab-compress.css ---
+/* --- Bundled: assets/css/tabs/tab-compress.css --- */
 
 /* ========================================== */
 /* TAB 5: COMPRESS PDF STYLES                 */
@@ -2895,7 +2902,7 @@ html.dark .savings-meter-card {
 }
 
 
-/* --- Bundled: assets/css/tabs/tab-images.css ---
+/* --- Bundled: assets/css/tabs/tab-images.css --- */
 
 /* ============================================== */
 /* TAB 6: IMAGE TO PDF STYLES                    */
@@ -3064,7 +3071,7 @@ html.dark .image-thumb-wrapper {
 }
 
 
-/* --- Bundled: assets/css/tabs/tab-pdftoimages.css ---
+/* --- Bundled: assets/css/tabs/tab-pdftoimages.css --- */
 
 /* ============================================== */
 /* TAB 7: PDF TO IMAGES GALLERY & CARDS           */
@@ -3221,7 +3228,7 @@ html.dark .pdftoimages-thumb-wrapper {
 }
 
 
-/* --- Bundled: assets/css/core/responsive.css ---
+/* --- Bundled: assets/css/core/responsive.css --- */
 
 /* ============================================== */
 /* COMPREHENSIVE RESPONSIVE DESIGN (MOBILE-FIRST) */

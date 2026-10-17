@@ -179,14 +179,7 @@ export function init() {
       }
     });
   }
-
-  if (elements.tabMergeBtn) elements.tabMergeBtn.addEventListener('click', () => switchTab('merge'));
-  if (elements.tabRemoveBtn) elements.tabRemoveBtn.addEventListener('click', () => switchTab('remove'));
-  if (elements.tabSlidesBtn) elements.tabSlidesBtn.addEventListener('click', () => switchTab('slides'));
-  if (elements.tabInvertBtn) elements.tabInvertBtn.addEventListener('click', () => switchTab('invert'));
-  if (elements.tabCompressBtn) elements.tabCompressBtn.addEventListener('click', () => switchTab('compress'));
-  if (elements.tabImagesBtn) elements.tabImagesBtn.addEventListener('click', () => switchTab('images'));
-  if (elements.tabPdfToImagesBtn) elements.tabPdfToImagesBtn.addEventListener('click', () => switchTab('pdftoimages'));
+  // Delegated click listener above handles all .nav-tab buttons
 
   initPWAInstallBanner();
   initCounter();
