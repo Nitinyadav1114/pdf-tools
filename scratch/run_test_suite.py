@@ -48,6 +48,22 @@ def find_browser():
     return None
 
 
+def kill_process_tree(proc):
+    if not proc:
+        return
+    try:
+        if sys.platform == "win32":
+            subprocess.run(["taskkill", "/F", "/T", "/PID", str(proc.pid)], capture_output=True, timeout=5)
+        else:
+            proc.terminate()
+            proc.wait(timeout=2)
+    except Exception:
+        try:
+            proc.kill()
+        except Exception:
+            pass
+
+
 def get_free_port():
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         s.bind(("127.0.0.1", 0))
@@ -62,6 +78,11 @@ class QuietHTTPHandler(http.server.SimpleHTTPRequestHandler):
         pass
 
 
+class ThreadedTCPServer(socketserver.ThreadingMixIn, socketserver.TCPServer):
+    daemon_threads = True
+    allow_reuse_address = True
+
+
 async def run_suite_cdp(browser_path, port, debug_port, tmp_dir):
     test_url = f"http://127.0.0.1:{port}/test_suite.html"
     cmd = [
@@ -70,6 +91,11 @@ async def run_suite_cdp(browser_path, port, debug_port, tmp_dir):
         "--disable-gpu",
         "--no-first-run",
         "--no-default-browser-check",
+        "--disable-extensions",
+        "--disable-background-networking",
+        "--disable-background-timer-throttling",
+        "--disable-backgrounding-occluded-windows",
+        "--disable-renderer-backgrounding",
         f"--remote-debugging-port={debug_port}",
         f"--user-data-dir={tmp_dir}",
         test_url,
@@ -89,7 +115,11 @@ async def run_suite_cdp(browser_path, port, debug_port, tmp_dir):
                 with urllib.request.urlopen(f"http://127.0.0.1:{debug_port}/json", timeout=1) as resp:
                     tabs = json.loads(resp.read().decode())
                     pages = [t for t in tabs if t.get("type") == "page"]
-                    if pages:
+                    matching = [t for t in pages if "test_suite.html" in t.get("url", "")]
+                    if matching:
+                        target = matching[0]
+                        break
+                    elif pages:
                         target = pages[0]
                         break
             except Exception:
@@ -107,7 +137,7 @@ async def run_suite_cdp(browser_path, port, debug_port, tmp_dir):
 
             # Poll for completion
             eval_id = 100
-            for _ in range(90):
+            for step in range(120):
                 eval_id += 1
                 poll_script = (
                     "(() => {\n"
@@ -116,7 +146,8 @@ async def run_suite_cdp(browser_path, port, debug_port, tmp_dir):
                     "  return JSON.stringify({\n"
                     "    done: !!doneEl,\n"
                     "    doneText: doneEl ? doneEl.innerText : '',\n"
-                    "    results: results\n"
+                    "    results: results,\n"
+                    "    href: window.location.href\n"
                     "  });\n"
                     "})()"
                 )
@@ -126,14 +157,30 @@ async def run_suite_cdp(browser_path, port, debug_port, tmp_dir):
                     "params": {"expression": poll_script, "returnByValue": True}
                 }))
 
-                # Wait for response with matching id
+                # Wait for response with matching id with per-read timeout
                 while True:
-                    raw_msg = await ws.recv()
+                    try:
+                        raw_msg = await asyncio.wait_for(ws.recv(), timeout=5.0)
+                    except asyncio.TimeoutError:
+                        break
                     msg = json.loads(raw_msg)
+                    if msg.get("method") == "Runtime.consoleAPICalled":
+                        level = msg.get("params", {}).get("type")
+                        if level in ("error", "assert"):
+                            args = msg.get("params", {}).get("args", [])
+                            err_txt = " ".join(str(a.get("value", "")) for a in args)
+                            print(f"[BROWSER ERROR] {err_txt}", file=sys.stderr)
                     if msg.get("id") == eval_id:
                         val = msg.get("result", {}).get("result", {}).get("value")
                         if val:
                             data = json.loads(val)
+                            # If stuck on about:blank, explicitly trigger navigation
+                            if data.get("href") == "about:blank" and step >= 2:
+                                await ws.send(json.dumps({
+                                    "id": 9999,
+                                    "method": "Runtime.evaluate",
+                                    "params": {"expression": f"window.location.href = '{test_url}';"}
+                                }))
                             if data.get("done"):
                                 return data
                         break
@@ -142,11 +189,7 @@ async def run_suite_cdp(browser_path, port, debug_port, tmp_dir):
             raise TimeoutError("Test suite did not finish within timeout.")
 
     finally:
-        try:
-            proc.terminate()
-            proc.wait(timeout=2)
-        except Exception:
-            proc.kill()
+        kill_process_tree(proc)
 
 
 def main():
@@ -162,7 +205,7 @@ def main():
     tmp_dir = tempfile.mkdtemp(prefix="pdf_tools_test_")
 
     print(f"[*] Serving repository on http://127.0.0.1:{port}")
-    httpd = socketserver.TCPServer(("127.0.0.1", port), QuietHTTPHandler)
+    httpd = ThreadedTCPServer(("127.0.0.1", port), QuietHTTPHandler)
     server_thread = threading.Thread(target=httpd.serve_forever, daemon=True)
     server_thread.start()
 
@@ -206,7 +249,10 @@ def main():
         traceback.print_exc()
         sys.exit(1)
     finally:
-        httpd.shutdown()
+        try:
+            httpd.shutdown()
+        finally:
+            httpd.server_close()
         shutil.rmtree(tmp_dir, ignore_errors=True)
 
 

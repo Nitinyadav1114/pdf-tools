@@ -37,6 +37,22 @@ def find_browser():
     return None
 
 
+def kill_process_tree(proc):
+    if not proc:
+        return
+    try:
+        if sys.platform == "win32":
+            subprocess.run(["taskkill", "/F", "/T", "/PID", str(proc.pid)], capture_output=True, timeout=5)
+        else:
+            proc.terminate()
+            proc.wait(timeout=2)
+    except Exception:
+        try:
+            proc.kill()
+        except Exception:
+            pass
+
+
 def get_free_port():
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         s.bind(("127.0.0.1", 0))
@@ -51,6 +67,11 @@ class QuietHTTPHandler(http.server.SimpleHTTPRequestHandler):
         pass
 
 
+class ThreadedTCPServer(socketserver.ThreadingMixIn, socketserver.TCPServer):
+    daemon_threads = True
+    allow_reuse_address = True
+
+
 async def test_ui_and_tab_switching(browser_path, port, debug_port, tmp_dir):
     test_url = f"http://127.0.0.1:{port}/index.html"
     cmd = [
@@ -59,6 +80,11 @@ async def test_ui_and_tab_switching(browser_path, port, debug_port, tmp_dir):
         "--disable-gpu",
         "--no-first-run",
         "--no-default-browser-check",
+        "--disable-extensions",
+        "--disable-background-networking",
+        "--disable-background-timer-throttling",
+        "--disable-backgrounding-occluded-windows",
+        "--disable-renderer-backgrounding",
         f"--remote-debugging-port={debug_port}",
         f"--user-data-dir={tmp_dir}",
         test_url,
@@ -77,7 +103,11 @@ async def test_ui_and_tab_switching(browser_path, port, debug_port, tmp_dir):
                 with urllib.request.urlopen(f"http://127.0.0.1:{debug_port}/json", timeout=1) as resp:
                     tabs = json.loads(resp.read().decode())
                     pages = [t for t in tabs if t.get("type") == "page"]
-                    if pages:
+                    matching = [t for t in pages if "index.html" in t.get("url", "")]
+                    if matching:
+                        target = matching[0]
+                        break
+                    elif pages:
                         target = pages[0]
                         break
             except Exception:
@@ -109,12 +139,16 @@ async def test_ui_and_tab_switching(browser_path, port, debug_port, tmp_dir):
                     if data.get("id") == curr_id:
                         return data.get("result", {}).get("result", {}).get("value")
 
-            # Wait for app.js initialization
-            for _ in range(20):
+            # Wait for app.js initialization (up to 20 seconds)
+            ready = False
+            for _ in range(80):
                 ready = await eval_js("typeof window.switchTab === 'function'")
                 if ready:
                     break
-                await asyncio.sleep(0.2)
+                await asyncio.sleep(0.25)
+
+            if not ready:
+                raise RuntimeError("app.js did not initialize window.switchTab within timeout.")
 
             tabs = ['merge', 'remove', 'slides', 'invert', 'compress', 'images', 'pdftoimages']
             view_map = {
@@ -140,9 +174,9 @@ async def test_ui_and_tab_switching(browser_path, port, debug_port, tmp_dir):
                 print(f"\n--- Testing in [{theme_status.upper()}] Theme ---")
 
                 for tab in tabs:
-                    # Switch tab
+                    # Switch tab via window.switchTab and click simulation
                     await eval_js(f"window.switchTab('{tab}')")
-                    await asyncio.sleep(0.1)
+                    await asyncio.sleep(0.15)
 
                     check_code = f"""
                     (() => {{
@@ -233,11 +267,7 @@ async def test_ui_and_tab_switching(browser_path, port, debug_port, tmp_dir):
             return all_tabs_passed and all_dz_passed and privacy_passed
 
     finally:
-        try:
-            proc.terminate()
-            proc.wait(timeout=2)
-        except Exception:
-            proc.kill()
+        kill_process_tree(proc)
 
 
 def main():
@@ -250,7 +280,7 @@ def main():
     debug_port = get_free_port()
     tmp_dir = tempfile.mkdtemp(prefix="tab_switch_test_")
 
-    httpd = socketserver.TCPServer(("127.0.0.1", port), QuietHTTPHandler)
+    httpd = ThreadedTCPServer(("127.0.0.1", port), QuietHTTPHandler)
     t = threading.Thread(target=httpd.serve_forever, daemon=True)
     t.start()
 
@@ -263,7 +293,10 @@ def main():
             print("\n[FAILURE] Tab switching or UI verification failed.", file=sys.stderr)
             sys.exit(1)
     finally:
-        httpd.shutdown()
+        try:
+            httpd.shutdown()
+        finally:
+            httpd.server_close()
         shutil.rmtree(tmp_dir, ignore_errors=True)
 
 

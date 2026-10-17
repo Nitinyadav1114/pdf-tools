@@ -3,6 +3,10 @@
 <head>
   <meta charset="utf-8">
   <title>PDF Merger & Page Remover Automated Tests</title>
+  <script>
+    // Ensure test environment uses mock/null counter endpoint so zero remote network requests are attempted
+    window.PDF_TOOLS_COUNTER_ENDPOINT = null;
+  </script>
   <script src="assets/vendor/pdf-lib.min.js"></script>
   <script src="assets/vendor/pdf.min.js"></script>
   <script src="assets/vendor/sortable.min.js"></script>
@@ -608,8 +612,16 @@
             10, 10, 10, 255,
             20, 20, 20, 255
           ]);
-          const darkPromise = new Promise((resolve) => {
-            worker.onmessage = (e) => resolve(e.data);
+          const darkPromise = new Promise((resolve, reject) => {
+            const timeout = setTimeout(() => reject(new Error('Worker dark-only invert timed out')), 3000);
+            worker.onmessage = (e) => {
+              clearTimeout(timeout);
+              resolve(e.data);
+            };
+            worker.onerror = (err) => {
+              clearTimeout(timeout);
+              reject(err);
+            };
             worker.postMessage({
               id: 103,
               type: 'invert',
