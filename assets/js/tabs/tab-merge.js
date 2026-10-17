@@ -231,7 +231,7 @@ export function renderMergeFileList() {
 
   mergeState.files.forEach((item, index) => {
     const card = document.createElement('div');
-    card.className = 'file-card reorder-card bg-surface-container-lowest dark:bg-[#131b2e] rounded-xl p-4 shadow-sm hover:shadow-md transition-all border border-slate-border dark:border-slate-800 flex flex-col justify-between group cursor-grab active:cursor-grabbing';
+    card.className = 'file-card reorder-card bg-surface-container-lowest/90 dark:bg-[#131b2e]/90 backdrop-blur-md rounded-2xl p-4 sm:p-5 shadow-sm hover:shadow-lg transition-all duration-200 border border-slate-200/80 dark:border-slate-800 flex flex-col justify-between group cursor-grab active:cursor-grabbing hover:-translate-y-1 relative';
     card.dataset.id = item.id;
 
     const formattedDate = formatTimestamp(item.lastModified);
@@ -240,25 +240,25 @@ export function renderMergeFileList() {
 
     const thumbHtml = item.thumbnailUrl
       ? `<img src="${item.thumbnailUrl}" class="w-full h-full object-cover" alt="Page 1 preview">`
-      : `<span class="material-symbols-outlined text-[22px]">picture_as_pdf</span>`;
+      : `<span class="material-symbols-outlined text-[24px]">picture_as_pdf</span>`;
 
     card.innerHTML = `
       <!-- Card Header Row -->
       <div class="flex items-start justify-between gap-2 mb-3">
         <div class="flex items-center gap-2">
-          <span class="drag-handle text-slate-muted dark:text-slate-500 group-hover:text-primary dark:group-hover:text-indigo-400 transition-colors cursor-grab" title="Drag to reorder" aria-label="Drag handle">
+          <span class="drag-handle text-slate-400 group-hover:text-primary-container dark:group-hover:text-indigo-400 transition-colors cursor-grab p-1 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800" title="Drag to reorder" aria-label="Drag handle">
             <span class="material-symbols-outlined text-[20px]">drag_indicator</span>
           </span>
-          <span class="index-pill w-6 h-6 rounded-full bg-primary-fixed dark:bg-indigo-950 text-primary dark:text-indigo-300 text-[11px] font-bold flex items-center justify-center">${index + 1}</span>
+          <span class="index-pill w-6 h-6 rounded-full bg-indigo-50 dark:bg-indigo-950/80 text-primary-container dark:text-indigo-300 text-xs font-bold flex items-center justify-center border border-indigo-100 dark:border-indigo-900/60 shadow-sm">${index + 1}</span>
         </div>
         <div class="card-header-actions file-actions flex items-center gap-1">
-          <button class="btn-card-action btn-up w-7 h-7 rounded-full flex items-center justify-center text-slate-muted dark:text-slate-400 hover:text-on-surface dark:hover:text-white hover:bg-surface-container dark:hover:bg-slate-800 transition-colors" title="Move Up" ${index === 0 ? 'disabled style="opacity: 0.3; cursor: not-allowed;"' : ''}>
+          <button class="btn-card-action btn-up w-7 h-7 rounded-full flex items-center justify-center text-slate-400 hover:text-slate-800 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" title="Move Up" ${index === 0 ? 'disabled style="opacity: 0.3; cursor: not-allowed;"' : ''}>
             <span class="material-symbols-outlined text-[16px]">expand_less</span>
           </button>
-          <button class="btn-card-action btn-down w-7 h-7 rounded-full flex items-center justify-center text-slate-muted dark:text-slate-400 hover:text-on-surface dark:hover:text-white hover:bg-surface-container dark:hover:bg-slate-800 transition-colors" title="Move Down" ${index === mergeState.files.length - 1 ? 'disabled style="opacity: 0.3; cursor: not-allowed;"' : ''}>
+          <button class="btn-card-action btn-down w-7 h-7 rounded-full flex items-center justify-center text-slate-400 hover:text-slate-800 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" title="Move Down" ${index === mergeState.files.length - 1 ? 'disabled style="opacity: 0.3; cursor: not-allowed;"' : ''}>
             <span class="material-symbols-outlined text-[16px]">expand_more</span>
           </button>
-          <button class="btn-card-action btn-delete w-7 h-7 rounded-full flex items-center justify-center text-slate-muted dark:text-slate-400 hover:text-error dark:hover:text-red-400 hover:bg-error-container/40 dark:hover:bg-red-950/50 transition-colors" title="Remove PDF">
+          <button class="btn-card-action btn-delete w-7 h-7 rounded-full flex items-center justify-center text-slate-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-950/50 transition-colors" title="Remove PDF">
             <span class="material-symbols-outlined text-[16px]">close</span>
           </button>
         </div>
@@ -266,22 +266,22 @@ export function renderMergeFileList() {
 
       <!-- Card Body Row -->
       <div class="flex items-start gap-3 mb-4">
-        <div class="file-thumb-container w-10 h-10 rounded-lg bg-error-container/50 dark:bg-red-950/40 text-error dark:text-red-400 flex items-center justify-center shrink-0 overflow-hidden">
+        <div class="file-thumb-container w-11 h-11 rounded-xl bg-slate-100 dark:bg-slate-800/80 text-primary-container dark:text-indigo-400 flex items-center justify-center shrink-0 overflow-hidden border border-slate-200/60 dark:border-slate-700/60 shadow-inner">
           ${thumbHtml}
         </div>
-        <div class="file-info flex flex-col min-w-0 flex-1">
-          <span class="file-name font-semibold text-sm text-on-surface dark:text-white truncate" title="${escapeHtml(item.name)}">${escapeHtml(item.name)}</span>
-          <span class="file-submeta text-xs text-slate-muted dark:text-slate-400"><span class="page-badge-text">${pageStr}</span> &bull; ${sizeStr}</span>
+        <div class="file-info flex flex-col min-w-0 flex-1 gap-0.5">
+          <span class="file-name font-bold text-sm text-on-surface dark:text-white truncate tracking-tight" title="${escapeHtml(item.name)}">${escapeHtml(item.name)}</span>
+          <span class="file-submeta text-xs text-slate-muted dark:text-slate-400"><span class="page-badge-text font-medium">${pageStr}</span> &bull; <span>${sizeStr}</span></span>
         </div>
       </div>
 
       <!-- Card Footer Row -->
-      <div class="card-footer-row flex items-center justify-between pt-2 border-t border-slate-border-subtle dark:border-slate-800">
-        <div class="inline-flex items-center gap-1 text-[11px] text-slate-muted dark:text-slate-400 bg-slate-bg dark:bg-slate-900 px-2 py-0.5 rounded border border-slate-border dark:border-slate-800">
-          <span class="material-symbols-outlined text-[12px]">schedule</span>
+      <div class="card-footer-row flex items-center justify-between pt-3 border-t border-slate-100 dark:border-slate-800/80">
+        <div class="inline-flex items-center gap-1.5 text-[11px] font-medium text-slate-500 dark:text-slate-400 bg-slate-100/70 dark:bg-slate-900/70 px-2.5 py-1 rounded-lg border border-slate-200/50 dark:border-slate-800">
+          <span class="material-symbols-outlined text-[13px]">schedule</span>
           <span>${formattedDate}</span>
         </div>
-        <span class="page-range-pill text-[11px] font-semibold text-primary-container dark:text-indigo-300 bg-indigo-tint dark:bg-indigo-950/60 px-2 py-0.5 rounded">${item.pageCount ? `Pages 1–${item.pageCount}` : 'Pages 1+'}</span>
+        <span class="page-range-pill text-[11px] font-semibold text-primary-container dark:text-indigo-300 bg-indigo-50 dark:bg-indigo-950/70 px-2.5 py-1 rounded-lg border border-indigo-100/70 dark:border-indigo-900/50">${item.pageCount ? `Pages 1–${item.pageCount}` : 'Pages 1+'}</span>
       </div>
     `;
 

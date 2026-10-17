@@ -49,6 +49,8 @@ if (typeof window !== 'undefined') {
   window.isValidImageFile = isValidImageFile;
   window.createZipArchive = createZipArchive;
   window.pdfToImagesState = pdfToImagesState;
+  window.mergeState = mergeState;
+  window.handleMergeFilesAdded = handleMergeFilesAdded;
   window.switchTab = switchTab;
   window.trackToolUsage = trackToolUsage;
   window.incrementProcessedCounter = incrementProcessedCounter;

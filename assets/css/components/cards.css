@@ -199,45 +199,72 @@
 
 /* File List & Cards */
 .file-list {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
+  display: grid;
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+  gap: 1rem;
   margin-bottom: 1.5rem;
   min-height: 20px;
 }
 
+@media (min-width: 640px) {
+  .file-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .file-list {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
 .file-card {
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  justify-content: space-between;
   background: var(--bg-card);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   border: 1px solid var(--border-color);
-  border-radius: var(--border-radius);
-  padding: 0.85rem 1rem;
+  border-radius: 20px;
+  padding: 1.1rem 1.15rem;
   gap: 0.85rem;
   box-shadow: var(--card-shadow);
-  transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.2s ease;
   user-select: none;
+  position: relative;
 }
 
 .file-card:hover {
   border-color: var(--border-hover);
   box-shadow: var(--card-shadow-hover);
+  transform: translateY(-2px);
+}
+
+body.theme-dark .file-card {
+  background: rgba(19, 27, 46, 0.85);
+  border-color: rgba(30, 41, 59, 0.85);
+}
+
+body.theme-dark .file-card:hover {
+  border-color: rgba(99, 102, 241, 0.4);
+  box-shadow: 0 16px 32px -4px rgba(0, 0, 0, 0.65), 0 0 16px 1px rgba(99, 102, 241, 0.15);
 }
 
 .drag-handle {
   color: var(--text-muted);
   cursor: grab;
-  padding: 0.4rem;
+  padding: 0.35rem;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 6px;
+  border-radius: 8px;
   transition: color 0.15s ease, background-color 0.15s ease;
 }
 
 .drag-handle:hover {
-  color: var(--text-main);
-  background-color: var(--bg-card-secondary);
+  color: var(--primary);
+  background-color: var(--primary-light);
 }
 
 .drag-handle:active {
@@ -247,21 +274,27 @@
 .index-pill {
   font-size: 0.75rem;
   font-weight: 700;
-  background: var(--bg-card-secondary);
-  color: var(--text-sub);
-  min-width: 26px;
-  height: 26px;
+  background: var(--primary-light);
+  color: var(--primary);
+  min-width: 24px;
+  height: 24px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 6px;
-  border: 1px solid var(--border-color);
+  border-radius: 9999px;
+  border: 1px solid rgba(79, 70, 229, 0.15);
+}
+
+body.theme-dark .index-pill {
+  background: rgba(30, 27, 75, 0.8);
+  color: #a5b4fc;
+  border-color: rgba(99, 102, 241, 0.3);
 }
 
 .file-thumb-container {
-  width: 52px;
-  height: 68px;
-  border-radius: 6px;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
   border: 1px solid var(--border-color);
   background: var(--bg-card-secondary);
   display: flex;
@@ -269,6 +302,7 @@
   justify-content: center;
   overflow: hidden;
   flex-shrink: 0;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.05);
 }
 
 .file-thumb-canvas {
@@ -288,11 +322,11 @@
   min-width: 0;
   display: flex;
   flex-direction: column;
-  gap: 0.3rem;
+  gap: 0.2rem;
 }
 
 .file-name {
-  font-size: 0.95rem;
+  font-size: 0.925rem;
   font-weight: 600;
   color: var(--text-main);
   white-space: nowrap;
@@ -339,9 +373,9 @@ body.theme-dark .timestamp-badge {
   background: transparent;
   border: 1px solid var(--border-color);
   color: var(--text-sub);
-  width: 32px;
-  height: 32px;
-  border-radius: 6px;
+  width: 30px;
+  height: 30px;
+  border-radius: 9999px;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -353,6 +387,11 @@ body.theme-dark .timestamp-badge {
   background: var(--bg-card-secondary);
   color: var(--text-main);
   border-color: var(--border-hover);
+}
+
+body.theme-dark .btn-card-action:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #f8fafc;
 }
 
 .btn-card-action.btn-delete:hover {
@@ -377,8 +416,10 @@ body.theme-dark .timestamp-badge {
 /* Unified Action Cards */
 .merge-action-card, .action-bar-card, .action-bar {
   background: var(--bg-card);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   border: 1px solid var(--border-color);
-  border-radius: var(--border-radius);
+  border-radius: 20px;
   padding: 1.25rem 1.5rem;
   display: flex;
   align-items: center;
@@ -388,6 +429,13 @@ body.theme-dark .timestamp-badge {
   box-shadow: var(--card-shadow);
   margin-bottom: 1.25rem;
   transition: var(--transition);
+}
+
+body.theme-dark .merge-action-card,
+body.theme-dark .action-bar-card,
+body.theme-dark .action-bar {
+  background: rgba(19, 27, 46, 0.85);
+  border-color: rgba(30, 41, 59, 0.85);
 }
 
 .output-filename-group, .output-filename-wrapper, .action-bar-left {
