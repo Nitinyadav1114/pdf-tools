@@ -66,10 +66,18 @@ class QuietHTTPHandler(http.server.SimpleHTTPRequestHandler):
     def log_message(self, format, *args):
         pass
 
+    def handle(self):
+        try:
+            super().handle()
+        except (ConnectionResetError, ConnectionAbortedError, BrokenPipeError):
+            pass
 
-class ThreadedTCPServer(socketserver.ThreadingMixIn, socketserver.TCPServer):
-    daemon_threads = True
+
+class RobustTCPServer(socketserver.TCPServer):
     allow_reuse_address = True
+
+    def handle_error(self, request, client_address):
+        pass
 
 
 async def test_ui_and_tab_switching(browser_path, port, debug_port, tmp_dir):
@@ -80,13 +88,9 @@ async def test_ui_and_tab_switching(browser_path, port, debug_port, tmp_dir):
         "--disable-gpu",
         "--no-first-run",
         "--no-default-browser-check",
-        "--disable-extensions",
-        "--disable-background-networking",
-        "--disable-background-timer-throttling",
-        "--disable-backgrounding-occluded-windows",
-        "--disable-renderer-backgrounding",
         f"--remote-debugging-port={debug_port}",
         f"--user-data-dir={tmp_dir}",
+        "--window-size=1440,900",
         test_url,
     ]
 
@@ -97,6 +101,7 @@ async def test_ui_and_tab_switching(browser_path, port, debug_port, tmp_dir):
     )
 
     try:
+        await asyncio.sleep(2)
         target = None
         for _ in range(30):
             try:
@@ -118,31 +123,36 @@ async def test_ui_and_tab_switching(browser_path, port, debug_port, tmp_dir):
             raise RuntimeError("Failed to connect to browser CDP target.")
 
         ws_url = target["webSocketDebuggerUrl"]
-        async with websockets.connect(ws_url, max_size=10_000_000) as ws:
-            await ws.send(json.dumps({"id": 1, "method": "Runtime.enable"}))
+        async with websockets.connect(ws_url, max_size=20_000_000) as ws:
+            msg_id = 100
 
-            # Helper to evaluate JS and get result
-            msg_id = 10
-
-            async def eval_js(expr):
+            async def send_cmd(method, params=None):
                 nonlocal msg_id
                 msg_id += 1
                 curr_id = msg_id
-                await ws.send(json.dumps({
-                    "id": curr_id,
-                    "method": "Runtime.evaluate",
-                    "params": {"expression": expr, "returnByValue": True, "awaitPromise": True}
-                }))
+                payload = {"id": curr_id, "method": method}
+                if params:
+                    payload["params"] = params
+                await ws.send(json.dumps(payload))
                 while True:
                     raw = await ws.recv()
                     data = json.loads(raw)
                     if data.get("id") == curr_id:
-                        return data.get("result", {}).get("result", {}).get("value")
+                        return data.get("result")
+
+            async def eval_js(expr):
+                res = await send_cmd("Runtime.evaluate", {"expression": expr, "returnByValue": True, "awaitPromise": True})
+                if res and "result" in res:
+                    return res["result"].get("value")
+                return None
+
+            await send_cmd("Runtime.enable")
+            await send_cmd("Page.enable")
 
             # Wait for app.js initialization (up to 20 seconds)
             ready = False
             for _ in range(80):
-                ready = await eval_js("typeof window.switchTab === 'function'")
+                ready = await eval_js("document.readyState === 'complete' && typeof window.switchTab === 'function'")
                 if ready:
                     break
                 await asyncio.sleep(0.25)
@@ -281,7 +291,7 @@ def main():
     debug_port = get_free_port()
     tmp_dir = tempfile.mkdtemp(prefix="tab_switch_test_")
 
-    httpd = ThreadedTCPServer(("127.0.0.1", port), QuietHTTPHandler)
+    httpd = RobustTCPServer(("127.0.0.1", port), QuietHTTPHandler)
     t = threading.Thread(target=httpd.serve_forever, daemon=True)
     t.start()
 

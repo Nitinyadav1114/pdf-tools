@@ -77,10 +77,18 @@ class QuietHTTPHandler(http.server.SimpleHTTPRequestHandler):
     def log_message(self, format, *args):
         pass
 
+    def handle(self):
+        try:
+            super().handle()
+        except (ConnectionResetError, ConnectionAbortedError, BrokenPipeError):
+            pass
 
-class ThreadedTCPServer(socketserver.ThreadingMixIn, socketserver.TCPServer):
-    daemon_threads = True
+
+class RobustTCPServer(socketserver.TCPServer):
     allow_reuse_address = True
+
+    def handle_error(self, request, client_address):
+        pass
 
 
 async def run_suite_cdp(browser_path, port, debug_port, tmp_dir):
@@ -91,13 +99,9 @@ async def run_suite_cdp(browser_path, port, debug_port, tmp_dir):
         "--disable-gpu",
         "--no-first-run",
         "--no-default-browser-check",
-        "--disable-extensions",
-        "--disable-background-networking",
-        "--disable-background-timer-throttling",
-        "--disable-backgrounding-occluded-windows",
-        "--disable-renderer-backgrounding",
         f"--remote-debugging-port={debug_port}",
         f"--user-data-dir={tmp_dir}",
+        "--window-size=1440,900",
         test_url,
     ]
 
@@ -108,6 +112,7 @@ async def run_suite_cdp(browser_path, port, debug_port, tmp_dir):
     )
 
     try:
+        await asyncio.sleep(2)
         # Wait for CDP endpoint to become ready
         target = None
         for _ in range(30):
@@ -205,7 +210,7 @@ def main():
     tmp_dir = tempfile.mkdtemp(prefix="pdf_tools_test_")
 
     print(f"[*] Serving repository on http://127.0.0.1:{port}")
-    httpd = ThreadedTCPServer(("127.0.0.1", port), QuietHTTPHandler)
+    httpd = RobustTCPServer(("127.0.0.1", port), QuietHTTPHandler)
     server_thread = threading.Thread(target=httpd.serve_forever, daemon=True)
     server_thread.start()
 

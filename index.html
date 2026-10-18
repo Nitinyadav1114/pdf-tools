@@ -32,7 +32,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=block" rel="stylesheet">
 
   <!-- Production Single Minified Stylesheet (Zero-Waterfall Pre-bundled Architecture) -->
-  <link rel="stylesheet" href="assets/css/bundle.min.css?v=13">
+  <link rel="stylesheet" href="assets/css/bundle.min.css?v=14">
 
   <!-- Canonical URL -->
   <link rel="canonical" href="https://nitinyadav1114.github.io/pdf-tools/">
@@ -79,106 +79,90 @@
   <link rel="manifest" href="manifest.json">
 
 </head>
-<body class="theme-light bg-slate-bg dark:bg-[#0a0f1d] font-sans text-on-surface dark:text-slate-100 antialiased min-h-screen flex flex-col">
-  <div class="app-container w-full max-w-6xl mx-auto px-4 sm:px-6 py-6 flex flex-col flex-1">
-    <!-- Header -->
-    <header class="w-full bg-surface-container-lowest/80 dark:bg-[#131b2e]/80 backdrop-blur-xl border border-slate-200/80 dark:border-slate-800 rounded-2xl py-3.5 px-4 sm:px-6 mb-6 shadow-sm transition-all">
-      <div class="flex items-center justify-between gap-4">
-        <div class="flex items-center gap-3.5">
-          <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 to-indigo-500 text-white flex items-center justify-center shadow-md shadow-indigo-500/25 shrink-0 transition-transform duration-200 hover:scale-105">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-              <polyline points="14 2 14 8 20 8"></polyline>
-              <line x1="9" y1="13" x2="15" y2="13"></line>
-              <line x1="9" y1="17" x2="15" y2="17"></line>
-              <polyline points="9 9 10 9 11 9"></polyline>
-            </svg>
-          </div>
-          <div>
-            <div class="flex items-center gap-2">
-              <h1 class="text-xl font-bold tracking-tight text-on-surface dark:text-white" id="appMainTitle">PDF Tools</h1>
-              <span class="hidden sm:inline-flex items-center px-2 py-0.5 rounded-full bg-indigo-50 dark:bg-indigo-950/70 text-indigo-600 dark:text-indigo-300 text-[11px] font-bold border border-indigo-100 dark:border-indigo-900/50">Private Suite</span>
-            </div>
-            <p class="text-xs text-slate-muted dark:text-slate-400 hidden md:block" id="appMainSubtitle">Sort by timestamp or drag &amp; drop to reorder</p>
-          </div>
+<body class="theme-light">
+  <div class="app-container">
+    <!-- Modern Sleek Header -->
+    <header class="app-header">
+      <div class="header-left">
+        <div class="brand-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+            <polyline points="14 2 14 8 20 8"></polyline>
+            <line x1="9" y1="13" x2="15" y2="13"></line>
+            <line x1="9" y1="17" x2="15" y2="17"></line>
+            <polyline points="9 9 10 9 11 9"></polyline>
+          </svg>
         </div>
-        <div class="flex items-center gap-2 sm:gap-3">
-          <div class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 shadow-sm border border-emerald-200/60 dark:border-emerald-800/50">
-            <span class="relative flex h-2 w-2">
-              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-              <span class="relative inline-flex rounded-full h-2 w-2 bg-[#10b981]"></span>
-            </span>
-            <span class="material-symbols-outlined text-[15px]" style="font-variation-settings: 'FILL' 1;">lock</span>
-            <span class="text-xs font-semibold whitespace-nowrap privacy-text-full">100% Private &amp; Offline</span>
-            <span class="text-xs font-semibold whitespace-nowrap privacy-text-short">Private &amp; Offline</span>
+        <div class="brand-meta">
+          <div class="brand-title-row">
+            <h1 class="brand-title" id="appMainTitle">PDF Tools</h1>
+            <span class="brand-badge">100% Private</span>
           </div>
-          <button id="themeToggleBtn" class="w-8 h-8 rounded-full bg-surface-container dark:bg-slate-800 flex items-center justify-center text-on-surface-variant dark:text-slate-300 hover:bg-surface-container-high dark:hover:bg-slate-700 transition-colors" type="button" aria-label="Toggle dark/light mode" title="Toggle theme">
-            <span class="theme-icon light-icon text-sm">🌙</span>
-            <span class="theme-icon dark-icon text-sm hidden">☀️</span>
-          </button>
-          <button id="headerInstallBtn" class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold shadow-md shadow-indigo-500/20 hover:shadow-indigo-500/30 hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200" type="button" aria-label="Install App" title="Install PDF Tools as desktop or mobile app">
-            <span class="material-symbols-outlined text-[16px]">download_for_offline</span>
-            <span class="hidden sm:inline">Install App</span>
-          </button>
+          <p class="brand-subtitle" id="appMainSubtitle">Sort by timestamp or drag &amp; drop to reorder</p>
         </div>
+      </div>
+      <div class="header-right">
+        <div class="privacy-badge">
+          <span class="privacy-dot">
+            <span class="privacy-dot-ping"></span>
+            <span class="privacy-dot-solid"></span>
+          </span>
+          <span class="material-symbols-outlined text-[15px]" style="font-variation-settings: 'FILL' 1;">lock</span>
+          <span class="privacy-text-full">100% Private &amp; Offline</span>
+          <span class="privacy-text-short">Private</span>
+        </div>
+        <button id="themeToggleBtn" class="theme-toggle-btn" type="button" aria-label="Toggle dark/light mode" title="Toggle theme">
+          <span class="theme-icon light-icon">🌙</span>
+          <span class="theme-icon dark-icon hidden">☀️</span>
+        </button>
+        <button id="headerInstallBtn" class="install-app-btn" type="button" aria-label="Install App" title="Install PDF Tools as desktop or mobile app">
+          <span class="material-symbols-outlined text-[16px]">download_for_offline</span>
+          <span class="hidden sm:inline">Install App</span>
+        </button>
       </div>
     </header>
 
-    <!-- Navigation Tabs Pill Bar -->
-    <div class="w-full overflow-x-auto pb-2 mb-6">
-      <nav class="nav-tabs inline-flex items-center gap-1.5 p-1.5 rounded-full bg-slate-200/60 dark:bg-slate-900/80 backdrop-blur-xl border border-slate-300/50 dark:border-slate-800/70 max-w-full shadow-inner" aria-label="Tool selection">
-        <button class="nav-tab active px-4 py-2 rounded-full text-on-surface-variant dark:text-slate-400 hover:text-on-surface dark:hover:text-slate-200 font-medium text-xs transition-all whitespace-nowrap flex items-center gap-1.5" id="tabMergeBtn" data-tab="merge">
+    <!-- Capsule Navigation Tabs -->
+    <div class="nav-tabs-wrapper">
+      <nav class="nav-tabs" aria-label="Tool selection">
+        <button class="nav-tab active" id="tabMergeBtn" data-tab="merge">
           <span class="material-symbols-outlined text-[16px]">merge</span>
           Merge PDFs
         </button>
-        <button class="nav-tab px-4 py-2 rounded-full text-on-surface-variant dark:text-slate-400 hover:text-on-surface dark:hover:text-slate-200 font-medium text-xs transition-all whitespace-nowrap flex items-center gap-1.5" id="tabRemoveBtn" data-tab="remove">
+        <button class="nav-tab" id="tabRemoveBtn" data-tab="remove">
           <span class="material-symbols-outlined text-[16px]">content_cut</span>
           Remove Pages
         </button>
-        <button class="nav-tab px-4 py-2 rounded-full text-on-surface-variant dark:text-slate-400 hover:text-on-surface dark:hover:text-slate-200 font-medium text-xs transition-all whitespace-nowrap flex items-center gap-1.5" id="tabSlidesBtn" data-tab="slides">
+        <button class="nav-tab" id="tabSlidesBtn" data-tab="slides">
           <span class="material-symbols-outlined text-[16px]">view_agenda</span>
           Slides to A4
         </button>
-        <button class="nav-tab px-4 py-2 rounded-full text-on-surface-variant dark:text-slate-400 hover:text-on-surface dark:hover:text-slate-200 font-medium text-xs transition-all whitespace-nowrap flex items-center gap-1.5" id="tabInvertBtn" data-tab="invert">
+        <button class="nav-tab" id="tabInvertBtn" data-tab="invert">
           <span class="material-symbols-outlined text-[16px]">invert_colors</span>
           Invert Colors
         </button>
-        <button class="nav-tab px-4 py-2 rounded-full text-on-surface-variant dark:text-slate-400 hover:text-on-surface dark:hover:text-slate-200 font-medium text-xs transition-all whitespace-nowrap flex items-center gap-1.5" id="tabCompressBtn" data-tab="compress">
+        <button class="nav-tab" id="tabCompressBtn" data-tab="compress">
           <span class="material-symbols-outlined text-[16px]">compress</span>
           Compress PDF
         </button>
-        <button class="nav-tab px-4 py-2 rounded-full text-on-surface-variant dark:text-slate-400 hover:text-on-surface dark:hover:text-slate-200 font-medium text-xs transition-all whitespace-nowrap flex items-center gap-1.5" id="tabImagesBtn" data-tab="images">
+        <button class="nav-tab" id="tabImagesBtn" data-tab="images">
           <span class="material-symbols-outlined text-[16px]">image</span>
           Image to PDF
         </button>
-        <button class="nav-tab px-4 py-2 rounded-full text-on-surface-variant dark:text-slate-400 hover:text-on-surface dark:hover:text-slate-200 font-medium text-xs transition-all whitespace-nowrap flex items-center gap-1.5" id="tabPdfToImagesBtn" data-tab="pdftoimages">
+        <button class="nav-tab" id="tabPdfToImagesBtn" data-tab="pdftoimages">
           <span class="material-symbols-outlined text-[16px]">photo_library</span>
           PDF to Images
         </button>
       </nav>
     </div>
 
-    <!-- Security & Engine Banner -->
-    <div id="privacyEngineBanner" class="w-full bg-surface-container-lowest/80 dark:bg-[#131b2e]/80 backdrop-blur-xl rounded-2xl p-4 sm:p-5 shadow-sm border border-emerald-200/50 dark:border-emerald-900/40 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
-      <div class="flex items-center gap-3.5">
-        <div class="w-10 h-10 rounded-xl bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0 shadow-sm border border-emerald-200/60 dark:border-emerald-800/40">
-          <span class="material-symbols-outlined text-[22px]" style="font-variation-settings: 'FILL' 1;">verified_user</span>
-        </div>
-        <div class="flex flex-col">
-          <div class="flex items-center gap-2">
-            <span class="font-bold text-sm text-on-surface dark:text-white">Client-side processing engine ready</span>
-            <span class="inline-flex items-center px-2 py-0.5 rounded-full bg-emerald-100/70 dark:bg-emerald-900/50 text-emerald-800 dark:text-emerald-200 text-[11px] font-bold">WebAssembly</span>
-          </div>
-          <span class="text-xs text-slate-muted dark:text-slate-400 mt-0.5">Your files stay strictly inside browser memory — no bytes are ever uploaded to any cloud server.</span>
-        </div>
-      </div>
-      <div class="flex items-center gap-2 text-emerald-700 dark:text-emerald-300 text-xs font-semibold whitespace-nowrap bg-emerald-50/80 dark:bg-emerald-950/60 px-3 py-1.5 rounded-full border border-emerald-200/70 dark:border-emerald-800/50 shadow-sm shrink-0">
-        <span class="relative flex h-2 w-2">
-          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-          <span class="relative inline-flex rounded-full h-2 w-2 bg-[#10b981]"></span>
-        </span>
-        <span>Isolated Sandbox Active</span>
-      </div>
+    <!-- Security & Engine Micro-Banner -->
+    <div id="privacyEngineBanner" class="trust-badge-row">
+      <span class="trust-badge-item"><span class="w-2 h-2 rounded-full bg-emerald-500 inline-block mr-1.5"></span>100% Client-Side Engine</span>
+      <span class="trust-badge-sep">•</span>
+      <span class="trust-badge-item">Zero Cloud Uploads</span>
+      <span class="trust-badge-sep">•</span>
+      <span class="trust-badge-item">Instant RAM Purge</span>
     </div>
 
     <!-- Main Content -->
@@ -189,29 +173,27 @@
       <div id="mergeTabView" class="tab-view active">
         <!-- Upload Drop Zone -->
         <section class="dropzone-section mb-6">
-          <div id="dropzone" class="dropzone w-full bg-surface-container-lowest/80 dark:bg-[#131b2e]/80 backdrop-blur-xl rounded-3xl p-8 sm:p-14 text-center shadow-sm relative overflow-hidden group border-2 border-dashed border-slate-300/80 dark:border-slate-800 hover:border-primary-container dark:hover:border-indigo-400 transition-all duration-300 cursor-pointer hover:shadow-xl hover:shadow-indigo-500/5 hover:-translate-y-0.5" tabindex="0" role="button" aria-label="Drop your PDF files here or browse to merge">
+          <div id="dropzone" class="dropzone" tabindex="0" role="button" aria-label="Drop your PDF files here or browse to merge">
             <!-- Ambient subtle Indigo Glow Backdrop -->
-            <div class="absolute -top-24 left-1/2 -translate-x-1/2 w-96 h-96 bg-primary-container/10 dark:bg-indigo-500/10 rounded-full blur-3xl pointer-events-none transition-all duration-500 group-hover:scale-125"></div>
+            <div class="dropzone-ambient-orb blur-3xl pointer-events-none"></div>
             <input type="file" id="fileInput" multiple accept=".pdf,application/pdf" class="file-input-hidden hidden" aria-label="Select PDF files to merge">
-            <div class="relative z-10 flex flex-col items-center justify-center dropzone-content">
+            <div class="dropzone-content">
               <!-- Floating Upload Orb -->
-              <div class="dropzone-icon-wrapper w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-indigo-50 dark:bg-indigo-950/70 text-primary-container dark:text-indigo-400 flex items-center justify-center shadow-sm group-hover:scale-110 group-hover:bg-primary-container group-hover:text-white group-hover:shadow-lg group-hover:shadow-indigo-500/30 transition-all duration-300 mb-4 sm:mb-5 border border-indigo-100/80 dark:border-indigo-900/40">
-                <span class="material-symbols-outlined text-[32px] sm:text-[38px] transition-transform duration-300 group-hover:-translate-y-1">upload_file</span>
+              <div class="dropzone-icon-box">
+                <span class="material-symbols-outlined text-[32px]">upload_file</span>
               </div>
-              <h2 class="text-2xl sm:text-3xl font-bold tracking-tight text-on-surface dark:text-white mb-1.5 dropzone-title">
+              <h2 class="dropzone-title">
                 <span class="drop-text-desktop">Drop your PDF files here</span>
-                <span class="drop-text-mobile sm:hidden">Tap to select PDF files</span>
+                <span class="drop-text-mobile">Tap to select PDF files</span>
               </h2>
-              <p class="text-sm sm:text-base text-slate-muted dark:text-slate-400 mb-5 dropzone-desc">
-                or <span class="text-primary-container dark:text-indigo-400 font-semibold underline underline-offset-4 cursor-pointer hover:text-primary transition-colors browse-link">browse from your device</span>
+              <p class="dropzone-desc">
+                or <span class="browse-link">browse from your device</span>
               </p>
-              <!-- Helper Metadata Pill -->
-              <div class="dropzone-hint inline-flex items-center flex-wrap justify-center gap-2 sm:gap-3 px-4 sm:px-5 py-2 rounded-full bg-slate-100/80 dark:bg-slate-900/70 border border-slate-200/60 dark:border-slate-800 text-slate-muted dark:text-slate-400 text-xs shadow-sm">
-                <span class="flex items-center gap-1 font-medium"><span class="w-1.5 h-1.5 rounded-full bg-indigo-500"></span>Supports multiple files</span>
-                <span>•</span>
-                <span class="flex items-center gap-1 font-medium"><span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>Auto-sorts by timestamp</span>
-                <span>•</span>
-                <span class="flex items-center gap-1 font-medium"><span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>Drag &amp; drop to reorder</span>
+              <!-- Helper Metadata Chips -->
+              <div class="dropzone-chips">
+                <span class="dropzone-chip"><span class="dropzone-chip-dot"></span>Supports multiple files</span>
+                <span class="dropzone-chip"><span class="dropzone-chip-dot" style="background: #10b981;"></span>Auto-sorts by timestamp</span>
+                <span class="dropzone-chip"><span class="dropzone-chip-dot" style="background: #f59e0b;"></span>Drag &amp; drop to reorder</span>
               </div>
             </div>
           </div>
@@ -368,29 +350,27 @@
       <div id="removeTabView" class="tab-view hidden">
         <!-- Single PDF Upload Dropzone -->
         <section class="dropzone-section mb-6" id="removeDropzoneSection">
-          <div id="removeDropzone" class="dropzone w-full bg-surface-container-lowest/80 dark:bg-[#131b2e]/80 backdrop-blur-xl rounded-3xl p-8 sm:p-14 text-center shadow-sm relative overflow-hidden group border-2 border-dashed border-slate-300/80 dark:border-slate-800 hover:border-rose-500 dark:hover:border-rose-400 transition-all duration-300 cursor-pointer hover:shadow-xl hover:shadow-rose-500/5 hover:-translate-y-0.5" tabindex="0" role="button" aria-label="Select a PDF to Remove Pages or browse from your device">
+          <div id="removeDropzone" class="dropzone" tabindex="0" role="button" aria-label="Select a PDF to Remove Pages or browse from your device">
             <!-- Ambient subtle Rose Glow Backdrop -->
-            <div class="absolute -top-24 left-1/2 -translate-x-1/2 w-96 h-96 bg-rose-500/10 dark:bg-rose-500/10 rounded-full blur-3xl pointer-events-none transition-all duration-500 group-hover:scale-125"></div>
+            <div class="dropzone-ambient-orb blur-3xl pointer-events-none"></div>
             <input type="file" id="removeFileInput" accept=".pdf,application/pdf" class="file-input-hidden hidden" aria-label="Select PDF file to remove pages">
-            <div class="relative z-10 flex flex-col items-center justify-center dropzone-content">
+            <div class="dropzone-content">
               <!-- Floating Upload Orb -->
-              <div class="dropzone-icon-wrapper w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-rose-50 dark:bg-rose-950/70 text-rose-600 dark:text-rose-400 flex items-center justify-center shadow-sm group-hover:scale-110 group-hover:bg-rose-600 group-hover:text-white group-hover:shadow-lg group-hover:shadow-rose-500/30 transition-all duration-300 mb-4 sm:mb-5 border border-rose-100/80 dark:border-rose-900/40">
-                <span class="material-symbols-outlined text-[32px] sm:text-[38px] transition-transform duration-300 group-hover:-translate-y-1">content_cut</span>
+              <div class="dropzone-icon-box">
+                <span class="material-symbols-outlined text-[32px]">content_cut</span>
               </div>
-              <h2 class="text-2xl sm:text-3xl font-bold tracking-tight text-on-surface dark:text-white mb-1.5 dropzone-title">
+              <h2 class="dropzone-title">
                 <span class="drop-text-desktop">Select a PDF to Remove Pages</span>
-                <span class="drop-text-mobile sm:hidden">Tap to select PDF</span>
+                <span class="drop-text-mobile">Tap to select PDF</span>
               </h2>
-              <p class="text-sm sm:text-base text-slate-muted dark:text-slate-400 mb-5 dropzone-desc">
-                or <span class="text-rose-600 dark:text-rose-400 font-semibold underline underline-offset-4 cursor-pointer hover:text-rose-500 transition-colors browse-link">browse from your device</span>
+              <p class="dropzone-desc">
+                or <span class="browse-link" style="color: var(--tool-remove);">browse from your device</span>
               </p>
-              <!-- Helper Metadata Pill -->
-              <div class="dropzone-hint inline-flex items-center flex-wrap justify-center gap-2 sm:gap-3 px-4 sm:px-5 py-2 rounded-full bg-slate-100/80 dark:bg-slate-900/70 border border-slate-200/60 dark:border-slate-800 text-slate-muted dark:text-slate-400 text-xs shadow-sm">
-                <span class="flex items-center gap-1 font-medium"><span class="w-1.5 h-1.5 rounded-full bg-rose-500"></span>Visual page deletion</span>
-                <span>•</span>
-                <span class="flex items-center gap-1 font-medium"><span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>Range syntax: 1, 3, 5-8</span>
-                <span>•</span>
-                <span class="flex items-center gap-1 font-medium"><span class="w-1.5 h-1.5 rounded-full bg-sky-500"></span>100% In-Browser</span>
+              <!-- Helper Metadata Chips -->
+              <div class="dropzone-chips">
+                <span class="dropzone-chip"><span class="dropzone-chip-dot" style="background: var(--tool-remove);"></span>Visual page deletion</span>
+                <span class="dropzone-chip"><span class="dropzone-chip-dot" style="background: #10b981;"></span>Range syntax: 1, 3, 5-8</span>
+                <span class="dropzone-chip"><span class="dropzone-chip-dot" style="background: #0284c7;"></span>100% In-Browser</span>
               </div>
             </div>
           </div>
@@ -514,29 +494,27 @@
       <div id="slidesTabView" class="tab-view hidden">
         <!-- Presentation Upload Drop Zone -->
         <section class="dropzone-section mb-6" id="slidesDropzoneSection">
-          <div id="slidesDropzone" class="dropzone w-full bg-surface-container-lowest/80 dark:bg-[#131b2e]/80 backdrop-blur-xl rounded-3xl p-8 sm:p-14 text-center shadow-sm relative overflow-hidden group border-2 border-dashed border-slate-300/80 dark:border-slate-800 hover:border-blue-500 dark:hover:border-blue-400 transition-all duration-300 cursor-pointer hover:shadow-xl hover:shadow-blue-500/5 hover:-translate-y-0.5" tabindex="0" role="button" aria-label="Upload Presentation PDF or browse from your device">
+          <div id="slidesDropzone" class="dropzone" tabindex="0" role="button" aria-label="Upload Presentation PDF or browse from your device">
             <!-- Ambient subtle Blue Glow Backdrop -->
-            <div class="absolute -top-24 left-1/2 -translate-x-1/2 w-96 h-96 bg-blue-500/10 dark:bg-blue-500/10 rounded-full blur-3xl pointer-events-none transition-all duration-500 group-hover:scale-125"></div>
+            <div class="dropzone-ambient-orb blur-3xl pointer-events-none"></div>
             <input type="file" id="slidesFileInput" accept=".pdf,application/pdf" class="file-input-hidden hidden" aria-label="Select presentation PDF to format as A4 handout">
-            <div class="relative z-10 flex flex-col items-center justify-center dropzone-content">
+            <div class="dropzone-content">
               <!-- Floating Upload Orb -->
-              <div class="dropzone-icon-wrapper w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-blue-50 dark:bg-blue-950/70 text-blue-600 dark:text-blue-400 flex items-center justify-center shadow-sm group-hover:scale-110 group-hover:bg-blue-600 group-hover:text-white group-hover:shadow-lg group-hover:shadow-blue-500/30 transition-all duration-300 mb-4 sm:mb-5 border border-blue-100/80 dark:border-blue-900/40">
-                <span class="material-symbols-outlined text-[32px] sm:text-[38px] transition-transform duration-300 group-hover:-translate-y-1">view_agenda</span>
+              <div class="dropzone-icon-box">
+                <span class="material-symbols-outlined text-[32px]">view_agenda</span>
               </div>
-              <h2 class="text-2xl sm:text-3xl font-bold tracking-tight text-on-surface dark:text-white mb-1.5 dropzone-title">
+              <h2 class="dropzone-title">
                 <span class="drop-text-desktop">Upload Presentation PDF</span>
-                <span class="drop-text-mobile sm:hidden">Tap to select Slides PDF</span>
+                <span class="drop-text-mobile">Tap to select Slides PDF</span>
               </h2>
-              <p class="text-sm sm:text-base text-slate-muted dark:text-slate-400 mb-5 dropzone-desc">
-                or <span class="text-blue-600 dark:text-blue-400 font-semibold underline underline-offset-4 cursor-pointer hover:text-blue-500 transition-colors browse-link">browse from your device</span>
+              <p class="dropzone-desc">
+                or <span class="browse-link" style="color: var(--tool-slides);">browse from your device</span>
               </p>
-              <!-- Helper Metadata Pill -->
-              <div class="dropzone-hint inline-flex items-center flex-wrap justify-center gap-2 sm:gap-3 px-4 sm:px-5 py-2 rounded-full bg-slate-100/80 dark:bg-slate-900/70 border border-slate-200/60 dark:border-slate-800 text-slate-muted dark:text-slate-400 text-xs shadow-sm">
-                <span class="flex items-center gap-1 font-medium"><span class="w-1.5 h-1.5 rounded-full bg-blue-500"></span>Fits 3 slides per A4 page</span>
-                <span>•</span>
-                <span class="flex items-center gap-1 font-medium"><span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>Optional note lines</span>
-                <span>•</span>
-                <span class="flex items-center gap-1 font-medium"><span class="w-1.5 h-1.5 rounded-full bg-indigo-500"></span>Auto margin optimization</span>
+              <!-- Helper Metadata Chips -->
+              <div class="dropzone-chips">
+                <span class="dropzone-chip"><span class="dropzone-chip-dot" style="background: var(--tool-slides);"></span>Fits 3 slides per A4 page</span>
+                <span class="dropzone-chip"><span class="dropzone-chip-dot" style="background: #10b981;"></span>Optional note lines</span>
+                <span class="dropzone-chip"><span class="dropzone-chip-dot" style="background: #4f46e5;"></span>Auto margin optimization</span>
               </div>
             </div>
           </div>
@@ -698,29 +676,27 @@
       <div id="invertTabView" class="tab-view hidden">
         <!-- Invert Upload Drop Zone -->
         <section class="dropzone-section mb-6" id="invertDropzoneSection">
-          <div id="invertDropzone" class="dropzone w-full bg-surface-container-lowest/80 dark:bg-[#131b2e]/80 backdrop-blur-xl rounded-3xl p-8 sm:p-14 text-center shadow-sm relative overflow-hidden group border-2 border-dashed border-slate-300/80 dark:border-slate-800 hover:border-purple-500 dark:hover:border-purple-400 transition-all duration-300 cursor-pointer hover:shadow-xl hover:shadow-purple-500/5 hover:-translate-y-0.5" tabindex="0" role="button" aria-label="Select a PDF to Invert Colors or browse from your device">
+          <div id="invertDropzone" class="dropzone" tabindex="0" role="button" aria-label="Select a PDF to Invert Colors or browse from your device">
             <!-- Ambient subtle Purple Glow Backdrop -->
-            <div class="absolute -top-24 left-1/2 -translate-x-1/2 w-96 h-96 bg-purple-500/10 dark:bg-purple-500/10 rounded-full blur-3xl pointer-events-none transition-all duration-500 group-hover:scale-125"></div>
+            <div class="dropzone-ambient-orb blur-3xl pointer-events-none"></div>
             <input type="file" id="invertFileInput" accept=".pdf,application/pdf" class="file-input-hidden hidden" aria-label="Select PDF file to invert colors">
-            <div class="relative z-10 flex flex-col items-center justify-center dropzone-content">
+            <div class="dropzone-content">
               <!-- Floating Upload Orb -->
-              <div class="dropzone-icon-wrapper w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-purple-50 dark:bg-purple-950/70 text-purple-600 dark:text-purple-400 flex items-center justify-center shadow-sm group-hover:scale-110 group-hover:bg-purple-600 group-hover:text-white group-hover:shadow-lg group-hover:shadow-purple-500/30 transition-all duration-300 mb-4 sm:mb-5 border border-purple-100/80 dark:border-purple-900/40">
-                <span class="material-symbols-outlined text-[32px] sm:text-[38px] transition-transform duration-300 group-hover:-translate-y-1">contrast</span>
+              <div class="dropzone-icon-box">
+                <span class="material-symbols-outlined text-[32px]">contrast</span>
               </div>
-              <h2 class="text-2xl sm:text-3xl font-bold tracking-tight text-on-surface dark:text-white mb-1.5 dropzone-title">
+              <h2 class="dropzone-title">
                 <span class="drop-text-desktop">Select a PDF to Invert Colors</span>
-                <span class="drop-text-mobile sm:hidden">Tap to select PDF to Invert</span>
+                <span class="drop-text-mobile">Tap to select PDF to Invert</span>
               </h2>
-              <p class="text-sm sm:text-base text-slate-muted dark:text-slate-400 mb-5 dropzone-desc">
-                or <span class="text-purple-600 dark:text-purple-400 font-semibold underline underline-offset-4 cursor-pointer hover:text-purple-500 transition-colors browse-link">browse from your device</span>
+              <p class="dropzone-desc">
+                or <span class="browse-link" style="color: var(--tool-invert);">browse from your device</span>
               </p>
-              <!-- Helper Metadata Pill -->
-              <div class="dropzone-hint inline-flex items-center flex-wrap justify-center gap-2 sm:gap-3 px-4 sm:px-5 py-2 rounded-full bg-slate-100/80 dark:bg-slate-900/70 border border-slate-200/60 dark:border-slate-800 text-slate-muted dark:text-slate-400 text-xs shadow-sm">
-                <span class="flex items-center gap-1 font-medium"><span class="w-1.5 h-1.5 rounded-full bg-purple-500"></span>Invert dark slides to white</span>
-                <span>•</span>
-                <span class="flex items-center gap-1 font-medium"><span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>Saves up to 90% toner</span>
-                <span>•</span>
-                <span class="flex items-center gap-1 font-medium"><span class="w-1.5 h-1.5 rounded-full bg-sky-500"></span>Crisp hardcopy printouts</span>
+              <!-- Helper Metadata Chips -->
+              <div class="dropzone-chips">
+                <span class="dropzone-chip"><span class="dropzone-chip-dot" style="background: var(--tool-invert);"></span>Invert dark slides to white</span>
+                <span class="dropzone-chip"><span class="dropzone-chip-dot" style="background: #10b981;"></span>Saves up to 90% toner</span>
+                <span class="dropzone-chip"><span class="dropzone-chip-dot" style="background: #0284c7;"></span>Crisp hardcopy printouts</span>
               </div>
             </div>
           </div>
@@ -931,29 +907,27 @@
       <div id="compressTabView" class="tab-view hidden">
         <!-- Upload Drop Zone -->
         <section class="dropzone-section mb-6">
-          <div id="compressDropzone" class="dropzone w-full bg-surface-container-lowest/80 dark:bg-[#131b2e]/80 backdrop-blur-xl rounded-3xl p-8 sm:p-14 text-center shadow-sm relative overflow-hidden group border-2 border-dashed border-slate-300/80 dark:border-slate-800 hover:border-emerald-500 dark:hover:border-emerald-400 transition-all duration-300 cursor-pointer hover:shadow-xl hover:shadow-emerald-500/5 hover:-translate-y-0.5" tabindex="0" role="button" aria-label="Drop PDF to Compress or browse from your device">
+          <div id="compressDropzone" class="dropzone" tabindex="0" role="button" aria-label="Drop PDF to Compress or browse from your device">
             <!-- Ambient subtle Emerald Glow Backdrop -->
-            <div class="absolute -top-24 left-1/2 -translate-x-1/2 w-96 h-96 bg-emerald-500/10 dark:bg-emerald-500/10 rounded-full blur-3xl pointer-events-none transition-all duration-500 group-hover:scale-125"></div>
+            <div class="dropzone-ambient-orb blur-3xl pointer-events-none"></div>
             <input type="file" id="compressFileInput" accept=".pdf,application/pdf" class="file-input-hidden hidden" aria-label="Select PDF file to compress">
-            <div class="relative z-10 flex flex-col items-center justify-center dropzone-content">
+            <div class="dropzone-content">
               <!-- Floating Upload Orb -->
-              <div class="dropzone-icon-wrapper w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-emerald-50 dark:bg-emerald-950/70 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shadow-sm group-hover:scale-110 group-hover:bg-emerald-600 group-hover:text-white group-hover:shadow-lg group-hover:shadow-emerald-500/30 transition-all duration-300 mb-4 sm:mb-5 border border-emerald-100/80 dark:border-emerald-900/40">
-                <span class="material-symbols-outlined text-[32px] sm:text-[38px] transition-transform duration-300 group-hover:-translate-y-1">compress</span>
+              <div class="dropzone-icon-box">
+                <span class="material-symbols-outlined text-[32px]">compress</span>
               </div>
-              <h2 class="text-2xl sm:text-3xl font-bold tracking-tight text-on-surface dark:text-white mb-1.5 dropzone-title">
+              <h2 class="dropzone-title">
                 <span class="drop-text-desktop">Drop PDF to Compress</span>
-                <span class="drop-text-mobile sm:hidden">Tap to select PDF to Compress</span>
+                <span class="drop-text-mobile">Tap to select PDF to Compress</span>
               </h2>
-              <p class="text-sm sm:text-base text-slate-muted dark:text-slate-400 mb-5 dropzone-desc">
-                or <span class="text-emerald-600 dark:text-emerald-400 font-semibold underline underline-offset-4 cursor-pointer hover:text-emerald-500 transition-colors browse-link">browse from your device</span>
+              <p class="dropzone-desc">
+                or <span class="browse-link" style="color: var(--tool-compress);">browse from your device</span>
               </p>
-              <!-- Helper Metadata Pill -->
-              <div class="dropzone-hint inline-flex items-center flex-wrap justify-center gap-2 sm:gap-3 px-4 sm:px-5 py-2 rounded-full bg-slate-100/80 dark:bg-slate-900/70 border border-slate-200/60 dark:border-slate-800 text-slate-muted dark:text-slate-400 text-xs shadow-sm">
-                <span class="flex items-center gap-1 font-medium"><span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>Smart lossless &amp; visual compression</span>
-                <span>•</span>
-                <span class="flex items-center gap-1 font-medium"><span class="w-1.5 h-1.5 rounded-full bg-indigo-500"></span>Up to 90% size reduction</span>
-                <span>•</span>
-                <span class="flex items-center gap-1 font-medium"><span class="w-1.5 h-1.5 rounded-full bg-sky-500"></span>100% In-Browser</span>
+              <!-- Helper Metadata Chips -->
+              <div class="dropzone-chips">
+                <span class="dropzone-chip"><span class="dropzone-chip-dot" style="background: var(--tool-compress);"></span>Smart lossless &amp; visual compression</span>
+                <span class="dropzone-chip"><span class="dropzone-chip-dot" style="background: #4f46e5;"></span>Up to 90% size reduction</span>
+                <span class="dropzone-chip"><span class="dropzone-chip-dot" style="background: #0284c7;"></span>100% In-Browser</span>
               </div>
             </div>
           </div>
@@ -1164,29 +1138,27 @@
       <div id="imagesTabView" class="tab-view hidden">
         <!-- Upload Drop Zone -->
         <section class="dropzone-section mb-6" id="imagesDropzoneSection">
-          <div id="imagesDropzone" class="dropzone w-full bg-surface-container-lowest/80 dark:bg-[#131b2e]/80 backdrop-blur-xl rounded-3xl p-8 sm:p-14 text-center shadow-sm relative overflow-hidden group border-2 border-dashed border-slate-300/80 dark:border-slate-800 hover:border-teal-500 dark:hover:border-teal-400 transition-all duration-300 cursor-pointer hover:shadow-xl hover:shadow-teal-500/5 hover:-translate-y-0.5" tabindex="0" role="button" aria-label="Drop your image files here or browse from your device">
+          <div id="imagesDropzone" class="dropzone" tabindex="0" role="button" aria-label="Drop your image files here or browse from your device">
             <!-- Ambient subtle Teal Glow Backdrop -->
-            <div class="absolute -top-24 left-1/2 -translate-x-1/2 w-96 h-96 bg-teal-500/10 dark:bg-teal-500/10 rounded-full blur-3xl pointer-events-none transition-all duration-500 group-hover:scale-125"></div>
+            <div class="dropzone-ambient-orb blur-3xl pointer-events-none"></div>
             <input type="file" id="imagesFileInput" multiple accept="image/*,.jpg,.jpeg,.png,.webp,.gif,.bmp" class="file-input-hidden hidden" aria-label="Select image files to convert to PDF">
-            <div class="relative z-10 flex flex-col items-center justify-center dropzone-content">
+            <div class="dropzone-content">
               <!-- Floating Upload Orb -->
-              <div class="dropzone-icon-wrapper w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-teal-50 dark:bg-teal-950/70 text-teal-600 dark:text-teal-400 flex items-center justify-center shadow-sm group-hover:scale-110 group-hover:bg-teal-600 group-hover:text-white group-hover:shadow-lg group-hover:shadow-teal-500/30 transition-all duration-300 mb-4 sm:mb-5 border border-teal-100/80 dark:border-teal-900/40">
-                <span class="material-symbols-outlined text-[32px] sm:text-[38px] transition-transform duration-300 group-hover:-translate-y-1">photo_library</span>
+              <div class="dropzone-icon-box">
+                <span class="material-symbols-outlined text-[32px]">photo_library</span>
               </div>
-              <h2 class="text-2xl sm:text-3xl font-bold tracking-tight text-on-surface dark:text-white mb-1.5 dropzone-title">
+              <h2 class="dropzone-title">
                 <span class="drop-text-desktop">Drop your image files here</span>
-                <span class="drop-text-mobile sm:hidden">Tap to select Photos / Images</span>
+                <span class="drop-text-mobile">Tap to select Photos / Images</span>
               </h2>
-              <p class="text-sm sm:text-base text-slate-muted dark:text-slate-400 mb-5 dropzone-desc">
-                or <span class="text-teal-600 dark:text-teal-400 font-semibold underline underline-offset-4 cursor-pointer hover:text-teal-500 transition-colors browse-link">choose images</span> from device
+              <p class="dropzone-desc">
+                or <span class="browse-link" style="color: var(--tool-images);">choose images</span> from device
               </p>
-              <!-- Helper Metadata Pill -->
-              <div class="dropzone-hint inline-flex items-center flex-wrap justify-center gap-2 sm:gap-3 px-4 sm:px-5 py-2 rounded-full bg-slate-100/80 dark:bg-slate-900/70 border border-slate-200/60 dark:border-slate-800 text-slate-muted dark:text-slate-400 text-xs shadow-sm">
-                <span class="flex items-center gap-1 font-medium"><span class="w-1.5 h-1.5 rounded-full bg-teal-500"></span>JPG, PNG, WebP, GIF, BMP</span>
-                <span>•</span>
-                <span class="flex items-center gap-1 font-medium"><span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>Drag to reorder</span>
-                <span>•</span>
-                <span class="flex items-center gap-1 font-medium"><span class="w-1.5 h-1.5 rounded-full bg-sky-500"></span>Rotate &amp; convert to PDF</span>
+              <!-- Helper Metadata Chips -->
+              <div class="dropzone-chips">
+                <span class="dropzone-chip"><span class="dropzone-chip-dot" style="background: var(--tool-images);"></span>JPG, PNG, WebP, GIF, BMP</span>
+                <span class="dropzone-chip"><span class="dropzone-chip-dot" style="background: #10b981;"></span>Drag to reorder</span>
+                <span class="dropzone-chip"><span class="dropzone-chip-dot" style="background: #0284c7;"></span>Rotate &amp; convert to PDF</span>
               </div>
             </div>
           </div>
@@ -1360,29 +1332,27 @@
       <div id="pdfToImagesTabView" class="tab-view hidden">
         <!-- Dropzone Section -->
         <section id="pdfToImagesDropzoneSection" class="dropzone-section mb-6">
-          <div id="pdfToImagesDropzone" class="dropzone w-full bg-surface-container-lowest/80 dark:bg-[#131b2e]/80 backdrop-blur-xl rounded-3xl p-8 sm:p-14 text-center shadow-sm relative overflow-hidden group border-2 border-dashed border-slate-300/80 dark:border-slate-800 hover:border-sky-500 dark:hover:border-sky-400 transition-all duration-300 cursor-pointer hover:shadow-xl hover:shadow-sky-500/5 hover:-translate-y-0.5" role="button" tabindex="0" aria-label="Select a PDF to Convert to Images or browse from your device">
+          <div id="pdfToImagesDropzone" class="dropzone" tabindex="0" role="button" aria-label="Select a PDF to Convert to Images or browse from your device">
             <!-- Ambient subtle Sky Blue Glow Backdrop -->
-            <div class="absolute -top-24 left-1/2 -translate-x-1/2 w-96 h-96 bg-sky-500/10 dark:bg-sky-500/10 rounded-full blur-3xl pointer-events-none transition-all duration-500 group-hover:scale-125"></div>
+            <div class="dropzone-ambient-orb blur-3xl pointer-events-none"></div>
             <input type="file" id="pdfToImagesFileInput" class="file-input-hidden hidden" accept=".pdf,application/pdf" aria-label="Select PDF document to convert to images">
-            <div class="relative z-10 flex flex-col items-center justify-center dropzone-content">
+            <div class="dropzone-content">
               <!-- Floating Upload Orb -->
-              <div class="dropzone-icon-wrapper w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-sky-50 dark:bg-sky-950/70 text-sky-600 dark:text-sky-400 flex items-center justify-center shadow-sm group-hover:scale-110 group-hover:bg-sky-600 group-hover:text-white group-hover:shadow-lg group-hover:shadow-sky-500/30 transition-all duration-300 mb-4 sm:mb-5 border border-sky-100/80 dark:border-sky-900/40">
-                <span class="material-symbols-outlined text-[32px] sm:text-[38px] transition-transform duration-300 group-hover:-translate-y-1">burst_mode</span>
+              <div class="dropzone-icon-box">
+                <span class="material-symbols-outlined text-[32px]">burst_mode</span>
               </div>
-              <h2 class="text-2xl sm:text-3xl font-bold tracking-tight text-on-surface dark:text-white mb-1.5 dropzone-title">
+              <h2 class="dropzone-title">
                 <span class="drop-text-desktop">Select a PDF to Convert to Images</span>
-                <span class="drop-text-mobile sm:hidden">Tap to select PDF</span>
+                <span class="drop-text-mobile">Tap to select PDF</span>
               </h2>
-              <p class="text-sm sm:text-base text-slate-muted dark:text-slate-400 mb-5 dropzone-desc">
-                or <span class="text-sky-600 dark:text-sky-400 font-semibold underline underline-offset-4 cursor-pointer hover:text-sky-500 transition-colors browse-link">browse from your device</span>
+              <p class="dropzone-desc">
+                or <span class="browse-link" style="color: var(--tool-pdftoimages);">browse from your device</span>
               </p>
-              <!-- Helper Metadata Pill -->
-              <div class="dropzone-hint inline-flex items-center flex-wrap justify-center gap-2 sm:gap-3 px-4 sm:px-5 py-2 rounded-full bg-slate-100/80 dark:bg-slate-900/70 border border-slate-200/60 dark:border-slate-800 text-slate-muted dark:text-slate-400 text-xs shadow-sm">
-                <span class="flex items-center gap-1 font-medium"><span class="w-1.5 h-1.5 rounded-full bg-sky-500"></span>Convert pages to JPG or PNG</span>
-                <span>•</span>
-                <span class="flex items-center gap-1 font-medium"><span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>Up to 300 DPI ultra print</span>
-                <span>•</span>
-                <span class="flex items-center gap-1 font-medium"><span class="w-1.5 h-1.5 rounded-full bg-indigo-500"></span>Download as ZIP</span>
+              <!-- Helper Metadata Chips -->
+              <div class="dropzone-chips">
+                <span class="dropzone-chip"><span class="dropzone-chip-dot" style="background: var(--tool-pdftoimages);"></span>Convert pages to JPG or PNG</span>
+                <span class="dropzone-chip"><span class="dropzone-chip-dot" style="background: #10b981;"></span>Up to 300 DPI ultra print</span>
+                <span class="dropzone-chip"><span class="dropzone-chip-dot" style="background: #4f46e5;"></span>Download as ZIP</span>
               </div>
             </div>
           </div>
@@ -1576,53 +1546,53 @@
     </main>
 
     <!-- 4-Card Feature Mosaic -->
-    <div class="w-full grid grid-cols-2 md:grid-cols-4 gap-4 mb-6 pt-2">
-      <div class="bg-surface-container-lowest dark:bg-[#131b2e] p-4 rounded-xl shadow-sm border border-slate-border dark:border-slate-800 flex flex-col gap-1">
-        <div class="w-8 h-8 rounded-lg bg-surface-container dark:bg-slate-800 text-primary dark:text-indigo-400 flex items-center justify-center mb-1">
-          <span class="material-symbols-outlined text-[18px]">layers</span>
+    <div class="preset-grid mb-6 pt-2">
+      <div class="file-card flex-col items-start gap-1 p-4">
+        <div class="dropzone-icon-box" style="width: 36px; height: 36px; margin-bottom: 0.5rem; border-radius: 10px;">
+          <span class="material-symbols-outlined text-[20px]">layers</span>
         </div>
-        <span class="text-xs font-semibold text-on-surface dark:text-white">Unlimited Batching</span>
+        <span class="text-xs font-bold text-on-surface dark:text-white">Unlimited Batching</span>
         <span class="text-[11px] text-slate-muted dark:text-slate-400 leading-tight">Combine as many documents as your RAM supports.</span>
       </div>
-      <div class="bg-surface-container-lowest dark:bg-[#131b2e] p-4 rounded-xl shadow-sm border border-slate-border dark:border-slate-800 flex flex-col gap-1">
-        <div class="w-8 h-8 rounded-lg bg-surface-container dark:bg-slate-800 text-tertiary-container dark:text-emerald-400 flex items-center justify-center mb-1">
-          <span class="material-symbols-outlined text-[18px]">lock_clock</span>
+      <div class="file-card flex-col items-start gap-1 p-4">
+        <div class="dropzone-icon-box" style="width: 36px; height: 36px; margin-bottom: 0.5rem; border-radius: 10px; color: #10b981;">
+          <span class="material-symbols-outlined text-[20px]">lock_clock</span>
         </div>
-        <span class="text-xs font-semibold text-on-surface dark:text-white">Immediate RAM Purge</span>
+        <span class="text-xs font-bold text-on-surface dark:text-white">Immediate RAM Purge</span>
         <span class="text-[11px] text-slate-muted dark:text-slate-400 leading-tight">Cached buffers clear as soon as the tab closes.</span>
       </div>
-      <div class="bg-surface-container-lowest dark:bg-[#131b2e] p-4 rounded-xl shadow-sm border border-slate-border dark:border-slate-800 flex flex-col gap-1">
-        <div class="w-8 h-8 rounded-lg bg-surface-container dark:bg-slate-800 text-secondary dark:text-indigo-400 flex items-center justify-center mb-1">
-          <span class="material-symbols-outlined text-[18px]">speed</span>
+      <div class="file-card flex-col items-start gap-1 p-4">
+        <div class="dropzone-icon-box" style="width: 36px; height: 36px; margin-bottom: 0.5rem; border-radius: 10px; color: #6366f1;">
+          <span class="material-symbols-outlined text-[20px]">speed</span>
         </div>
-        <span class="text-xs font-semibold text-on-surface dark:text-white">Instant Export</span>
+        <span class="text-xs font-bold text-on-surface dark:text-white">Instant Export</span>
         <span class="text-[11px] text-slate-muted dark:text-slate-400 leading-tight">No upload queues or remote render wait times.</span>
       </div>
-      <div class="bg-surface-container-lowest dark:bg-[#131b2e] p-4 rounded-xl shadow-sm border border-slate-border dark:border-slate-800 flex flex-col gap-1">
-        <div class="w-8 h-8 rounded-lg bg-surface-container dark:bg-slate-800 text-on-surface-variant dark:text-slate-300 flex items-center justify-center mb-1">
-          <span class="material-symbols-outlined text-[18px]">offline_pin</span>
+      <div class="file-card flex-col items-start gap-1 p-4">
+        <div class="dropzone-icon-box" style="width: 36px; height: 36px; margin-bottom: 0.5rem; border-radius: 10px; color: #f59e0b;">
+          <span class="material-symbols-outlined text-[20px]">offline_pin</span>
         </div>
-        <span class="text-xs font-semibold text-on-surface dark:text-white">PWA Ready</span>
+        <span class="text-xs font-bold text-on-surface dark:text-white">PWA Ready</span>
         <span class="text-[11px] text-slate-muted dark:text-slate-400 leading-tight">Works flawlessly without active Wi-Fi connection.</span>
       </div>
     </div>
 
     <!-- Live Global Impact & Privacy Telemetry Section -->
-    <section id="footerStatsCard" class="w-full bg-surface-container-lowest/80 dark:bg-[#131b2e]/80 backdrop-blur-md rounded-2xl p-6 shadow-sm border border-slate-border dark:border-slate-800 mb-6">
-      <div class="flex flex-col items-center max-w-2xl mx-auto text-center">
+    <section id="footerStatsCard" class="workspace-card mb-6 text-center">
+      <div class="flex flex-col items-center max-w-2xl mx-auto">
         <!-- Top Status Indicators -->
         <div class="flex items-center justify-between w-full mb-4">
           <div class="flex items-center gap-2">
             <span class="w-2 h-2 rounded-full bg-[#10b981] animate-ping"></span>
-            <span class="text-[11px] uppercase tracking-wider text-on-surface-variant dark:text-slate-300 font-bold">LIVE GLOBAL IMPACT</span>
+            <span class="text-[11px] uppercase tracking-wider text-slate-muted dark:text-slate-400 font-bold">LIVE GLOBAL IMPACT</span>
           </div>
-          <span class="px-2.5 py-0.5 rounded-full bg-emerald-tint dark:bg-emerald-950/60 text-tertiary-container dark:text-emerald-300 border border-transparent dark:border-emerald-800/40 text-[11px] font-bold">100% Private</span>
+          <span class="privacy-badge" style="padding: 0.2rem 0.6rem; font-size: 0.7rem;">100% Private</span>
         </div>
         <!-- 2-Metric Dual Showcase -->
-        <div class="w-full grid grid-cols-1 sm:grid-cols-2 gap-4 bg-slate-bg/70 dark:bg-slate-900/60 p-4 rounded-xl mb-3 border border-slate-border dark:border-slate-800">
+        <div class="w-full grid grid-cols-1 sm:grid-cols-2 gap-4 p-4 rounded-xl mb-3 border border-slate-200/60 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-900/60">
           <!-- Metric 1: Visitors -->
-          <div class="flex items-center justify-center gap-4 py-2 sm:border-r border-slate-border dark:border-slate-800">
-            <div class="w-12 h-12 rounded-xl bg-indigo-tint dark:bg-indigo-950/60 text-primary-container dark:text-indigo-400 flex items-center justify-center shrink-0 shadow-sm">
+          <div class="flex items-center justify-center gap-4 py-2 sm:border-r border-slate-200/60 dark:border-slate-800">
+            <div class="w-12 h-12 rounded-xl bg-indigo-50 dark:bg-indigo-950/60 text-primary-container dark:text-indigo-400 flex items-center justify-center shrink-0 shadow-sm border border-indigo-100 dark:border-indigo-900/40">
               <span class="material-symbols-outlined text-[26px]">groups</span>
             </div>
             <div class="flex flex-col text-left">
@@ -1632,7 +1602,7 @@
           </div>
           <!-- Metric 2: Processed Documents -->
           <div class="flex items-center justify-center gap-4 py-2">
-            <div class="w-12 h-12 rounded-xl bg-emerald-tint dark:bg-emerald-950/60 text-tertiary-container dark:text-emerald-400 flex items-center justify-center shrink-0 shadow-sm">
+            <div class="w-12 h-12 rounded-xl bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0 shadow-sm border border-emerald-100 dark:border-emerald-900/40">
               <span class="material-symbols-outlined text-[26px]">enhanced_encryption</span>
             </div>
             <div class="flex flex-col text-left">
@@ -1650,7 +1620,7 @@
     </section>
 
     <!-- Mobile PWA Install Banner -->
-    <div id="pwaInstallBanner" class="pwa-install-banner hidden mb-6 bg-surface-container-lowest dark:bg-[#131b2e] border border-slate-border dark:border-slate-800 rounded-xl p-4 shadow-sm flex items-center justify-between gap-3">
+    <div id="pwaInstallBanner" class="pwa-install-banner hidden mb-6 workspace-card flex items-center justify-between gap-3">
       <div class="pwa-install-content flex items-center gap-3">
         <div class="pwa-install-icon text-2xl">📲</div>
         <div class="pwa-install-text flex flex-col">
@@ -1659,15 +1629,15 @@
         </div>
       </div>
       <div class="pwa-install-actions flex items-center gap-2">
-        <button id="pwaInstallBtn" class="btn btn-primary btn-sm px-3 py-1.5 rounded-lg bg-primary text-white text-xs font-semibold shadow hover:bg-primary-container transition-all">Install</button>
+        <button id="pwaInstallBtn" class="btn btn-primary btn-sm px-3 py-1.5 rounded-lg bg-indigo-600 text-white text-xs font-semibold shadow hover:bg-indigo-700 transition-all">Install</button>
         <button id="pwaDismissBtn" class="btn-pwa-dismiss text-slate-muted dark:text-slate-400 hover:text-on-surface dark:hover:text-white p-1 text-lg" aria-label="Dismiss banner">&times;</button>
       </div>
     </div>
 
     <!-- Footer -->
-    <footer class="w-full bg-surface-container-lowest dark:bg-[#131b2e] border-t border-slate-border dark:border-slate-800 py-4 px-4 sm:px-6 rounded-2xl shadow-sm mt-auto mb-2">
-      <div class="flex flex-col md:flex-row items-center justify-between gap-3 text-xs text-slate-muted dark:text-slate-400">
-        <div class="inline-flex items-center gap-1.5 font-semibold text-tertiary-container dark:text-emerald-300 bg-emerald-tint dark:bg-emerald-950/60 border border-transparent dark:border-emerald-800/40 px-3 py-1 rounded-full">
+    <footer class="app-header mt-auto mb-2 py-3 px-4 sm:px-6">
+      <div class="flex flex-col md:flex-row items-center justify-between gap-3 text-xs text-slate-muted dark:text-slate-400 w-full">
+        <div class="privacy-badge">
           <span class="material-symbols-outlined text-[16px]">verified_user</span>
           <span>Zero Server Processing Guarantee</span>
         </div>
@@ -1681,7 +1651,7 @@
   <script defer src="assets/vendor/pdf.min.js" integrity="sha384-/1qUCSGwTur9vjf/z9lmu/eCUYbpOTgSjmpbMQZ1/CtX2v/WcAIKqRv+U1DUCG6e" crossorigin="anonymous"></script>
   <script defer src="assets/vendor/sortable.min.js" integrity="sha384-BSxuMLxX+FCbTdYec3TbXlnMGEEM2QXTFdtDaveen71o+jswm2J36+xFqp8k4VHM" crossorigin="anonymous"></script>
 
-  <script type="module" src="assets/js/app.js?v=13"></script>
+  <script type="module" src="assets/js/app.js?v=14"></script>
   <script>
     // Register Service Worker for fast browser caching & offline access
     if ('serviceWorker' in navigator) {
