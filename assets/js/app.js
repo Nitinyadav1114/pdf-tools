@@ -11,7 +11,8 @@ import {
   invertState,
   compressState,
   imagesState,
-  pdfToImagesState
+  pdfToImagesState,
+  splitState
 } from './core/state.js';
 import { elements } from './core/dom.js';
 import {
@@ -35,6 +36,7 @@ import { initInvertTab, handleInvertFileSelected } from './tabs/tab-invert.js';
 import { initCompressTab, handleCompressFileSelected } from './tabs/tab-compress.js';
 import { initImagesTab, handleImageFilesAdded } from './tabs/tab-images.js';
 import { initPdfToImagesTab, handlePdfToImagesFileSelected } from './tabs/tab-pdftoimages.js';
+import { initSplitTab, handleSplitFileSelected, parseRangeGroups } from './tabs/tab-split.js';
 
 // Configure PDF.js worker
 if (typeof window !== 'undefined' && window.pdfjsLib) {
@@ -48,11 +50,19 @@ if (typeof window !== 'undefined') {
   window.isValidPdfFile = isValidPdfFile;
   window.isValidImageFile = isValidImageFile;
   window.createZipArchive = createZipArchive;
-  window.pdfToImagesState = pdfToImagesState;
   window.mergeState = mergeState;
+  window.removeState = removeState;
+  window.slidesState = slidesState;
+  window.invertState = invertState;
+  window.compressState = compressState;
+  window.imagesState = imagesState;
+  window.pdfToImagesState = pdfToImagesState;
+  window.splitState = splitState;
+  window.parseRangeGroups = parseRangeGroups;
   window.handleMergeFilesAdded = handleMergeFilesAdded;
   window.handleCompressFileSelected = handleCompressFileSelected;
   window.handleRemoveFileSelected = handleRemoveFileSelected;
+  window.handleSplitFileSelected = handleSplitFileSelected;
   window.handleSlidesFileSelected = handleSlidesFileSelected;
   window.handleInvertFileSelected = handleInvertFileSelected;
   window.handlePdfToImagesFileSelected = handlePdfToImagesFileSelected;
@@ -76,6 +86,7 @@ export function switchTab(tab) {
     tabCompressBtn,
     tabImagesBtn,
     tabPdfToImagesBtn,
+    tabSplitBtn,
     mergeTabView,
     removeTabView,
     slidesTabView,
@@ -83,14 +94,15 @@ export function switchTab(tab) {
     compressTabView,
     imagesTabView,
     pdfToImagesTabView,
+    splitTabView,
     appMainSubtitle
   } = elements;
 
-  [tabMergeBtn, tabRemoveBtn, tabSlidesBtn, tabInvertBtn, tabCompressBtn, tabImagesBtn, tabPdfToImagesBtn].forEach((btn) => {
+  [tabMergeBtn, tabRemoveBtn, tabSlidesBtn, tabInvertBtn, tabCompressBtn, tabImagesBtn, tabPdfToImagesBtn, tabSplitBtn].forEach((btn) => {
     if (btn) btn.classList.remove('active');
   });
 
-  [mergeTabView, removeTabView, slidesTabView, invertTabView, compressTabView, imagesTabView, pdfToImagesTabView].forEach((view) => {
+  [mergeTabView, removeTabView, slidesTabView, invertTabView, compressTabView, imagesTabView, pdfToImagesTabView, splitTabView].forEach((view) => {
     if (view) view.classList.add('hidden');
   });
 
@@ -104,7 +116,7 @@ export function switchTab(tab) {
     activeBtn = tabRemoveBtn;
     if (tabRemoveBtn) tabRemoveBtn.classList.add('active');
     if (removeTabView) removeTabView.classList.remove('hidden');
-    if (appMainSubtitle) appMainSubtitle.textContent = 'Select and remove unwanted pages with live visual preview';
+    if (appMainSubtitle) appMainSubtitle.textContent = 'Select, rotate, and organize pages with live visual preview';
   } else if (tab === 'slides') {
     activeBtn = tabSlidesBtn;
     if (tabSlidesBtn) tabSlidesBtn.classList.add('active');
@@ -130,6 +142,11 @@ export function switchTab(tab) {
     if (tabPdfToImagesBtn) tabPdfToImagesBtn.classList.add('active');
     if (pdfToImagesTabView) pdfToImagesTabView.classList.remove('hidden');
     if (appMainSubtitle) appMainSubtitle.textContent = 'Convert PDF pages into high-resolution JPG or PNG images & download as ZIP';
+  } else if (tab === 'split') {
+    activeBtn = tabSplitBtn;
+    if (tabSplitBtn) tabSplitBtn.classList.add('active');
+    if (splitTabView) splitTabView.classList.remove('hidden');
+    if (appMainSubtitle) appMainSubtitle.textContent = 'Extract specific page ranges or split into multiple separate PDF documents';
   }
 
   if (activeBtn && typeof activeBtn.scrollIntoView === 'function') {
@@ -162,12 +179,13 @@ export function init() {
 
   // Initialize individual tool tabs
   initMergeTab(switchTab, handleCompressFileSelected);
-  initRemoveTab();
+  initRemoveTab(switchTab, handleCompressFileSelected, handleSplitFileSelected);
   initSlidesTab(switchTab, handleInvertFileSelected);
   initInvertTab(switchTab);
   initCompressTab(switchTab);
   initImagesTab(switchTab, handleCompressFileSelected);
   initPdfToImagesTab();
+  initSplitTab(switchTab, handleCompressFileSelected);
 
   // Navigation tab bar click listener
   const navTabsContainer = document.querySelector('.nav-tabs');
@@ -235,11 +253,13 @@ export function init() {
     switchTab('images');
   } else if (tabParam === 'pdftoimages') {
     switchTab('pdftoimages');
+  } else if (tabParam === 'split') {
+    switchTab('split');
   }
 
   window.addEventListener('hashchange', () => {
     const hash = window.location.hash.replace('#', '');
-    if (['merge', 'remove', 'slides', 'invert', 'compress', 'images', 'pdftoimages'].includes(hash)) {
+    if (['merge', 'remove', 'slides', 'invert', 'compress', 'images', 'pdftoimages', 'split'].includes(hash)) {
       switchTab(hash);
     }
   });

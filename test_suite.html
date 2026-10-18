@@ -1040,6 +1040,113 @@
           assert(afterTrack === beforeTrack + 5, 'trackToolUsage helper with count 5 increments processed counter by exactly 5');
         }
 
+        // Test 18: Split PDF / Page Range Extractor Suite
+        {
+          assert(typeof window.parseRangeGroups === 'function', 'parseRangeGroups helper exported on window');
+          assert(typeof window.splitState === 'object', 'splitState state object accessible on window');
+          assert(window.splitState.mode === 'extract', 'splitState defaults to extract mode');
+          assert(typeof window.handleSplitFileSelected === 'function', 'handleSplitFileSelected handler accessible on window');
+
+          // 18a: Grouped range parsing
+          const parsed1 = window.parseRangeGroups('1-3, 5, 8-10', 10);
+          assert(parsed1.length === 3, 'parseRangeGroups parses comma-separated ranges into 3 groups');
+          assert(parsed1[0].join(',') === '1,2,3', 'First parsed group contains pages 1, 2, 3');
+          assert(parsed1[1].join(',') === '5', 'Second parsed group contains page 5');
+          assert(parsed1[2].join(',') === '8,9,10', 'Third parsed group contains pages 8, 9, 10');
+
+          const parsedSemicolon = window.parseRangeGroups('1-2; 3-5; 6-10', 10);
+          assert(parsedSemicolon.length === 3, 'parseRangeGroups handles semicolon-delimited groups');
+
+          // 18b: PDF Page Range Extraction to single document
+          const sampleDoc = await PDFLib.PDFDocument.create();
+          for (let i = 1; i <= 6; i++) {
+            const page = sampleDoc.addPage([400, 600]);
+            page.drawText(`Sample Page ${i}`, { x: 50, y: 300, size: 16 });
+          }
+          const sampleBytes = await sampleDoc.save();
+          const loadedSample = await PDFLib.PDFDocument.load(sampleBytes);
+          assert(loadedSample.getPageCount() === 6, 'Created 6-page test document for splitting');
+
+          // Extract pages 2 and 4 (0-based indices 1 and 3)
+          const extractedDoc = await PDFLib.PDFDocument.create();
+          const copiedPages = await extractedDoc.copyPages(loadedSample, [1, 3]);
+          copiedPages.forEach(p => extractedDoc.addPage(p));
+          const extractedBytes = await extractedDoc.save();
+
+          const verifyExtracted = await PDFLib.PDFDocument.load(extractedBytes);
+          assert(verifyExtracted.getPageCount() === 2, 'Extracted PDF has exactly 2 pages');
+
+          const extractedBlob = new Blob([extractedBytes], { type: 'application/pdf' });
+          const isExtractedValid = await window.isValidPdfFile(extractedBlob);
+          assert(isExtractedValid === true, 'Extracted PDF document passes client-side %PDF- validation');
+
+          // 18c: Fixed-size split (every 2 pages -> 3 separate documents packaged in ZIP)
+          const zipFiles = [];
+          for (let chunkIdx = 0; chunkIdx < 3; chunkIdx++) {
+            const chunkDoc = await PDFLib.PDFDocument.create();
+            const indices = [chunkIdx * 2, chunkIdx * 2 + 1];
+            const pages = await chunkDoc.copyPages(loadedSample, indices);
+            pages.forEach(p => chunkDoc.addPage(p));
+            const chunkBytes = await chunkDoc.save();
+            zipFiles.push({
+              name: `split_part_${chunkIdx + 1}.pdf`,
+              data: new Uint8Array(chunkBytes)
+            });
+          }
+          assert(zipFiles.length === 3, 'Split document into 3 separate 2-page chunks');
+
+          const splitZipBlob = window.createZipArchive(zipFiles);
+          assert(splitZipBlob instanceof Blob && splitZipBlob.type === 'application/zip', 'Split chunks packaged as valid application/zip Blob');
+          assert(splitZipBlob.size > extractedBytes.length * 2, 'ZIP archive contains all 3 split PDF documents');
+
+          const zipBuffer = await splitZipBlob.arrayBuffer();
+          const zipText = new TextDecoder('ascii', { fatal: false }).decode(zipBuffer);
+          assert(zipText.includes('split_part_1.pdf') && zipText.includes('split_part_2.pdf'), 'ZIP directory contains split part filenames');
+        }
+
+        // Test 19: Visual Page Rotation & Reorganize Deck Suite
+        {
+          assert(window.removeState.pageRotations instanceof Map, 'removeState.pageRotations is initialized as a Map');
+
+          // Create a 2-page PDF and apply 90° clockwise to page 1 and 180° to page 2
+          const rotDoc = await PDFLib.PDFDocument.create();
+          const p1 = rotDoc.addPage([400, 600]);
+          p1.drawText('Page 1 Normal', { x: 50, y: 300, size: 16 });
+          const p2 = rotDoc.addPage([400, 600]);
+          p2.drawText('Page 2 Normal', { x: 50, y: 300, size: 16 });
+          const rotBytes = await rotDoc.save();
+
+          const loadedForRot = await PDFLib.PDFDocument.load(rotBytes);
+          const outRotDoc = await PDFLib.PDFDocument.create();
+          const [cp1, cp2] = await outRotDoc.copyPages(loadedForRot, [0, 1]);
+
+          // Rotate page 1 by 90 degrees
+          cp1.setRotation(PDFLib.degrees(90));
+          outRotDoc.addPage(cp1);
+
+          // Rotate page 2 by 180 degrees
+          cp2.setRotation(PDFLib.degrees(180));
+          outRotDoc.addPage(cp2);
+
+          const savedRotBytes = await outRotDoc.save();
+          const verifyRotDoc = await PDFLib.PDFDocument.load(savedRotBytes);
+
+          assert(verifyRotDoc.getPage(0).getRotation().angle === 90, 'Page 1 rotation metadata successfully encoded as 90° CW');
+          assert(verifyRotDoc.getPage(1).getRotation().angle === 180, 'Page 2 rotation metadata successfully encoded as 180°');
+
+          const rotBlob = new Blob([savedRotBytes], { type: 'application/pdf' });
+          const isRotValid = await window.isValidPdfFile(rotBlob);
+          assert(isRotValid === true, 'Rotated PDF document passes client-side security validation');
+
+          // Workflow Handoff: File object constructor with PDF Blob
+          const handoffFile = new File([rotBlob], 'rotated_export.pdf', {
+            type: 'application/pdf',
+            lastModified: Date.now()
+          });
+          assert(handoffFile instanceof File && handoffFile.name === 'rotated_export.pdf', 'Workflow handoff File object created cleanly from Blob');
+          assert(typeof window.switchTab === 'function', 'switchTab is available for seamless tool handoffs');
+        }
+
         const msg = 'ALL_TESTS_COMPLETED_SUCCESSFULLY (' + results.length + ' assertions passed)';
         console.log(msg);
         document.body.innerHTML += '<h2 id="done">' + msg + '</h2>';

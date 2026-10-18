@@ -73,7 +73,8 @@ class QuietHTTPHandler(http.server.SimpleHTTPRequestHandler):
             pass
 
 
-class RobustTCPServer(socketserver.TCPServer):
+class RobustTCPServer(socketserver.ThreadingMixIn, socketserver.TCPServer):
+    daemon_threads = True
     allow_reuse_address = True
 
     def handle_error(self, request, client_address):
@@ -160,7 +161,7 @@ async def test_ui_and_tab_switching(browser_path, port, debug_port, tmp_dir):
             if not ready:
                 raise RuntimeError("app.js did not initialize window.switchTab within timeout.")
 
-            tabs = ['merge', 'remove', 'slides', 'invert', 'compress', 'images', 'pdftoimages']
+            tabs = ['merge', 'remove', 'slides', 'invert', 'compress', 'images', 'pdftoimages', 'split']
             view_map = {
                 'merge': 'mergeTabView',
                 'remove': 'removeTabView',
@@ -168,7 +169,8 @@ async def test_ui_and_tab_switching(browser_path, port, debug_port, tmp_dir):
                 'invert': 'invertTabView',
                 'compress': 'compressTabView',
                 'images': 'imagesTabView',
-                'pdftoimages': 'pdfToImagesTabView'
+                'pdftoimages': 'pdfToImagesTabView',
+                'split': 'splitTabView'
             }
 
             results = []
@@ -229,7 +231,7 @@ async def test_ui_and_tab_switching(browser_path, port, debug_port, tmp_dir):
                 const dzs = [
                     'dropzone', 'removeDropzone', 'slidesDropzone',
                     'invertDropzone', 'compressDropzone', 'imagesDropzone',
-                    'pdfToImagesDropzone'
+                    'pdfToImagesDropzone', 'splitDropzone'
                 ];
                 return dzs.map(id => {
                     const el = document.getElementById(id);

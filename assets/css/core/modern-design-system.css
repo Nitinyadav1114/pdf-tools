@@ -43,6 +43,11 @@
   --tool-pdftoimages-hover: #0369a1;
   --tool-pdftoimages-bg: rgba(2, 132, 199, 0.08);
   --tool-pdftoimages-glow: rgba(2, 132, 199, 0.25);
+
+  --tool-split: #ea580c;
+  --tool-split-hover: #c2410c;
+  --tool-split-bg: rgba(234, 88, 12, 0.08);
+  --tool-split-glow: rgba(234, 88, 12, 0.25);
 }
 
 /* Light Mode Palette */
@@ -392,6 +397,10 @@ html.dark .privacy-badge {
   background: var(--tool-pdftoimages-bg);
   color: var(--tool-pdftoimages);
 }
+.nav-tab[data-tab="split"].active {
+  background: var(--tool-split-bg);
+  color: var(--tool-split);
+}
 
 /* Trust Micro-Badge */
 .trust-badge-row {
@@ -511,6 +520,14 @@ html.dark .privacy-badge {
   background: radial-gradient(circle, var(--tool-pdftoimages-bg) 0%, transparent 70%);
 }
 
+#splitTabView .dropzone:hover {
+  border-color: var(--tool-split);
+  box-shadow: 0 12px 24px -4px var(--tool-split-glow);
+}
+#splitTabView .dropzone-ambient-orb {
+  background: radial-gradient(circle, var(--tool-split-bg) 0%, transparent 70%);
+}
+
 .dropzone-content {
   position: relative;
   z-index: 2;
@@ -581,6 +598,13 @@ html.dark .privacy-badge {
   background: var(--tool-pdftoimages);
   color: #ffffff;
   box-shadow: 0 6px 16px var(--tool-pdftoimages-glow);
+}
+
+#splitTabView .dropzone-icon-box { color: var(--tool-split); }
+#splitTabView .dropzone:hover .dropzone-icon-box {
+  background: var(--tool-split);
+  color: #ffffff;
+  box-shadow: 0 6px 16px var(--tool-split-glow);
 }
 
 .dropzone-title {
@@ -782,6 +806,51 @@ html.dark .privacy-badge {
 }
 .btn-cta-sky:hover {
   box-shadow: 0 6px 18px rgba(2, 132, 199, 0.45);
+}
+
+.btn-cta-orange {
+  background: linear-gradient(135deg, #ea580c 0%, #c2410c 100%);
+  box-shadow: 0 4px 14px rgba(234, 88, 12, 0.3);
+}
+.btn-cta-orange:hover {
+  box-shadow: 0 6px 18px rgba(234, 88, 12, 0.45);
+}
+
+/* Page Card Rotate & Actions */
+.page-action-btn {
+  width: 24px;
+  height: 24px;
+  border-radius: 6px;
+  background: var(--surface-secondary);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-secondary);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.page-action-btn:hover {
+  background: var(--border-subtle);
+  color: var(--text-primary);
+  transform: scale(1.08);
+}
+.page-rot-badge {
+  font-size: 0.65rem;
+  font-weight: 700;
+  padding: 0.1rem 0.35rem;
+  border-radius: 4px;
+  background: rgba(37, 99, 235, 0.12);
+  color: #2563eb;
+  border: 1px solid rgba(37, 99, 235, 0.25);
+}
+body.theme-dark .page-rot-badge {
+  background: rgba(59, 130, 246, 0.2);
+  color: #93c5fd;
+  border-color: rgba(59, 130, 246, 0.3);
+}
+.page-canvas {
+  transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* File Cards */

@@ -84,7 +84,8 @@ class QuietHTTPHandler(http.server.SimpleHTTPRequestHandler):
             pass
 
 
-class RobustTCPServer(socketserver.TCPServer):
+class RobustTCPServer(socketserver.ThreadingMixIn, socketserver.TCPServer):
+    daemon_threads = True
     allow_reuse_address = True
 
     def handle_error(self, request, client_address):
@@ -136,9 +137,11 @@ async def run_suite_cdp(browser_path, port, debug_port, tmp_dir):
 
         ws_url = target["webSocketDebuggerUrl"]
         async with websockets.connect(ws_url, max_size=10_000_000) as ws:
-            # Enable Runtime to evaluate script
+            # Enable Runtime and Console to evaluate script and capture errors
             await ws.send(json.dumps({"id": 1, "method": "Runtime.enable"}))
             await ws.send(json.dumps({"id": 2, "method": "Console.enable"}))
+            await ws.send(json.dumps({"id": 3, "method": "Page.enable"}))
+            await ws.send(json.dumps({"id": 4, "method": "Page.reload", "params": {"ignoreCache": True}}))
 
             # Poll for completion
             eval_id = 100
@@ -152,7 +155,10 @@ async def run_suite_cdp(browser_path, port, debug_port, tmp_dir):
                     "    done: !!doneEl,\n"
                     "    doneText: doneEl ? doneEl.innerText : '',\n"
                     "    results: results,\n"
-                    "    href: window.location.href\n"
+                    "    href: window.location.href,\n"
+                    "    body: document.body ? document.body.innerText.slice(0, 200) : '',\n"
+                    "    hasSplit: typeof window.splitState !== 'undefined',\n"
+                    "    hasApp: typeof window.switchTab !== 'undefined'\n"
                     "  });\n"
                     "})()"
                 )
@@ -169,16 +175,18 @@ async def run_suite_cdp(browser_path, port, debug_port, tmp_dir):
                     except asyncio.TimeoutError:
                         break
                     msg = json.loads(raw_msg)
+                    if msg.get("method") == "Runtime.exceptionThrown":
+                        details = msg.get("params", {}).get("exceptionDetails", {})
+                        print(f"[BROWSER EXCEPTION] {details.get('text')} - {details.get('exception', {}).get('description')}", file=sys.stderr)
                     if msg.get("method") == "Runtime.consoleAPICalled":
-                        level = msg.get("params", {}).get("type")
-                        if level in ("error", "assert"):
-                            args = msg.get("params", {}).get("args", [])
-                            err_txt = " ".join(str(a.get("value", "")) for a in args)
-                            print(f"[BROWSER ERROR] {err_txt}", file=sys.stderr)
+                        args = msg.get("params", {}).get("args", [])
+                        err_txt = " ".join(str(a.get("value", "")) for a in args)
+                        print(f"[BROWSER LOG] {err_txt}", file=sys.stderr)
                     if msg.get("id") == eval_id:
                         val = msg.get("result", {}).get("result", {}).get("value")
                         if val:
                             data = json.loads(val)
+                            print(f"[DEBUG STEP {step}] href={data.get('href')}, results={len(data.get('results', []))}, done={data.get('done')}, hasSplit={data.get('hasSplit')}, hasApp={data.get('hasApp')}, body={data.get('body')!r}", file=sys.stderr)
                             # If stuck on about:blank, explicitly trigger navigation
                             if data.get("href") == "about:blank" and step >= 2:
                                 await ws.send(json.dumps({
@@ -188,6 +196,8 @@ async def run_suite_cdp(browser_path, port, debug_port, tmp_dir):
                                 }))
                             if data.get("done"):
                                 return data
+                        else:
+                            print(f"[DEBUG STEP {step}] eval result empty: {msg.get('result')}", file=sys.stderr)
                         break
                 await asyncio.sleep(0.5)
 
@@ -241,11 +251,11 @@ def main():
         print(f"Banner: {done_text}")
         print("=" * 70)
 
-        if failed == 0 and passed == 125:
-            print("\n[SUCCESS] 100% Automated Test Suite Passed (125/125 assertions)!")
+        if failed == 0 and passed >= 145:
+            print(f"\n[SUCCESS] 100% Automated Test Suite Passed ({passed}/{passed} assertions)!")
             sys.exit(0)
         else:
-            print(f"\n[FAILURE] Expected 125 passed assertions, got {passed} passed, {failed} failed.", file=sys.stderr)
+            print(f"\n[FAILURE] Expected at least 145 passed assertions with 0 failures, got {passed} passed, {failed} failed.", file=sys.stderr)
             sys.exit(1)
 
     except Exception as e:

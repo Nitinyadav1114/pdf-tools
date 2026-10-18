@@ -21,7 +21,7 @@ Unlike traditional online PDF converters that transmit your sensitive documents 
 
 ---
 
-## ✨ 7 Powerful All-in-One Tools
+## ✨ 8 Powerful All-in-One Tools
 
 ### 1. 📑 Merge PDFs
 - **⏱️ Timestamp & Metadata Sorting**: Automatically sort uploaded PDFs chronologically (oldest or newest first) based on file modification timestamps.
@@ -29,11 +29,13 @@ Unlike traditional online PDF converters that transmit your sensitive documents 
 - **🖼️ Real-Time Previews**: Instant first-page thumbnail previews rendered via PDF.js.
 - **⚡ Batch Processing**: Combine as many documents as your device's memory allows.
 
-### 2. ✂️ Remove Pages
+### 2. ✂️ Remove Pages & Rotate Deck
 - **🎯 Flexible Selection Syntax**: Enter comma-separated page numbers and ranges (e.g., `1, 3, 5-8, 12`).
-- **🖼️ Interactive Visual Grid**: Click any page thumbnail in the live preview grid to toggle page removal.
+- **🔄 Visual Page Rotation**: Rotate individual pages 90° clockwise or batch-rotate the entire document with live visual feedback.
+- **✋ Drag & Drop Reordering**: Reorder pages directly in the visual thumbnail grid prior to exporting.
 - **⚡ One-Click Helpers**: Select Odd pages, Even pages, Invert selection, or Reset with a single click.
 - **📄 Lossless Page Stripping**: Strips selected pages without re-encoding or re-compressing unselected content.
+- **🔗 Workflow Handoffs**: Pass cleaned output PDF directly to Compress PDF or Split PDF in a single click.
 
 ### 3. 📊 Slides to A4 Handout
 - **🎯 Multi-Slide Handout Generator**: Neatly scale and pack 2, 3, 4, 6, or 9 presentation slides onto standard A4 portrait pages (`595 × 842 pt`).
@@ -70,12 +72,18 @@ Unlike traditional online PDF converters that transmit your sensitive documents 
 - **📦 Clean ZIP Download**: Automatically packages all extracted images into an uncompressed, instantly-downloaded ZIP archive using a native client-side streaming ZIP generator.
 - **📑 Custom Page Ranges**: Extract all pages or specific page numbers.
 
+### 8. 🔀 Split PDF / Extract Pages
+- **🎯 Extract Specific Ranges**: Extract custom page ranges (`1-3, 5, 8-10`) into a single consolidated PDF or individual PDFs.
+- **✂️ Fixed-Size Chunk Splitting**: Split large documents every $N$ pages (e.g. every 2 pages) into separate documents.
+- **📦 Custom Range Groups**: Divide documents into distinct groups (`1-2, 3-5, 6-10`) packaged inside an in-browser ZIP archive.
+- **🔗 Workflow Handoffs**: Pass split output documents directly to Compress PDF without re-downloading or re-uploading.
+
 ---
 
 ## 🎨 Modern Linear & Apple-Inspired Design System
 
 - **Clean Aesthetic**: Engineered from the ground up with subtle frosted glass containers, elevated cards, and uncluttered navigation.
-- **Active Tool Palette**: Instant visual feedback with tool-specific accent colors (Indigo, Rose, Blue, Purple, Emerald, Teal, Sky).
+- **Active Tool Palette**: Instant visual feedback with tool-specific accent colors (Indigo, Rose, Blue, Purple, Emerald, Teal, Sky, Amber).
 - **Above-The-Fold Dropzones**: Uncluttered dropzones with ambient backdrops, drag-and-drop support, and responsive metadata pills.
 - **Flawless Mobile Experience**: Mobile-first breakpoints tested on 390px viewports (iPhone 12/13/14/15) with zero horizontal overflow.
 - **Dual Themes**: Full Light Mode and Dark Mode support with smooth theme toggle and persistence.

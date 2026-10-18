@@ -20,6 +20,7 @@ export const removeState = {
   pdfDoc: null,
   totalPages: 0,
   selectedPages: new Set(), // 1-based page numbers marked for deletion
+  pageRotations: new Map(), // pageNum -> degrees (0, 90, 180, 270)
   outputBlob: null,
   outputUrl: null,
   isCancelled: false,
@@ -106,6 +107,24 @@ export const pdfToImagesState = {
   zipBlob: null,
 };
 
+// Tab 8: Split PDF State
+export const splitState = {
+  file: null,
+  arrayBuffer: null,
+  srcDoc: null,
+  totalPages: 0,
+  mode: 'extract', // 'extract', 'fixed', 'custom'
+  extractRange: '',
+  extractAsZip: false,
+  everyN: 2,
+  customRanges: '',
+  outputBlob: null,
+  outputUrl: null,
+  isCancelled: false,
+  isProcessing: false,
+};
+
 if (typeof window !== 'undefined') {
   window.pdfToImagesState = pdfToImagesState;
+  window.splitState = splitState;
 }

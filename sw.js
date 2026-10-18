@@ -1,4 +1,4 @@
-const CACHE_NAME = 'pdf-tools-v14';
+const CACHE_NAME = 'pdf-tools-v15';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
@@ -36,6 +36,7 @@ const ASSETS_TO_CACHE = [
   './assets/js/tabs/tab-compress.js',
   './assets/js/tabs/tab-images.js',
   './assets/js/tabs/tab-pdftoimages.js',
+  './assets/js/tabs/tab-split.js',
   './assets/vendor/pdf-lib.min.js',
   './assets/vendor/pdf.min.js',
   './assets/vendor/pdf.worker.min.js',

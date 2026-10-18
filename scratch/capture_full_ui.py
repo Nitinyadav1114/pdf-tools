@@ -70,7 +70,8 @@ class QuietHTTPHandler(http.server.SimpleHTTPRequestHandler):
         except (ConnectionResetError, ConnectionAbortedError, BrokenPipeError):
             pass
 
-class RobustTCPServer(socketserver.TCPServer):
+class RobustTCPServer(socketserver.ThreadingMixIn, socketserver.TCPServer):
+    daemon_threads = True
     allow_reuse_address = True
     def handle_error(self, request, client_address):
         pass
@@ -115,10 +116,6 @@ async def capture_screenshots(browser_path, port, debug_port, tmp_dir):
 
         ws_url = target["webSocketDebuggerUrl"]
         async with websockets.connect(ws_url, max_size=20_000_000) as ws:
-            await ws.send(json.dumps({"id": 1, "method": "Runtime.enable"}))
-            await ws.send(json.dumps({"id": 2, "method": "Page.enable"}))
-            await ws.send(json.dumps({"id": 3, "method": "Console.enable"}))
-
             msg_id = 100
 
             async def send_cmd(method, params=None):
@@ -139,7 +136,12 @@ async def capture_screenshots(browser_path, port, debug_port, tmp_dir):
                 res = await send_cmd("Runtime.evaluate", {"expression": expr, "returnByValue": True, "awaitPromise": True})
                 if res and "exceptionDetails" in res:
                     print(f"JS EXCEPTION for [{expr[:60]}]:", res["exceptionDetails"].get("text"), res["exceptionDetails"].get("exception", {}).get("description"))
-                return res.get("result", {}).get("value")
+                if res and "result" in res:
+                    return res["result"].get("value")
+                return None
+
+            await send_cmd("Runtime.enable")
+            await send_cmd("Page.enable")
 
             # Wait for page ready
             ready = False
@@ -197,8 +199,16 @@ async def capture_screenshots(browser_path, port, debug_port, tmp_dir):
                 f.write(base64.b64decode(res["data"]))
             print("Captured live_mobile_light.png")
 
+            # Switch to Desktop Split PDF tab
+            await eval_js("window.switchTab('split')")
+            await asyncio.sleep(0.3)
+            res = await send_cmd("Page.captureScreenshot", {"format": "png"})
+            with open(os.path.join(ARTIFACT_DIR, "live_desktop_split.png"), "wb") as f:
+                f.write(base64.b64decode(res["data"]))
+            print("Captured live_desktop_split.png")
+
             # Let's also check each tab in mobile light!
-            for tab_id in ['remove', 'slides', 'invert', 'compress', 'images', 'pdftoimages']:
+            for tab_id in ['remove', 'slides', 'invert', 'compress', 'images', 'pdftoimages', 'split']:
                 await eval_js(f"window.switchTab('{tab_id}')")
                 await asyncio.sleep(0.3)
                 view_id = 'pdfToImagesTabView' if tab_id == 'pdftoimages' else f'{tab_id}TabView'

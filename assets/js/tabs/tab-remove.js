@@ -101,6 +101,13 @@ export function resetRemoveWorkspace() {
     elements.pagesGrid.innerHTML = '';
   }
 
+  if (removeState.sortableInstance) {
+    try {
+      removeState.sortableInstance.destroy();
+    } catch (e) {}
+    removeState.sortableInstance = null;
+  }
+  removeState.pageRotations.clear();
   removeState.file = null;
   removeState.arrayBuffer = null;
   removeState.pdfDoc = null;
@@ -146,6 +153,31 @@ function processThumbnailQueue() {
   }
 }
 
+export function rotatePage(pageNum, degreesDelta = 90) {
+  const current = removeState.pageRotations.get(pageNum) || 0;
+  const next = ((current + degreesDelta) % 360 + 360) % 360;
+  removeState.pageRotations.set(pageNum, next);
+  const canvas = document.getElementById(`canvas_page_${pageNum}`);
+  if (canvas) {
+    canvas.style.transform = next !== 0 ? `rotate(${next}deg)` : '';
+    canvas.style.transition = 'transform 0.2s cubic-bezier(0.4, 0, 0.2, 1)';
+  }
+  const card = elements.pagesGrid ? elements.pagesGrid.querySelector(`.page-card[data-page-num="${pageNum}"]`) : null;
+  if (card) {
+    const rotBadge = card.querySelector('.page-rot-badge');
+    if (rotBadge) {
+      rotBadge.textContent = next !== 0 ? `${next}°` : '';
+      rotBadge.classList.toggle('hidden', next === 0);
+    }
+  }
+}
+
+export function rotateAllPages(degreesDelta = 90) {
+  for (let p = 1; p <= removeState.totalPages; p++) {
+    rotatePage(p, degreesDelta);
+  }
+}
+
 export function renderPagesGrid() {
   if (!elements.pagesGrid) return;
   if (removeState.observer) {
@@ -185,17 +217,33 @@ export function renderPagesGrid() {
     }
     card.dataset.pageNum = p;
 
+    const rot = removeState.pageRotations.get(p) || 0;
+
     card.innerHTML = `
       <div class="page-card-header">
         <span class="page-num-pill">Page ${p}</span>
-        <span class="page-status-badge">🗑️ Delete</span>
+        <span class="page-rot-badge ${rot === 0 ? 'hidden' : ''}">${rot ? rot + '°' : ''}</span>
+        <div class="page-card-actions">
+          <button type="button" class="page-action-btn page-rotate-cw-btn" title="Rotate 90° Clockwise" aria-label="Rotate Page ${p}">
+            <span class="material-symbols-outlined text-[15px]">rotate_right</span>
+          </button>
+          <span class="page-status-badge">🗑️ Delete</span>
+        </div>
       </div>
       <div class="page-canvas-wrapper">
-        <canvas class="page-canvas" id="canvas_page_${p}"></canvas>
+        <canvas class="page-canvas" id="canvas_page_${p}" style="${rot !== 0 ? `transform: rotate(${rot}deg);` : ''}"></canvas>
         <div class="page-fallback-label">📄 Page ${p}</div>
         <div class="delete-watermark">🗑️ Delete</div>
       </div>
     `;
+
+    const rotateBtn = card.querySelector('.page-rotate-cw-btn');
+    if (rotateBtn) {
+      rotateBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        rotatePage(p, 90);
+      });
+    }
 
     card.addEventListener('click', () => {
       togglePageSelection(p);
@@ -208,6 +256,19 @@ export function renderPagesGrid() {
     } else {
       queueThumbnailRender(p);
     }
+  }
+
+  if (typeof window !== 'undefined' && window.Sortable && elements.pagesGrid && !removeState.sortableInstance) {
+    try {
+      removeState.sortableInstance = new window.Sortable(elements.pagesGrid, {
+        animation: 150,
+        ghostClass: 'sortable-ghost',
+        chosenClass: 'sortable-chosen',
+        dragClass: 'sortable-drag',
+        delay: 50,
+        delayOnTouchOnly: true
+      });
+    } catch (e) {}
   }
 }
 
@@ -349,17 +410,19 @@ export async function executeRemovePages() {
     return;
   }
 
-  if (removeState.selectedPages.size === 0) {
-    alert('Please select at least 1 page to delete (e.g. 1, 2, 7, 8 or click the page cards).');
+  const hasRotations = Array.from(removeState.pageRotations.values()).some((r) => r !== 0);
+  if (removeState.selectedPages.size === 0 && !hasRotations && !removeState.sortableInstance) {
+    alert('Please select at least 1 page to delete, or rotate/reorder pages.');
     return;
   }
 
-  const keptPages = [];
-  for (let p = 1; p <= removeState.totalPages; p++) {
-    if (!removeState.selectedPages.has(p)) {
-      keptPages.push(p);
-    }
+  const cardElements = elements.pagesGrid ? Array.from(elements.pagesGrid.querySelectorAll('.page-card')) : [];
+  let orderedPageNums = cardElements.map((c) => parseInt(c.dataset.pageNum, 10)).filter(Boolean);
+  if (orderedPageNums.length === 0) {
+    orderedPageNums = Array.from({ length: removeState.totalPages }, (_, i) => i + 1);
   }
+
+  const keptPages = orderedPageNums.filter((p) => !removeState.selectedPages.has(p));
 
   if (keptPages.length === 0) {
     alert('Cannot delete all pages! You must keep at least 1 page.');
@@ -380,20 +443,25 @@ export async function executeRemovePages() {
   try {
     if (removeState.isCancelled) throw new Error('OPERATION_CANCELLED');
 
-    const { PDFDocument } = window.PDFLib;
-    setRemoveProgress(30, 'Extracting unselected pages...');
+    const { PDFDocument, degrees } = window.PDFLib;
+    setRemoveProgress(30, 'Extracting and organizing pages...');
 
     const srcDoc = await PDFDocument.load(removeState.arrayBuffer, { ignoreEncryption: true });
     if (removeState.isCancelled) throw new Error('OPERATION_CANCELLED');
 
     const newDoc = await PDFDocument.create();
 
-    const keptIndices = keptPages.map((p) => p - 1);
-    const copiedPages = await newDoc.copyPages(srcDoc, keptIndices);
-    if (removeState.isCancelled) throw new Error('OPERATION_CANCELLED');
-
-    setRemoveProgress(70, 'Compiling clean PDF...');
-    copiedPages.forEach((page) => newDoc.addPage(page));
+    for (let i = 0; i < keptPages.length; i++) {
+      if (removeState.isCancelled) throw new Error('OPERATION_CANCELLED');
+      const pNum = keptPages[i];
+      const [copiedPage] = await newDoc.copyPages(srcDoc, [pNum - 1]);
+      const addedRot = removeState.pageRotations.get(pNum) || 0;
+      if (addedRot !== 0 && degrees) {
+        const curRot = copiedPage.getRotation().angle;
+        copiedPage.setRotation(degrees((curRot + addedRot) % 360));
+      }
+      newDoc.addPage(copiedPage);
+    }
 
     setRemoveProgress(90, 'Saving new PDF...');
     const newPdfBytes = await newDoc.save();
@@ -452,7 +520,7 @@ function setRemoveProgress(percent, text) {
   if (elements.removeProgressText) elements.removeProgressText.textContent = text;
 }
 
-export function initRemoveTab() {
+export function initRemoveTab(switchTab, handleCompressFileSelected, handleSplitFileSelected) {
   const {
     removeDropzone,
     removeFileInput,
@@ -461,12 +529,16 @@ export function initRemoveTab() {
     btnSelectEven,
     btnInvertSelect,
     btnClearSelect,
+    btnRotateAllCw,
+    btnRotateAllCcw,
     removeChangeFileBtn,
     executeRemoveBtn,
     removeCancelBtn,
     removeShareBtn,
     removePreviewBtn,
-    removeDownloadBtn
+    removeDownloadBtn,
+    removeSendToCompressBtn,
+    removeSendToSplitBtn
   } = elements;
 
   if (removeDropzone && removeFileInput) {
@@ -511,6 +583,8 @@ export function initRemoveTab() {
   if (btnSelectEven) btnSelectEven.addEventListener('click', selectEvenPages);
   if (btnInvertSelect) btnInvertSelect.addEventListener('click', invertSelection);
   if (btnClearSelect) btnClearSelect.addEventListener('click', clearPageSelection);
+  if (btnRotateAllCw) btnRotateAllCw.addEventListener('click', () => rotateAllPages(90));
+  if (btnRotateAllCcw) btnRotateAllCcw.addEventListener('click', () => rotateAllPages(-90));
   if (removeChangeFileBtn) removeChangeFileBtn.addEventListener('click', resetRemoveWorkspace);
   if (executeRemoveBtn) executeRemoveBtn.addEventListener('click', executeRemovePages);
 
@@ -532,6 +606,30 @@ export function initRemoveTab() {
       if (removeState.outputUrl) {
         window.open(removeState.outputUrl, '_blank');
       }
+    });
+  }
+
+  if (removeSendToCompressBtn) {
+    removeSendToCompressBtn.addEventListener('click', () => {
+      if (!removeState.outputBlob) return;
+      const handoffFile = new File([removeState.outputBlob], (removeDownloadBtn && removeDownloadBtn.download) || 'cleaned_document.pdf', {
+        type: 'application/pdf',
+        lastModified: Date.now()
+      });
+      if (typeof switchTab === 'function') switchTab('compress');
+      if (typeof handleCompressFileSelected === 'function') handleCompressFileSelected(handoffFile);
+    });
+  }
+
+  if (removeSendToSplitBtn) {
+    removeSendToSplitBtn.addEventListener('click', () => {
+      if (!removeState.outputBlob) return;
+      const handoffFile = new File([removeState.outputBlob], (removeDownloadBtn && removeDownloadBtn.download) || 'cleaned_document.pdf', {
+        type: 'application/pdf',
+        lastModified: Date.now()
+      });
+      if (typeof switchTab === 'function') switchTab('split');
+      if (typeof handleSplitFileSelected === 'function') handleSplitFileSelected(handoffFile);
     });
   }
 }
