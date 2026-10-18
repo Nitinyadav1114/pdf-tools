@@ -5,6 +5,7 @@
 
 const elIds = {
   // Navigation & Shell
+  tabHomeBtn: 'tabHomeBtn',
   tabMergeBtn: 'tabMergeBtn',
   tabRemoveBtn: 'tabRemoveBtn',
   tabSlidesBtn: 'tabSlidesBtn',
@@ -13,6 +14,7 @@ const elIds = {
   tabImagesBtn: 'tabImagesBtn',
   tabPdfToImagesBtn: 'tabPdfToImagesBtn',
   tabSplitBtn: 'tabSplitBtn',
+  homeTabView: 'homeTabView',
   mergeTabView: 'mergeTabView',
   removeTabView: 'removeTabView',
   slidesTabView: 'slidesTabView',
@@ -23,6 +25,8 @@ const elIds = {
   splitTabView: 'splitTabView',
   appMainSubtitle: 'appMainSubtitle',
   themeToggleBtn: 'themeToggleBtn',
+  homeDropzone: 'homeDropzone',
+  homeFileInput: 'homeFileInput',
 
   // Merge Tab
   dropzone: 'dropzone',

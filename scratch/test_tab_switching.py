@@ -161,8 +161,9 @@ async def test_ui_and_tab_switching(browser_path, port, debug_port, tmp_dir):
             if not ready:
                 raise RuntimeError("app.js did not initialize window.switchTab within timeout.")
 
-            tabs = ['merge', 'remove', 'slides', 'invert', 'compress', 'images', 'pdftoimages', 'split']
+            tabs = ['home', 'merge', 'remove', 'slides', 'invert', 'compress', 'images', 'pdftoimages', 'split']
             view_map = {
+                'home': 'homeTabView',
                 'merge': 'mergeTabView',
                 'remove': 'removeTabView',
                 'slides': 'slidesTabView',
@@ -229,7 +230,7 @@ async def test_ui_and_tab_switching(browser_path, port, debug_port, tmp_dir):
             dropzones_check = """
             (() => {
                 const dzs = [
-                    'dropzone', 'removeDropzone', 'slidesDropzone',
+                    'homeDropzone', 'dropzone', 'removeDropzone', 'slidesDropzone',
                     'invertDropzone', 'compressDropzone', 'imagesDropzone',
                     'pdfToImagesDropzone', 'splitDropzone'
                 ];

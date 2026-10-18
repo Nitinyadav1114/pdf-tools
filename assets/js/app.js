@@ -37,6 +37,7 @@ import { initCompressTab, handleCompressFileSelected } from './tabs/tab-compress
 import { initImagesTab, handleImageFilesAdded } from './tabs/tab-images.js';
 import { initPdfToImagesTab, handlePdfToImagesFileSelected } from './tabs/tab-pdftoimages.js';
 import { initSplitTab, handleSplitFileSelected, parseRangeGroups } from './tabs/tab-split.js';
+import { initHomeTab } from './tabs/tab-home.js';
 
 // Configure PDF.js worker
 if (typeof window !== 'undefined' && window.pdfjsLib) {
@@ -79,6 +80,7 @@ if (typeof window !== 'undefined') {
  */
 export function switchTab(tab) {
   const {
+    tabHomeBtn,
     tabMergeBtn,
     tabRemoveBtn,
     tabSlidesBtn,
@@ -87,6 +89,7 @@ export function switchTab(tab) {
     tabImagesBtn,
     tabPdfToImagesBtn,
     tabSplitBtn,
+    homeTabView,
     mergeTabView,
     removeTabView,
     slidesTabView,
@@ -98,16 +101,21 @@ export function switchTab(tab) {
     appMainSubtitle
   } = elements;
 
-  [tabMergeBtn, tabRemoveBtn, tabSlidesBtn, tabInvertBtn, tabCompressBtn, tabImagesBtn, tabPdfToImagesBtn, tabSplitBtn].forEach((btn) => {
+  [tabHomeBtn, tabMergeBtn, tabRemoveBtn, tabSlidesBtn, tabInvertBtn, tabCompressBtn, tabImagesBtn, tabPdfToImagesBtn, tabSplitBtn].forEach((btn) => {
     if (btn) btn.classList.remove('active');
   });
 
-  [mergeTabView, removeTabView, slidesTabView, invertTabView, compressTabView, imagesTabView, pdfToImagesTabView, splitTabView].forEach((view) => {
+  [homeTabView, mergeTabView, removeTabView, slidesTabView, invertTabView, compressTabView, imagesTabView, pdfToImagesTabView, splitTabView].forEach((view) => {
     if (view) view.classList.add('hidden');
   });
 
   let activeBtn = null;
-  if (tab === 'merge') {
+  if (tab === 'home') {
+    activeBtn = tabHomeBtn;
+    if (tabHomeBtn) tabHomeBtn.classList.add('active');
+    if (homeTabView) homeTabView.classList.remove('hidden');
+    if (appMainSubtitle) appMainSubtitle.textContent = '100% In-Browser & Private PDF Tools • Zero Server Uploads';
+  } else if (tab === 'merge') {
     activeBtn = tabMergeBtn;
     if (tabMergeBtn) tabMergeBtn.classList.add('active');
     if (mergeTabView) mergeTabView.classList.remove('hidden');
@@ -186,6 +194,16 @@ export function init() {
   initImagesTab(switchTab, handleCompressFileSelected);
   initPdfToImagesTab();
   initSplitTab(switchTab, handleCompressFileSelected);
+  initHomeTab(switchTab, {
+    handleMergeFilesAdded,
+    handleCompressFileSelected,
+    handleRemoveFileSelected,
+    handleSplitFileSelected,
+    handleSlidesFileSelected,
+    handleInvertFileSelected,
+    handlePdfToImagesFileSelected,
+    handleImageFilesAdded
+  });
 
   // Navigation tab bar click listener
   const navTabsContainer = document.querySelector('.nav-tabs');
@@ -255,12 +273,18 @@ export function init() {
     switchTab('pdftoimages');
   } else if (tabParam === 'split') {
     switchTab('split');
+  } else if (tabParam === 'merge') {
+    switchTab('merge');
+  } else {
+    switchTab('home');
   }
 
   window.addEventListener('hashchange', () => {
     const hash = window.location.hash.replace('#', '');
-    if (['merge', 'remove', 'slides', 'invert', 'compress', 'images', 'pdftoimages', 'split'].includes(hash)) {
+    if (['home', 'merge', 'remove', 'slides', 'invert', 'compress', 'images', 'pdftoimages', 'split'].includes(hash)) {
       switchTab(hash);
+    } else if (!hash) {
+      switchTab('home');
     }
   });
 }

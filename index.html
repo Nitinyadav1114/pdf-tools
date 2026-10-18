@@ -32,7 +32,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=block" rel="stylesheet">
 
   <!-- Production Single Minified Stylesheet (Zero-Waterfall Pre-bundled Architecture) -->
-  <link rel="stylesheet" href="assets/css/bundle.min.css?v=15">
+  <link rel="stylesheet" href="assets/css/bundle.min.css?v=16">
 
   <!-- Canonical URL -->
   <link rel="canonical" href="https://nitinyadav1114.github.io/pdf-tools/">
@@ -125,7 +125,11 @@
     <!-- Capsule Navigation Tabs -->
     <div class="nav-tabs-wrapper">
       <nav class="nav-tabs" aria-label="Tool selection">
-        <button class="nav-tab active" id="tabMergeBtn" data-tab="merge">
+        <button class="nav-tab active" id="tabHomeBtn" data-tab="home">
+          <span class="material-symbols-outlined text-[16px]">grid_view</span>
+          All Tools
+        </button>
+        <button class="nav-tab" id="tabMergeBtn" data-tab="merge">
           <span class="material-symbols-outlined text-[16px]">merge</span>
           Merge PDFs
         </button>
@@ -172,9 +176,358 @@
     <!-- Main Content -->
     <main class="main-content w-full flex flex-col">
       <!-- ============================================== -->
+      <!-- TAB 0: ALL TOOLS HUB / LANDING PAGE VIEW       -->
+      <!-- ============================================== -->
+      <div id="homeTabView" class="tab-view active">
+        <!-- Hero Section -->
+        <section class="home-hero-section">
+          <div class="home-hero-badge">
+            <span class="material-symbols-outlined text-[15px]">verified_user</span>
+            <span>100% In-Browser • Zero Cloud Uploads • Instant RAM Purge</span>
+          </div>
+          <h1 class="home-hero-title">
+            Private, Fast &amp; Powerful<br>
+            <span class="home-hero-gradient">PDF Suite in Your Browser</span>
+          </h1>
+          <p class="home-hero-desc">
+            No server uploads. No waiting in queue. No artificial limits or subscriptions.<br class="hidden sm:inline">
+            All document processing runs 100% locally on your device for absolute privacy and enterprise security.
+          </p>
+        </section>
+
+        <!-- Universal Smart Dropzone -->
+        <section class="dropzone-section mb-10">
+          <div id="homeDropzone" class="dropzone universal-dropzone cursor-pointer" tabindex="0" role="button" aria-label="Drop any PDF or images here to start">
+            <div class="dropzone-ambient-orb blur-3xl pointer-events-none"></div>
+            <input type="file" id="homeFileInput" multiple accept=".pdf,image/*,application/pdf" class="file-input-hidden hidden" aria-label="Select files for smart routing">
+            <div class="dropzone-content">
+              <div class="dropzone-icon-box" style="color: var(--tool-home);">
+                <span class="material-symbols-outlined text-[32px]">auto_awesome</span>
+              </div>
+              <h2 class="dropzone-title">
+                <span class="drop-text-desktop">Drop any PDF or images here to start</span>
+                <span class="drop-text-mobile">Tap to select any PDF or images</span>
+              </h2>
+              <p class="dropzone-desc">
+                or <span class="browse-link">browse files from your device</span>
+              </p>
+              <div class="dropzone-chips">
+                <span class="dropzone-chip"><span class="dropzone-chip-dot" style="background: #6366f1;"></span>Single PDF: Quick Tool Selector</span>
+                <span class="dropzone-chip"><span class="dropzone-chip-dot" style="background: #10b981;"></span>2+ PDFs: Auto-routes to Merge</span>
+                <span class="dropzone-chip"><span class="dropzone-chip-dot" style="background: #0d9488;"></span>Images: Auto-routes to Image to PDF</span>
+                <span class="dropzone-chip"><span class="dropzone-chip-dot" style="background: #f59e0b;"></span>100% Private (No Upload)</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- 8-Tool Visual Showcase Grid -->
+        <section class="mb-12">
+          <h2 class="home-section-title">All PDF Tools</h2>
+          <p class="home-section-desc">Choose a dedicated workspace or drop your files directly into any tool</p>
+
+          <div class="home-tool-grid">
+            <!-- Tool 1: Merge PDFs -->
+            <div class="home-tool-card" data-launch-tab="merge" role="button" tabindex="0" aria-label="Open Merge PDFs tool" style="--card-accent: var(--tool-merge); --card-bg: var(--tool-merge-bg); --card-glow: var(--tool-merge-glow);">
+              <div class="home-tool-card-header">
+                <div class="home-tool-icon-box">
+                  <span class="material-symbols-outlined text-[24px]">merge</span>
+                </div>
+                <span class="home-tool-badge">Popular</span>
+              </div>
+              <h3 class="home-tool-title">Merge PDFs</h3>
+              <p class="home-tool-desc">Combine multiple PDF files into one clean document with timestamp sorting and drag &amp; drop reordering.</p>
+              <div class="home-tool-cta">
+                <span>Launch Tool</span>
+                <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+              </div>
+            </div>
+
+            <!-- Tool 2: Split PDF -->
+            <div class="home-tool-card" data-launch-tab="split" role="button" tabindex="0" aria-label="Open Split PDF tool" style="--card-accent: var(--tool-split); --card-bg: var(--tool-split-bg); --card-glow: var(--tool-split-glow);">
+              <div class="home-tool-card-header">
+                <div class="home-tool-icon-box">
+                  <span class="material-symbols-outlined text-[24px]">call_split</span>
+                </div>
+                <span class="home-tool-badge" style="color: #ea580c; border-color: rgba(234, 88, 12, 0.25);">New</span>
+              </div>
+              <h3 class="home-tool-title">Split PDF</h3>
+              <p class="home-tool-desc">Extract custom page ranges into a new document or split every page into separate individual PDFs in a ZIP.</p>
+              <div class="home-tool-cta">
+                <span>Launch Tool</span>
+                <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+              </div>
+            </div>
+
+            <!-- Tool 3: Remove & Rotate Pages -->
+            <div class="home-tool-card" data-launch-tab="remove" role="button" tabindex="0" aria-label="Open Remove Pages tool" style="--card-accent: var(--tool-remove); --card-bg: var(--tool-remove-bg); --card-glow: var(--tool-remove-glow);">
+              <div class="home-tool-card-header">
+                <div class="home-tool-icon-box">
+                  <span class="material-symbols-outlined text-[24px]">content_cut</span>
+                </div>
+                <span class="home-tool-badge">Visual Grid</span>
+              </div>
+              <h3 class="home-tool-title">Remove &amp; Rotate</h3>
+              <p class="home-tool-desc">Interactive visual page grid to select, delete unwanted pages, rotate orientations 90°/180°, and reorder.</p>
+              <div class="home-tool-cta">
+                <span>Launch Tool</span>
+                <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+              </div>
+            </div>
+
+            <!-- Tool 4: Compress PDF -->
+            <div class="home-tool-card" data-launch-tab="compress" role="button" tabindex="0" aria-label="Open Compress PDF tool" style="--card-accent: var(--tool-compress); --card-bg: var(--tool-compress-bg); --card-glow: var(--tool-compress-glow);">
+              <div class="home-tool-card-header">
+                <div class="home-tool-icon-box">
+                  <span class="material-symbols-outlined text-[24px]">compress</span>
+                </div>
+                <span class="home-tool-badge">Smart Engine</span>
+              </div>
+              <h3 class="home-tool-title">Compress PDF</h3>
+              <p class="home-tool-desc">Drastically reduce PDF file size with object stream deduplication and intelligent canvas raster optimization.</p>
+              <div class="home-tool-cta">
+                <span>Launch Tool</span>
+                <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+              </div>
+            </div>
+
+            <!-- Tool 5: Slides to A4 -->
+            <div class="home-tool-card" data-launch-tab="slides" role="button" tabindex="0" aria-label="Open Slides to A4 tool" style="--card-accent: var(--tool-slides); --card-bg: var(--tool-slides-bg); --card-glow: var(--tool-slides-glow);">
+              <div class="home-tool-card-header">
+                <div class="home-tool-icon-box">
+                  <span class="material-symbols-outlined text-[24px]">view_agenda</span>
+                </div>
+                <span class="home-tool-badge">Print Ready</span>
+              </div>
+              <h3 class="home-tool-title">Slides to A4 Handout</h3>
+              <p class="home-tool-desc">Pack 2, 3, 4, 6, or 9 presentation slides per A4 page with clean margins and borders for printing and note-taking.</p>
+              <div class="home-tool-cta">
+                <span>Launch Tool</span>
+                <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+              </div>
+            </div>
+
+            <!-- Tool 6: Invert Colors (Ink Saver) -->
+            <div class="home-tool-card" data-launch-tab="invert" role="button" tabindex="0" aria-label="Open Invert Colors tool" style="--card-accent: var(--tool-invert); --card-bg: var(--tool-invert-bg); --card-glow: var(--tool-invert-glow);">
+              <div class="home-tool-card-header">
+                <div class="home-tool-icon-box">
+                  <span class="material-symbols-outlined text-[24px]">invert_colors</span>
+                </div>
+                <span class="home-tool-badge">Ink Saver</span>
+              </div>
+              <h3 class="home-tool-title">Invert Colors</h3>
+              <p class="home-tool-desc">Convert dark presentations to clean white paper backgrounds to save printer ink and toner cartridges.</p>
+              <div class="home-tool-cta">
+                <span>Launch Tool</span>
+                <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+              </div>
+            </div>
+
+            <!-- Tool 7: Images to PDF -->
+            <div class="home-tool-card" data-launch-tab="images" role="button" tabindex="0" aria-label="Open Images to PDF tool" style="--card-accent: var(--tool-images); --card-bg: var(--tool-images-bg); --card-glow: var(--tool-images-glow);">
+              <div class="home-tool-card-header">
+                <div class="home-tool-icon-box">
+                  <span class="material-symbols-outlined text-[24px]">image</span>
+                </div>
+                <span class="home-tool-badge">Batch Mode</span>
+              </div>
+              <h3 class="home-tool-title">Images to PDF</h3>
+              <p class="home-tool-desc">Convert multiple JPG, PNG, WebP or GIF photos into a single beautifully formatted PDF with custom margins.</p>
+              <div class="home-tool-cta">
+                <span>Launch Tool</span>
+                <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+              </div>
+            </div>
+
+            <!-- Tool 8: PDF to Images -->
+            <div class="home-tool-card" data-launch-tab="pdftoimages" role="button" tabindex="0" aria-label="Open PDF to Images tool" style="--card-accent: var(--tool-pdftoimages); --card-bg: var(--tool-pdftoimages-bg); --card-glow: var(--tool-pdftoimages-glow);">
+              <div class="home-tool-card-header">
+                <div class="home-tool-icon-box">
+                  <span class="material-symbols-outlined text-[24px]">photo_library</span>
+                </div>
+                <span class="home-tool-badge">High-Res ZIP</span>
+              </div>
+              <h3 class="home-tool-title">PDF to Images</h3>
+              <p class="home-tool-desc">Extract all PDF pages into crisp high-resolution JPEG or PNG images bundled in an instant ZIP download.</p>
+              <div class="home-tool-cta">
+                <span>Launch Tool</span>
+                <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Security & Privacy Architecture 3-Card Section -->
+        <section class="home-security-section">
+          <h2 class="home-section-title">Enterprise-Grade Privacy Architecture</h2>
+          <p class="home-section-desc">Why PDF Tools is the most secure way to handle sensitive and confidential documents</p>
+
+          <div class="home-security-grid">
+            <div class="home-security-card">
+              <div class="home-security-icon-box">
+                <span class="material-symbols-outlined text-[24px]">lock</span>
+              </div>
+              <h3 class="home-security-title">Zero Cloud Uploads</h3>
+              <p class="home-security-desc">Your files never touch any remote server, cloud API, or third-party database. Every single byte is read, rendered, and processed locally inside your web browser sandbox.</p>
+            </div>
+
+            <div class="home-security-card">
+              <div class="home-security-icon-box">
+                <span class="material-symbols-outlined text-[24px]">memory</span>
+              </div>
+              <h3 class="home-security-title">WebAssembly &amp; Web Workers</h3>
+              <p class="home-security-desc">High-performance calculations execute across multithreaded client-side Web Workers using WebAssembly, ensuring 60 FPS fluid rendering and zero server wait queues.</p>
+            </div>
+
+            <div class="home-security-card">
+              <div class="home-security-icon-box">
+                <span class="material-symbols-outlined text-[24px]">delete_sweep</span>
+              </div>
+              <h3 class="home-security-title">Instant RAM Purge</h3>
+              <p class="home-security-desc">Files exist strictly in volatile browser memory while you work. Closing or reloading your tab immediately frees RAM, leaving zero residual files or temporary logs anywhere.</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Side-by-Side Comparison Table -->
+        <section class="home-comparison-section">
+          <h2 class="home-section-title">PDF Tools vs Cloud PDF Services</h2>
+          <p class="home-section-desc">See how 100% in-browser processing compares to traditional subscription cloud tools</p>
+
+          <div class="comparison-table-wrapper">
+            <table class="comparison-table">
+              <thead>
+                <tr>
+                  <th class="feature-col">Feature Matrix</th>
+                  <th class="highlight-col">PDF Tools (Our App)</th>
+                  <th class="competitor-col">Smallpdf / iLovePDF</th>
+                  <th class="competitor-col">Adobe Acrobat Online</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="feature-col">File Privacy &amp; Storage</td>
+                  <td class="highlight-col"><span class="table-badge-yes"><span class="material-symbols-outlined text-[16px]">check_circle</span>100% In-Browser (Zero uploads)</span></td>
+                  <td class="competitor-col"><span class="table-badge-no"><span class="material-symbols-outlined text-[16px]">cancel</span>Uploaded to 3rd-party servers</span></td>
+                  <td class="competitor-col"><span class="table-badge-no"><span class="material-symbols-outlined text-[16px]">cancel</span>Uploaded to Adobe Cloud</span></td>
+                </tr>
+                <tr>
+                  <td class="feature-col">Offline Support (PWA)</td>
+                  <td class="highlight-col"><span class="table-badge-yes"><span class="material-symbols-outlined text-[16px]">check_circle</span>Works 100% Offline</span></td>
+                  <td class="competitor-col"><span class="table-badge-no"><span class="material-symbols-outlined text-[16px]">cancel</span>Requires active internet</span></td>
+                  <td class="competitor-col"><span class="table-badge-no"><span class="material-symbols-outlined text-[16px]">cancel</span>Requires active internet</span></td>
+                </tr>
+                <tr>
+                  <td class="feature-col">Daily Usage Limits</td>
+                  <td class="highlight-col"><span class="table-badge-yes"><span class="material-symbols-outlined text-[16px]">check_circle</span>Unlimited &amp; Free Forever</span></td>
+                  <td class="competitor-col">2–3 tasks/day free limit</td>
+                  <td class="competitor-col">Paywall after trial preview</td>
+                </tr>
+                <tr>
+                  <td class="feature-col">Processing Speed</td>
+                  <td class="highlight-col"><span class="table-badge-yes"><span class="material-symbols-outlined text-[16px]">check_circle</span>Instant (No upload latency)</span></td>
+                  <td class="competitor-col">Upload + Queue + Download wait</td>
+                  <td class="competitor-col">Upload + Conversion wait</td>
+                </tr>
+                <tr>
+                  <td class="feature-col">GDPR / Compliance Safety</td>
+                  <td class="highlight-col"><span class="table-badge-yes"><span class="material-symbols-outlined text-[16px]">check_circle</span>100% Safe (No data transfer)</span></td>
+                  <td class="competitor-col">Data transferred to remote servers</td>
+                  <td class="competitor-col">Requires account &amp; cloud consent</td>
+                </tr>
+                <tr>
+                  <td class="feature-col">Ads &amp; Upsell Popups</td>
+                  <td class="highlight-col"><span class="table-badge-yes"><span class="material-symbols-outlined text-[16px]">check_circle</span>Zero Ads &amp; Zero Popups</span></td>
+                  <td class="competitor-col">Intrusive ads &amp; upgrade prompts</td>
+                  <td class="competitor-col">Aggressive Creative Cloud upsells</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- Accessible FAQ Accordion -->
+        <section class="home-faq-section">
+          <h2 class="home-section-title">Frequently Asked Questions</h2>
+          <p class="home-section-desc">Quick answers about privacy, offline capability, and browser performance</p>
+
+          <div class="faq-list">
+            <details class="faq-item">
+              <summary class="faq-summary">
+                <span>Are my PDF files really safe and never uploaded to any server?</span>
+                <span class="material-symbols-outlined faq-icon">expand_more</span>
+              </summary>
+              <div class="faq-content">
+                Yes, absolutely 100%. PDF Tools operates entirely inside your web browser using pure client-side WebAssembly and JavaScript (PDF-Lib and PDF.js). When you select or drag a file into the app, your browser loads it directly from your device storage into memory. No network packets containing your document are ever transmitted over the internet.
+              </div>
+            </details>
+
+            <details class="faq-item">
+              <summary class="faq-summary">
+                <span>Can I use PDF Tools when I am completely offline?</span>
+                <span class="material-symbols-outlined faq-icon">expand_more</span>
+              </summary>
+              <div class="faq-content">
+                Yes! Our Service Worker precaches all required application code, libraries, and design assets on your first visit. You can install PDF Tools as a Progressive Web App (PWA) on your desktop or mobile device and run all 8 tools on airplanes, field sites, or air-gapped secure networks with zero internet access.
+              </div>
+            </details>
+
+            <details class="faq-item">
+              <summary class="faq-summary">
+                <span>Is there any file size limit or daily quota?</span>
+                <span class="material-symbols-outlined faq-icon">expand_more</span>
+              </summary>
+              <div class="faq-content">
+                There are zero artificial limits, no subscriptions, and no daily task quotas. Processing speed and capacity depend solely on your computer or mobile device's available RAM and CPU power. Most modern devices can easily process documents containing hundreds of pages or images.
+              </div>
+            </details>
+
+            <details class="faq-item">
+              <summary class="faq-summary">
+                <span>Which browsers and operating systems are supported?</span>
+                <span class="material-symbols-outlined faq-icon">expand_more</span>
+              </summary>
+              <div class="faq-content">
+                PDF Tools works on all modern web browsers supporting ES modules and HTML5 Canvas, including Google Chrome, Microsoft Edge, Mozilla Firefox, Apple Safari, Brave, and Opera across Windows, macOS, Linux, Android, and iOS.
+              </div>
+            </details>
+
+            <details class="faq-item">
+              <summary class="faq-summary">
+                <span>How does the Universal Dropzone work?</span>
+                <span class="material-symbols-outlined faq-icon">expand_more</span>
+              </summary>
+              <div class="faq-content">
+                Our smart file router automatically inspects dropped files: if you drop multiple PDFs, it instantly routes them to the Merge tool. If you drop image files (JPG, PNG, WebP), it routes them to Image to PDF. If you drop a single PDF, a quick launcher modal opens allowing you to choose any of our 7 PDF tools with a single click.
+              </div>
+            </details>
+          </div>
+        </section>
+
+        <!-- PWA Install CTA Card -->
+        <section class="home-install-card">
+          <div class="flex items-center gap-4">
+            <div class="w-12 h-12 rounded-2xl bg-primary-container text-white flex items-center justify-center shrink-0 shadow-md">
+              <span class="material-symbols-outlined text-[28px]">download_for_offline</span>
+            </div>
+            <div>
+              <h3 class="text-base font-bold text-on-surface dark:text-white">Install PDF Tools Desktop &amp; Mobile App</h3>
+              <p class="text-xs text-slate-muted dark:text-slate-400 mt-0.5">Instant launch from your home screen or dock • 100% Offline Ready</p>
+            </div>
+          </div>
+          <div class="flex items-center gap-3 w-full sm:w-auto">
+            <button type="button" class="btn-cta text-xs py-2.5 px-6 shadow-md" onclick="document.getElementById('headerInstallBtn') ? document.getElementById('headerInstallBtn').click() : null">
+              <span class="material-symbols-outlined text-[16px]">download</span>
+              Install App Now
+            </button>
+          </div>
+        </section>
+      </div>
+
+      <!-- ============================================== -->
       <!-- TAB 1: MERGE PDFS VIEW                         -->
       <!-- ============================================== -->
-      <div id="mergeTabView" class="tab-view active">
+      <div id="mergeTabView" class="tab-view hidden">
         <!-- Upload Drop Zone -->
         <section class="dropzone-section mb-6">
           <div id="dropzone" class="dropzone" tabindex="0" role="button" aria-label="Drop your PDF files here or browse to merge">
@@ -1859,7 +2212,7 @@
   <script defer src="assets/vendor/pdf.min.js" integrity="sha384-/1qUCSGwTur9vjf/z9lmu/eCUYbpOTgSjmpbMQZ1/CtX2v/WcAIKqRv+U1DUCG6e" crossorigin="anonymous"></script>
   <script defer src="assets/vendor/sortable.min.js" integrity="sha384-BSxuMLxX+FCbTdYec3TbXlnMGEEM2QXTFdtDaveen71o+jswm2J36+xFqp8k4VHM" crossorigin="anonymous"></script>
 
-  <script type="module" src="assets/js/app.js?v=15"></script>
+  <script type="module" src="assets/js/app.js?v=16"></script>
   <script>
     // Register Service Worker for fast browser caching & offline access
     if ('serviceWorker' in navigator) {
@@ -1882,8 +2235,92 @@
     }
   </script>
 
-    <!-- PWA Install Instructions Modal -->
-    <div id="pwaInstallModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm hidden" role="dialog" aria-modal="true" aria-labelledby="installModalTitle">
+  <!-- Home Universal Smart Router Modal -->
+  <div id="homeUniversalModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm hidden" role="dialog" aria-modal="true" aria-labelledby="homeModalTitle">
+    <div class="universal-modal-card">
+      <div class="flex items-start justify-between gap-3 mb-4">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-primary-container text-white flex items-center justify-center shrink-0 shadow-sm">
+            <span class="material-symbols-outlined text-[24px]">picture_as_pdf</span>
+          </div>
+          <div>
+            <h3 id="homeModalTitle" class="text-base font-bold text-on-surface dark:text-white">Choose a Tool for this PDF</h3>
+            <p class="text-xs text-slate-muted dark:text-slate-400">
+              <span id="homeModalFileName" class="font-medium text-on-surface dark:text-slate-200">document.pdf</span>
+              <span class="mx-1">•</span>
+              <span id="homeModalFileSize">0 KB</span>
+            </p>
+          </div>
+        </div>
+        <button type="button" id="closeHomeModalBtn" class="text-slate-muted dark:text-slate-400 hover:text-on-surface dark:hover:text-white p-1 rounded-lg" aria-label="Close dialog">
+          <span class="material-symbols-outlined text-[20px]">close</span>
+        </button>
+      </div>
+
+      <p class="text-xs text-slate-muted dark:text-slate-300 mb-3">Select the operation you want to perform with this document:</p>
+
+      <div class="home-modal-actions">
+        <button type="button" id="homeActionCompress" class="home-modal-btn">
+          <span class="material-symbols-outlined text-[20px] text-emerald-500">compress</span>
+          <div>
+            <strong class="block text-xs font-semibold">Compress PDF</strong>
+            <span class="block text-[11px] text-slate-muted font-normal">Shrink file size</span>
+          </div>
+        </button>
+
+        <button type="button" id="homeActionRemove" class="home-modal-btn">
+          <span class="material-symbols-outlined text-[20px] text-rose-500">content_cut</span>
+          <div>
+            <strong class="block text-xs font-semibold">Remove &amp; Rotate</strong>
+            <span class="block text-[11px] text-slate-muted font-normal">Delete or rotate pages</span>
+          </div>
+        </button>
+
+        <button type="button" id="homeActionSplit" class="home-modal-btn">
+          <span class="material-symbols-outlined text-[20px] text-orange-500">call_split</span>
+          <div>
+            <strong class="block text-xs font-semibold">Split PDF</strong>
+            <span class="block text-[11px] text-slate-muted font-normal">Extract ranges or pages</span>
+          </div>
+        </button>
+
+        <button type="button" id="homeActionMerge" class="home-modal-btn">
+          <span class="material-symbols-outlined text-[20px] text-indigo-500">merge</span>
+          <div>
+            <strong class="block text-xs font-semibold">Merge PDFs</strong>
+            <span class="block text-[11px] text-slate-muted font-normal">Add more files to merge</span>
+          </div>
+        </button>
+
+        <button type="button" id="homeActionPdfToImages" class="home-modal-btn">
+          <span class="material-symbols-outlined text-[20px] text-sky-500">photo_library</span>
+          <div>
+            <strong class="block text-xs font-semibold">PDF to Images</strong>
+            <span class="block text-[11px] text-slate-muted font-normal">Export pages to JPG/PNG</span>
+          </div>
+        </button>
+
+        <button type="button" id="homeActionInvert" class="home-modal-btn">
+          <span class="material-symbols-outlined text-[20px] text-purple-500">invert_colors</span>
+          <div>
+            <strong class="block text-xs font-semibold">Invert Colors</strong>
+            <span class="block text-[11px] text-slate-muted font-normal">Save printer ink</span>
+          </div>
+        </button>
+
+        <button type="button" id="homeActionSlides" class="home-modal-btn">
+          <span class="material-symbols-outlined text-[20px] text-blue-500">view_agenda</span>
+          <div>
+            <strong class="block text-xs font-semibold">Slides to A4</strong>
+            <span class="block text-[11px] text-slate-muted font-normal">Print handouts with notes</span>
+          </div>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- PWA Install Instructions Modal -->
+  <div id="pwaInstallModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm hidden" role="dialog" aria-modal="true" aria-labelledby="installModalTitle">
       <div class="w-full max-w-md bg-surface-container-lowest dark:bg-[#131b2e] border border-slate-border dark:border-slate-800 rounded-2xl shadow-2xl overflow-hidden p-6">
         <div class="flex items-start justify-between gap-3 mb-4">
           <div class="flex items-center gap-3">
