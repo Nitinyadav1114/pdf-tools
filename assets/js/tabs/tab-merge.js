@@ -438,7 +438,7 @@ export async function mergePdfs() {
     if (elements.resultSummary) {
       elements.resultSummary.textContent = `Successfully merged ${totalFiles} files (${totalMergedPages} total pages • ${formatBytes(mergeState.mergedBlob.size)}).`;
     }
-    if (elements.shareBtn && typeof navigator !== 'undefined' && navigator.share) {
+    if (elements.shareBtn) {
       elements.shareBtn.classList.remove('hidden');
     }
     if (elements.resultCard) {

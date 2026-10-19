@@ -286,7 +286,21 @@ const elIds = {
   headerInstallBtn: 'headerInstallBtn',
   pwaInstallModal: 'pwaInstallModal',
   closeInstallModalBtn: 'closeInstallModalBtn',
-  confirmInstallModalBtn: 'confirmInstallModalBtn'
+  confirmInstallModalBtn: 'confirmInstallModalBtn',
+
+  // Universal Share Modal
+  appShareModal: 'appShareModal',
+  closeShareModalBtn: 'closeShareModalBtn',
+  shareModalFileName: 'shareModalFileName',
+  shareModalFileSize: 'shareModalFileSize',
+  shareModalFileExt: 'shareModalFileExt',
+  shareModalDownloadBtn: 'shareModalDownloadBtn',
+  shareModalCopyLinkBtn: 'shareModalCopyLinkBtn',
+  shareModalWhatsAppBtn: 'shareModalWhatsAppBtn',
+  shareModalEmailBtn: 'shareModalEmailBtn',
+  shareModalTelegramBtn: 'shareModalTelegramBtn',
+  shareModalNativeBtn: 'shareModalNativeBtn',
+  shareModalCopyFeedback: 'shareModalCopyFeedback'
 };
 
 export const elements = {};

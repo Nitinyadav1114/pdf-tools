@@ -490,7 +490,7 @@ export async function executeRemovePages() {
     if (elements.removeResultSummary) {
       elements.removeResultSummary.textContent = `Deleted ${deletedCount} ${deletedCount === 1 ? 'page' : 'pages'}. New PDF contains ${keptCount} ${keptCount === 1 ? 'page' : 'pages'} (${formatBytes(removeState.outputBlob.size)}).`;
     }
-    if (elements.removeShareBtn && typeof navigator !== 'undefined' && navigator.share) {
+    if (elements.removeShareBtn) {
       elements.removeShareBtn.classList.remove('hidden');
     }
     if (elements.removeResultCard) {

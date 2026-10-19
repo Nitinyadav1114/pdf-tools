@@ -141,7 +141,7 @@ async def run_suite_cdp(browser_path, port, debug_port, tmp_dir):
             await ws.send(json.dumps({"id": 1, "method": "Runtime.enable"}))
             await ws.send(json.dumps({"id": 2, "method": "Console.enable"}))
             await ws.send(json.dumps({"id": 3, "method": "Page.enable"}))
-            await ws.send(json.dumps({"id": 4, "method": "Page.reload", "params": {"ignoreCache": True}}))
+            await ws.send(json.dumps({"id": 4, "method": "Page.navigate", "params": {"url": test_url}}))
 
             # Poll for completion
             eval_id = 100

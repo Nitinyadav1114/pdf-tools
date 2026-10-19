@@ -494,7 +494,7 @@ export async function executeInvertPdf() {
     if (elements.invertResultSummary) {
       elements.invertResultSummary.textContent = `Successfully inverted ${pagesToInvertSet.size} of ${totalPages} pages (${formatBytes(invertState.outputBlob.size)}). Ready for printing!`;
     }
-    if (elements.invertShareBtn && typeof navigator !== 'undefined' && navigator.share) {
+    if (elements.invertShareBtn) {
       elements.invertShareBtn.classList.remove('hidden');
     }
     if (elements.invertResultCard) {

@@ -22,7 +22,10 @@ import {
   formatTimestamp,
   escapeHtml,
   isPasswordProtectedError,
-  handleSharePdf
+  handleSharePdf,
+  initShareModal,
+  openShareModal,
+  closeShareModal
 } from './core/utils.js';
 import { isValidPdfFile, isValidImageFile } from './core/validators.js';
 import { createZipArchive } from './core/zip-builder.js';
@@ -72,6 +75,8 @@ if (typeof window !== 'undefined') {
   window.trackToolUsage = trackToolUsage;
   window.incrementProcessedCounter = incrementProcessedCounter;
   window.getCounterStats = getCounterStats;
+  window.openShareModal = openShareModal;
+  window.closeShareModal = closeShareModal;
 }
 
 /**
@@ -219,6 +224,7 @@ export function init() {
 
   initPWAInstallBanner();
   initCounter();
+  initShareModal();
 
   // Handle URL query parameters and deep linking
   const urlParams = new URLSearchParams(window.location.search);

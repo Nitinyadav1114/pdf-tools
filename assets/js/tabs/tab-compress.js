@@ -420,7 +420,7 @@ export async function executeCompressPDF() {
       }
     }
 
-    if (elements.compressShareBtn && typeof navigator !== 'undefined' && navigator.share) {
+    if (elements.compressShareBtn) {
       elements.compressShareBtn.classList.remove('hidden');
     }
     if (elements.compressResultCard) {

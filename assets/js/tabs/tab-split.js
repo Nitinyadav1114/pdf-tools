@@ -394,15 +394,12 @@ export async function executeSplit(switchTab, handleCompressFileSelected) {
     }
 
     if (splitShareBtn) {
+      splitShareBtn.classList.remove('hidden');
       splitShareBtn.onclick = () => {
         if (splitState.outputBlob) {
           const isZip = splitState.outputBlob.type === 'application/zip';
           const ext = isZip ? '.zip' : '.pdf';
-          const fileToShare = new File([splitState.outputBlob], `${prefix}${ext}`, {
-            type: splitState.outputBlob.type,
-            lastModified: Date.now()
-          });
-          handleSharePdf(fileToShare);
+          handleSharePdf(splitState.outputBlob, `${prefix}${ext}`, splitState.outputBlob.type);
         }
       };
     }

@@ -608,7 +608,7 @@ export async function executeGenerateSlidesA4() {
     if (elements.slidesResultSummary) {
       elements.slidesResultSummary.textContent = `Formatted ${totalSlides} slides onto ${totalA4Pages} A4 pages (${formatBytes(slidesState.outputBlob.size)}).`;
     }
-    if (elements.slidesShareBtn && typeof navigator !== 'undefined' && navigator.share) {
+    if (elements.slidesShareBtn) {
       elements.slidesShareBtn.classList.remove('hidden');
     }
     if (elements.slidesResultCard) {

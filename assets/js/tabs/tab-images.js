@@ -362,7 +362,7 @@ export async function executeImagesToPDF() {
       elements.imagesResultSummary.textContent = `Successfully converted ${total} image${total > 1 ? 's' : ''} into a ${formatBytes(pdfBytes.length)} PDF document.`;
     }
 
-    if (elements.imagesShareBtn && typeof navigator !== 'undefined' && navigator.share) {
+    if (elements.imagesShareBtn) {
       elements.imagesShareBtn.classList.remove('hidden');
     }
     if (elements.imagesResultCard) {

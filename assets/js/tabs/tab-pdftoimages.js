@@ -11,7 +11,8 @@ import {
   escapeHtml,
   parsePageInput,
   isPasswordProtectedError,
-  trackToolUsage
+  trackToolUsage,
+  handleSharePdf
 } from '../core/utils.js';
 import { isValidPdfFile } from '../core/validators.js';
 
@@ -174,7 +175,7 @@ export async function convertPdfToImages() {
       elements.pdfToImagesResultSummary.textContent = `Successfully converted ${generatedImages.length} ${generatedImages.length === 1 ? 'page' : 'pages'} to high-resolution ${ext.toUpperCase()} images!`;
     }
 
-    if (elements.pdfToImagesShareBtn && typeof navigator !== 'undefined' && navigator.share) {
+    if (elements.pdfToImagesShareBtn) {
       elements.pdfToImagesShareBtn.classList.remove('hidden');
     }
 
@@ -309,47 +310,18 @@ export async function downloadAllPdfImagesZip() {
 }
 
 export async function sharePdfImages() {
-  if (!navigator.share) {
-    alert('Sharing is not supported on this device. Please use the Download buttons.');
-    return;
-  }
-
   if (!pdfToImagesState.images || pdfToImagesState.images.length === 0) {
     alert('No converted images to share.');
     return;
   }
 
-  try {
-    const filesToShare = [];
-    const maxShare = Math.min(pdfToImagesState.images.length, 10);
-    for (let i = 0; i < maxShare; i++) {
-      const img = pdfToImagesState.images[i];
-      filesToShare.push(new File([img.blob], img.name, { type: img.blob.type }));
-    }
+  const prefix = (elements.pdfToImagesOutputPrefix ? elements.pdfToImagesOutputPrefix.value.trim() : '') || 'converted_images';
 
-    if (navigator.canShare && navigator.canShare({ files: filesToShare })) {
-      await navigator.share({
-        title: 'Converted PDF Images',
-        text: `Converted ${filesToShare.length} images using PDF Tools`,
-        files: filesToShare,
-      });
-    } else if (pdfToImagesState.zipBlob) {
-      const prefix = (elements.pdfToImagesOutputPrefix ? elements.pdfToImagesOutputPrefix.value.trim() : '') || 'converted_images';
-      const zipFile = new File([pdfToImagesState.zipBlob], `${prefix}_images.zip`, { type: 'application/zip' });
-      if (navigator.canShare && navigator.canShare({ files: [zipFile] })) {
-        await navigator.share({
-          title: 'Converted PDF Images (ZIP)',
-          text: 'Converted images ZIP archive from PDF Tools',
-          files: [zipFile],
-        });
-      }
-    } else {
-      alert('File sharing is not supported by your browser for these image files. Please use the Download buttons.');
-    }
-  } catch (err) {
-    if (err.name !== 'AbortError') {
-      console.warn('Share error:', err);
-    }
+  if (pdfToImagesState.zipBlob) {
+    handleSharePdf(pdfToImagesState.zipBlob, `${prefix}_images.zip`, 'application/zip');
+  } else if (pdfToImagesState.images && pdfToImagesState.images.length > 0) {
+    const firstImg = pdfToImagesState.images[0];
+    handleSharePdf(firstImg.blob, firstImg.name, firstImg.blob.type || 'image/jpeg');
   }
 }
 
