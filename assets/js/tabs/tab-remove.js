@@ -49,10 +49,11 @@ export async function handleRemoveFileSelected(file) {
     removeState.arrayBuffer = await file.arrayBuffer();
 
     await ensureAllPdfEngines().catch(() => {});
-    if (window.PDFLib) {
-      const srcDoc = await PDFLib.PDFDocument.load(removeState.arrayBuffer, { ignoreEncryption: true });
-      removeState.totalPages = srcDoc.getPageCount();
+    if (!window.PDFLib) {
+      throw new Error('PDF-Lib engine could not be loaded.');
     }
+    const srcDoc = await PDFLib.PDFDocument.load(removeState.arrayBuffer, { ignoreEncryption: true });
+    removeState.totalPages = srcDoc.getPageCount();
 
     if (removeState.totalPages === 0) {
       throw new Error('Document contains no pages or could not be read.');

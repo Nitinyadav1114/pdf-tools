@@ -75,10 +75,11 @@ export async function handleSlidesFileSelected(file) {
     slidesState.arrayBuffer = await file.arrayBuffer();
 
     await ensureAllPdfEngines().catch(() => {});
-    if (window.PDFLib) {
-      const srcDoc = await PDFLib.PDFDocument.load(slidesState.arrayBuffer, { ignoreEncryption: true });
-      slidesState.totalSlides = srcDoc.getPageCount();
+    if (!window.PDFLib) {
+      throw new Error('PDF-Lib engine could not be loaded.');
     }
+    const srcDoc = await PDFLib.PDFDocument.load(slidesState.arrayBuffer, { ignoreEncryption: true });
+    slidesState.totalSlides = srcDoc.getPageCount();
 
     if (slidesState.totalSlides === 0) {
       throw new Error('Presentation contains no slides.');

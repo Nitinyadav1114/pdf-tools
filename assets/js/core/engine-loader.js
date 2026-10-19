@@ -6,9 +6,18 @@
 let pdfLibPromise = null;
 let pdfJsPromise = null;
 
-const PDF_LIB_PATH = 'assets/vendor/pdf-lib.min.js';
-const PDF_JS_PATH = 'assets/vendor/pdf.min.js';
-const PDF_WORKER_PATH = 'assets/vendor/pdf.worker.min.js';
+function getVendorPath(relativePath) {
+  try {
+    if (typeof import.meta !== 'undefined' && import.meta.url) {
+      return new URL(relativePath, import.meta.url).href;
+    }
+  } catch (e) {}
+  return relativePath.replace(/^(\.\.\/)+/, 'assets/');
+}
+
+const PDF_LIB_PATH = getVendorPath('../../vendor/pdf-lib.min.js');
+const PDF_JS_PATH = getVendorPath('../../vendor/pdf.min.js');
+const PDF_WORKER_PATH = getVendorPath('../../vendor/pdf.worker.min.js');
 
 /**
  * Dynamically loads and returns the PDFLib global object.
@@ -42,21 +51,37 @@ export function ensurePdfLibLoaded() {
       if (window.PDFLib) {
         return resolve(window.PDFLib);
       }
-      existingScript.addEventListener('load', () => resolve(window.PDFLib), { once: true });
+      existingScript.addEventListener('load', () => {
+        if (window.PDFLib) {
+          resolve(window.PDFLib);
+        } else {
+          pdfLibPromise = null;
+          existingScript.remove();
+          reject(new Error('PDF-Lib script loaded but window.PDFLib is not defined.'));
+        }
+      }, { once: true });
       existingScript.addEventListener('error', (err) => {
         pdfLibPromise = null;
+        existingScript.remove();
         reject(new Error('Failed to load PDF-Lib engine: ' + (err?.message || 'Network error')));
       }, { once: true });
       return;
     }
 
     const script = document.createElement('script');
+    script.id = 'pdf-lib-engine';
     script.src = PDF_LIB_PATH;
     script.async = true;
     script.crossOrigin = 'anonymous';
 
     script.onload = () => {
-      resolve(window.PDFLib);
+      if (window.PDFLib) {
+        resolve(window.PDFLib);
+      } else {
+        pdfLibPromise = null;
+        script.remove();
+        reject(new Error('PDF-Lib script loaded but window.PDFLib is not defined.'));
+      }
     };
 
     script.onerror = (err) => {
@@ -102,7 +127,7 @@ export function ensurePdfJsLoaded() {
       return resolve(window.pdfjsLib);
     }
 
-    const existingScript = document.querySelector('script[src*="pdf.min.js"], script[src*="pdf.js"]');
+    const existingScript = document.querySelector('script#pdf-js-engine, script[src*="vendor/pdf.min.js"], script[src*="vendor/pdf.js"]');
     if (existingScript) {
       if (window.pdfjsLib) {
         if (window.pdfjsLib.GlobalWorkerOptions && !window.pdfjsLib.GlobalWorkerOptions.workerSrc) {
@@ -111,28 +136,42 @@ export function ensurePdfJsLoaded() {
         return resolve(window.pdfjsLib);
       }
       existingScript.addEventListener('load', () => {
-        if (window.pdfjsLib && window.pdfjsLib.GlobalWorkerOptions && !window.pdfjsLib.GlobalWorkerOptions.workerSrc) {
-          window.pdfjsLib.GlobalWorkerOptions.workerSrc = PDF_WORKER_PATH;
+        if (window.pdfjsLib) {
+          if (window.pdfjsLib.GlobalWorkerOptions && !window.pdfjsLib.GlobalWorkerOptions.workerSrc) {
+            window.pdfjsLib.GlobalWorkerOptions.workerSrc = PDF_WORKER_PATH;
+          }
+          resolve(window.pdfjsLib);
+        } else {
+          pdfJsPromise = null;
+          existingScript.remove();
+          reject(new Error('PDF.js script loaded but window.pdfjsLib is not defined.'));
         }
-        resolve(window.pdfjsLib);
       }, { once: true });
       existingScript.addEventListener('error', (err) => {
         pdfJsPromise = null;
+        existingScript.remove();
         reject(new Error('Failed to load PDF.js engine: ' + (err?.message || 'Network error')));
       }, { once: true });
       return;
     }
 
     const script = document.createElement('script');
+    script.id = 'pdf-js-engine';
     script.src = PDF_JS_PATH;
     script.async = true;
     script.crossOrigin = 'anonymous';
 
     script.onload = () => {
-      if (window.pdfjsLib && window.pdfjsLib.GlobalWorkerOptions) {
-        window.pdfjsLib.GlobalWorkerOptions.workerSrc = PDF_WORKER_PATH;
+      if (window.pdfjsLib) {
+        if (window.pdfjsLib.GlobalWorkerOptions && !window.pdfjsLib.GlobalWorkerOptions.workerSrc) {
+          window.pdfjsLib.GlobalWorkerOptions.workerSrc = PDF_WORKER_PATH;
+        }
+        resolve(window.pdfjsLib);
+      } else {
+        pdfJsPromise = null;
+        script.remove();
+        reject(new Error('PDF.js script loaded but window.pdfjsLib is not defined.'));
       }
-      resolve(window.pdfjsLib);
     };
 
     script.onerror = (err) => {
@@ -157,9 +196,10 @@ export function ensureAllPdfEngines() {
 }
 
 /**
- * Preload the appropriate engine for a given tool/tab.
+ * Preload the appropriate engine for a given tool/tab and returns the load Promise.
  *
  * @param {string} toolName
+ * @returns {Promise<any>}
  */
 export function preloadEngineForTool(toolName) {
   switch (toolName) {
@@ -168,17 +208,14 @@ export function preloadEngineForTool(toolName) {
     case 'slides':
     case 'invert':
     case 'compress':
-      ensureAllPdfEngines().catch(() => {});
-      break;
+      return ensureAllPdfEngines();
     case 'images':
     case 'split':
-      ensurePdfLibLoaded().catch(() => {});
-      break;
+      return ensurePdfLibLoaded();
     case 'pdftoimages':
-      ensurePdfJsLoaded().catch(() => {});
-      break;
+      return ensurePdfJsLoaded();
     default:
-      break;
+      return Promise.resolve();
   }
 }
 

@@ -35,6 +35,9 @@ export async function handlePdfToImagesFileSelected(file) {
     const arrayBuffer = await file.arrayBuffer();
 
     await ensurePdfJsLoaded().catch(() => {});
+    if (!window.pdfjsLib) {
+      throw new Error('PDF.js engine could not be loaded.');
+    }
     let pdfjsDoc;
     try {
       const bufferCopy = new Uint8Array(arrayBuffer.slice(0));
@@ -109,6 +112,9 @@ export async function convertPdfToImages() {
   if (elements.pdfToImagesResultCard) elements.pdfToImagesResultCard.classList.add('hidden');
 
   await ensurePdfJsLoaded().catch(() => {});
+  if (!window.pdfjsLib) {
+    throw new Error('PDF.js engine could not be loaded.');
+  }
   const total = targetPages.length;
   const generatedImages = [];
 

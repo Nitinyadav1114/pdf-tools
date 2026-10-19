@@ -195,13 +195,13 @@ export function switchTab(tab) {
     } catch (e) {}
   }
   trackToolUsage(tab, 'viewed');
-  preloadEngineForTool(tab);
+  return preloadEngineForTool(tab);
 }
 
 /**
  * Main Application Bootloader
  */
-export function init() {
+export async function init() {
   if (!document.getElementById('mergeTabView')) {
     // DOM elements not present (e.g. running inside headless unit tests)
     return;
@@ -247,11 +247,11 @@ export function init() {
   initShareModal();
   initEnginePreloader();
 
-  // Handle URL query parameters and deep linking
+  // Handle URL query parameters and direct deep linking
   const urlParams = new URLSearchParams(window.location.search);
   const tabParam = urlParams.get('tab') || window.location.hash.replace('#', '');
   if (tabParam === 'slides') {
-    switchTab('slides');
+    await switchTab('slides').catch(() => {});
     if (urlParams.get('demo') === 'true') {
       fetch('test_samples/Sample_8_Pages.pdf')
         .then((res) => res.blob())
@@ -265,9 +265,9 @@ export function init() {
         .catch((err) => console.warn('Could not load demo sample:', err));
     }
   } else if (tabParam === 'remove') {
-    switchTab('remove');
+    await switchTab('remove').catch(() => {});
   } else if (tabParam === 'invert') {
-    switchTab('invert');
+    await switchTab('invert').catch(() => {});
     if (urlParams.get('demo') === 'true') {
       fetch('test_samples/Dark_Sample_Slides.pdf')
         .then((res) => res.blob())
@@ -281,7 +281,7 @@ export function init() {
         .catch((err) => console.warn('Could not load demo sample:', err));
     }
   } else if (tabParam === 'compress') {
-    switchTab('compress');
+    await switchTab('compress').catch(() => {});
     if (urlParams.get('demo') === 'true') {
       fetch('test_samples/Sample_8_Pages.pdf')
         .then((res) => res.blob())
@@ -295,21 +295,21 @@ export function init() {
         .catch((err) => console.warn('Could not load demo sample:', err));
     }
   } else if (tabParam === 'images') {
-    switchTab('images');
+    await switchTab('images').catch(() => {});
   } else if (tabParam === 'pdftoimages') {
-    switchTab('pdftoimages');
+    await switchTab('pdftoimages').catch(() => {});
   } else if (tabParam === 'split') {
-    switchTab('split');
+    await switchTab('split').catch(() => {});
   } else if (tabParam === 'merge') {
-    switchTab('merge');
+    await switchTab('merge').catch(() => {});
   } else {
     switchTab('home');
   }
 
-  window.addEventListener('hashchange', () => {
+  window.addEventListener('hashchange', async () => {
     const hash = window.location.hash.replace('#', '');
     if (['home', 'merge', 'remove', 'slides', 'invert', 'compress', 'images', 'pdftoimages', 'split'].includes(hash)) {
-      switchTab(hash);
+      await switchTab(hash).catch(() => {});
     } else if (!hash) {
       switchTab('home');
     }
@@ -318,8 +318,11 @@ export function init() {
 
 if (typeof document !== 'undefined') {
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', init);
+    document.addEventListener('DOMContentLoaded', () => {
+      init().catch((err) => console.error('PDF Tools boot error:', err));
+    });
   } else {
-    init();
+    init().catch((err) => console.error('PDF Tools boot error:', err));
   }
 }
+

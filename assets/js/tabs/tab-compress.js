@@ -33,6 +33,9 @@ export async function handleCompressFileSelected(file) {
     const arrayBuffer = await file.arrayBuffer();
 
     await ensurePdfJsLoaded().catch(() => {});
+    if (!window.pdfjsLib) {
+      throw new Error('PDF.js engine could not be loaded.');
+    }
     let pdfjsDoc;
     try {
       const bufferCopy = new Uint8Array(arrayBuffer.slice(0));
@@ -266,8 +269,8 @@ export async function renderCompressComparisonPreview() {
 export async function executeCompressPDF() {
   if (elements.executeCompressBtn && elements.executeCompressBtn.disabled) return;
   await ensureAllPdfEngines().catch(() => {});
-  if (!compressState.arrayBuffer || !window.PDFLib) {
-    alert('No PDF file loaded or PDF-Lib is not ready.');
+  if (!compressState.arrayBuffer || !window.PDFLib || !window.pdfjsLib) {
+    alert('No PDF file loaded or PDF engines are not ready.');
     return;
   }
 

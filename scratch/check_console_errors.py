@@ -49,7 +49,6 @@ class ThreadedTCPServer(socketserver.ThreadingMixIn, socketserver.TCPServer):
     allow_reuse_address = True
 
 async def check_errors(browser_path, port, debug_port, tmp_dir):
-    test_url = f"http://127.0.0.1:{port}/index.html"
     cmd = [
         browser_path,
         "--headless=new",
@@ -59,7 +58,7 @@ async def check_errors(browser_path, port, debug_port, tmp_dir):
         "--disable-extensions",
         f"--remote-debugging-port={debug_port}",
         f"--user-data-dir={tmp_dir}",
-        test_url,
+        "about:blank"
     ]
     proc = subprocess.Popen(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     try:
@@ -71,15 +70,25 @@ async def check_errors(browser_path, port, debug_port, tmp_dir):
         async with websockets.connect(ws_url) as ws:
             await ws.send(json.dumps({"id": 1, "method": "Console.enable"}))
             await ws.send(json.dumps({"id": 2, "method": "Runtime.enable"}))
+            await ws.send(json.dumps({"id": 3, "method": "Page.enable"}))
+            
+            # Navigate to index.html
+            test_url = f"http://127.0.0.1:{port}/index.html"
+            await ws.send(json.dumps({"id": 4, "method": "Page.navigate", "params": {"url": test_url}}))
             
             # Listen for console messages
-            for _ in range(20):
-                raw = await asyncio.wait_for(ws.recv(), timeout=2)
-                data = json.loads(raw)
-                if data.get("method") == "Console.messageAdded":
-                    print("CONSOLE:", data["params"]["message"])
-                if data.get("method") == "Runtime.exceptionThrown":
-                    print("EXCEPTION:", data["params"]["exceptionDetails"])
+            while True:
+                try:
+                    raw = await asyncio.wait_for(ws.recv(), timeout=3)
+                    data = json.loads(raw)
+                    if data.get("method") == "Console.messageAdded":
+                        print("CONSOLE:", data["params"]["message"])
+                    if data.get("method") == "Runtime.exceptionThrown":
+                        print("EXCEPTION:", data["params"]["exceptionDetails"])
+                    if data.get("method") == "Runtime.consoleAPICalled":
+                        print("API CALLED:", data["params"]["type"], data["params"]["args"])
+                except asyncio.TimeoutError:
+                    break
     finally:
         kill_process_tree(proc)
 

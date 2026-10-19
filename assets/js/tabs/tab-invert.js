@@ -44,13 +44,14 @@ export async function handleInvertFileSelected(file) {
     if (elements.invertOutputFilename) elements.invertOutputFilename.value = `${baseName}_inverted.pdf`;
 
     await ensureAllPdfEngines().catch(() => {});
-    if (window.PDFLib) {
-      const doc = await PDFLib.PDFDocument.load(arrayBuffer, { ignoreEncryption: true });
-      invertState.pdfDoc = doc;
-      invertState.totalPages = doc.getPageCount();
-      if (elements.invertFileSubtext) {
-        elements.invertFileSubtext.textContent = `${invertState.totalPages} pages • ${formatBytes(file.size)}`;
-      }
+    if (!window.PDFLib) {
+      throw new Error('PDF-Lib engine could not be loaded.');
+    }
+    const doc = await PDFLib.PDFDocument.load(arrayBuffer, { ignoreEncryption: true });
+    invertState.pdfDoc = doc;
+    invertState.totalPages = doc.getPageCount();
+    if (elements.invertFileSubtext) {
+      elements.invertFileSubtext.textContent = `${invertState.totalPages} pages • ${formatBytes(file.size)}`;
     }
 
     invertState.previewPageNum = 1;
