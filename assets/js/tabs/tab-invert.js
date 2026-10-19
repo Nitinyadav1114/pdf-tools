@@ -14,6 +14,7 @@ import {
   trackToolUsage
 } from '../core/utils.js';
 import { isValidPdfFile } from '../core/validators.js';
+import { ensureAllPdfEngines, ensurePdfJsLoaded } from '../core/engine-loader.js';
 
 export async function handleInvertFileSelected(file) {
   if (!file) return;
@@ -42,6 +43,7 @@ export async function handleInvertFileSelected(file) {
     const baseName = file.name.replace(/\.[^/.]+$/, '');
     if (elements.invertOutputFilename) elements.invertOutputFilename.value = `${baseName}_inverted.pdf`;
 
+    await ensureAllPdfEngines().catch(() => {});
     if (window.PDFLib) {
       const doc = await PDFLib.PDFDocument.load(arrayBuffer, { ignoreEncryption: true });
       invertState.pdfDoc = doc;
@@ -209,7 +211,9 @@ export function applyInvertAlgorithm(imageData, mode) {
 }
 
 export async function renderInvertComparisonPreview() {
-  if (!invertState.arrayBuffer || !window.pdfjsLib) return;
+  if (!invertState.arrayBuffer) return;
+  await ensurePdfJsLoaded().catch(() => {});
+  if (!window.pdfjsLib) return;
 
   const renderId = ++invertState.activeRenderId;
   if (elements.invertOriginalSpinner) elements.invertOriginalSpinner.classList.remove('hidden');
@@ -348,6 +352,7 @@ export async function executeInvertPdf() {
     return;
   }
 
+  await ensureAllPdfEngines().catch(() => {});
   if (!window.PDFLib || !window.pdfjsLib) {
     alert('PDF libraries are not loaded.');
     return;
@@ -548,6 +553,7 @@ export function initInvertTab(switchTab) {
   } = elements;
 
   if (invertDropzone && invertFileInput) {
+    invertDropzone.addEventListener('mouseenter', () => ensureAllPdfEngines().catch(() => {}), { once: true, passive: true });
     invertDropzone.addEventListener('click', () => invertFileInput.click());
     invertDropzone.addEventListener('keydown', (e) => {
       if (e.key === 'Enter' || e.key === ' ') {
@@ -565,6 +571,7 @@ export function initInvertTab(switchTab) {
       invertDropzone.addEventListener(eventName, (e) => {
         e.preventDefault();
         e.stopPropagation();
+        ensureAllPdfEngines().catch(() => {});
         invertDropzone.classList.add('drag-active');
       });
     });

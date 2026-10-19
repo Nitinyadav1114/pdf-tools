@@ -12,6 +12,7 @@ import {
   trackToolUsage
 } from '../core/utils.js';
 import { isValidPdfFile } from '../core/validators.js';
+import { ensureAllPdfEngines, ensurePdfLibLoaded } from '../core/engine-loader.js';
 
 export const MARGIN_CONFIG = {
   narrow: {
@@ -73,6 +74,7 @@ export async function handleSlidesFileSelected(file) {
   try {
     slidesState.arrayBuffer = await file.arrayBuffer();
 
+    await ensureAllPdfEngines().catch(() => {});
     if (window.PDFLib) {
       const srcDoc = await PDFLib.PDFDocument.load(slidesState.arrayBuffer, { ignoreEncryption: true });
       slidesState.totalSlides = srcDoc.getPageCount();
@@ -273,6 +275,7 @@ export async function executeGenerateSlidesA4() {
     return;
   }
 
+  await ensurePdfLibLoaded().catch(() => {});
   if (!window.PDFLib) {
     alert('PDF-Lib is not loaded.');
     return;
@@ -657,6 +660,7 @@ export function initSlidesTab(switchTab, handleInvertFileSelected) {
   } = elements;
 
   if (slidesDropzone && slidesFileInput) {
+    slidesDropzone.addEventListener('mouseenter', () => ensureAllPdfEngines().catch(() => {}), { once: true, passive: true });
     slidesDropzone.addEventListener('click', () => slidesFileInput.click());
     slidesDropzone.addEventListener('keydown', (e) => {
       if (e.key === 'Enter' || e.key === ' ') {
@@ -674,6 +678,7 @@ export function initSlidesTab(switchTab, handleInvertFileSelected) {
       slidesDropzone.addEventListener(eventName, (e) => {
         e.preventDefault();
         e.stopPropagation();
+        ensureAllPdfEngines().catch(() => {});
         slidesDropzone.classList.add('drag-active');
       });
     });

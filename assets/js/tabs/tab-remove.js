@@ -15,6 +15,7 @@ import {
   trackToolUsage
 } from '../core/utils.js';
 import { isValidPdfFile } from '../core/validators.js';
+import { ensureAllPdfEngines, ensurePdfLibLoaded } from '../core/engine-loader.js';
 
 const MAX_CONCURRENT_THUMBNAILS = 3;
 
@@ -47,6 +48,7 @@ export async function handleRemoveFileSelected(file) {
   try {
     removeState.arrayBuffer = await file.arrayBuffer();
 
+    await ensureAllPdfEngines().catch(() => {});
     if (window.PDFLib) {
       const srcDoc = await PDFLib.PDFDocument.load(removeState.arrayBuffer, { ignoreEncryption: true });
       removeState.totalPages = srcDoc.getPageCount();
@@ -429,6 +431,7 @@ export async function executeRemovePages() {
     return;
   }
 
+  await ensurePdfLibLoaded().catch(() => {});
   if (!window.PDFLib) {
     alert('PDF-Lib is not loaded.');
     return;
@@ -542,6 +545,7 @@ export function initRemoveTab(switchTab, handleCompressFileSelected, handleSplit
   } = elements;
 
   if (removeDropzone && removeFileInput) {
+    removeDropzone.addEventListener('mouseenter', () => ensureAllPdfEngines().catch(() => {}), { once: true, passive: true });
     removeDropzone.addEventListener('click', () => removeFileInput.click());
     removeDropzone.addEventListener('keydown', (e) => {
       if (e.key === 'Enter' || e.key === ' ') {
@@ -559,6 +563,7 @@ export function initRemoveTab(switchTab, handleCompressFileSelected, handleSplit
       removeDropzone.addEventListener(eventName, (e) => {
         e.preventDefault();
         e.stopPropagation();
+        ensureAllPdfEngines().catch(() => {});
         removeDropzone.classList.add('drag-active');
       });
     });

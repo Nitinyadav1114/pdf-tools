@@ -3,6 +3,14 @@
  * Formatting, string escaping, sharing, privacy tracking, and theme management.
  */
 
+export {
+  ensurePdfLibLoaded,
+  ensurePdfJsLoaded,
+  ensureAllPdfEngines,
+  preloadEngineForTool,
+  initEnginePreloader
+} from './engine-loader.js';
+
 export function formatBytes(bytes, decimals = 1) {
   if (!bytes || bytes === 0) return '0 B';
   const k = 1024;

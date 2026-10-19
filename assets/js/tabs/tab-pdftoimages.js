@@ -15,6 +15,7 @@ import {
   handleSharePdf
 } from '../core/utils.js';
 import { isValidPdfFile } from '../core/validators.js';
+import { ensurePdfJsLoaded } from '../core/engine-loader.js';
 
 export async function handlePdfToImagesFileSelected(file) {
   if (!file) return;
@@ -33,6 +34,7 @@ export async function handlePdfToImagesFileSelected(file) {
   try {
     const arrayBuffer = await file.arrayBuffer();
 
+    await ensurePdfJsLoaded().catch(() => {});
     let pdfjsDoc;
     try {
       const bufferCopy = new Uint8Array(arrayBuffer.slice(0));
@@ -106,6 +108,7 @@ export async function convertPdfToImages() {
   if (elements.pdfToImagesProgressContainer) elements.pdfToImagesProgressContainer.classList.remove('hidden');
   if (elements.pdfToImagesResultCard) elements.pdfToImagesResultCard.classList.add('hidden');
 
+  await ensurePdfJsLoaded().catch(() => {});
   const total = targetPages.length;
   const generatedImages = [];
 
@@ -366,6 +369,7 @@ export function initPdfToImagesTab() {
   } = elements;
 
   if (pdfToImagesDropzone && pdfToImagesFileInput) {
+    pdfToImagesDropzone.addEventListener('mouseenter', () => ensurePdfJsLoaded().catch(() => {}), { once: true, passive: true });
     pdfToImagesDropzone.addEventListener('click', () => pdfToImagesFileInput.click());
     pdfToImagesDropzone.addEventListener('keydown', (e) => {
       if (e.key === 'Enter' || e.key === ' ') {
@@ -383,6 +387,7 @@ export function initPdfToImagesTab() {
       pdfToImagesDropzone.addEventListener(eventName, (e) => {
         e.preventDefault();
         e.stopPropagation();
+        ensurePdfJsLoaded().catch(() => {});
         pdfToImagesDropzone.classList.add('drag-active');
       });
     });

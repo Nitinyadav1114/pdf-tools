@@ -14,6 +14,7 @@ import {
   trackToolUsage
 } from '../core/utils.js';
 import { isValidPdfFile } from '../core/validators.js';
+import { ensureAllPdfEngines, ensurePdfLibLoaded } from '../core/engine-loader.js';
 
 let sortableInstance = null;
 
@@ -83,6 +84,7 @@ export async function handleMergeFilesAdded(fileList) {
 }
 
 async function processMergeMetadata() {
+  await ensureAllPdfEngines().catch(() => {});
   for (const item of mergeState.files) {
     if (item.pageCount === null) {
       try {
@@ -361,6 +363,7 @@ export async function mergePdfs() {
     return;
   }
 
+  await ensurePdfLibLoaded().catch(() => {});
   if (!window.PDFLib) {
     alert('PDF-Lib is not loaded. Please check your local files.');
     return;
@@ -487,6 +490,7 @@ export function initMergeTab(switchTab, handleCompressFileSelected) {
   }
 
   if (dropzone && fileInput) {
+    dropzone.addEventListener('mouseenter', () => ensureAllPdfEngines().catch(() => {}), { once: true, passive: true });
     dropzone.addEventListener('click', () => fileInput.click());
     dropzone.addEventListener('keydown', (e) => {
       if (e.key === 'Enter' || e.key === ' ') {
@@ -505,6 +509,7 @@ export function initMergeTab(switchTab, handleCompressFileSelected) {
       dropzone.addEventListener(eventName, (e) => {
         e.preventDefault();
         e.stopPropagation();
+        ensureAllPdfEngines().catch(() => {});
         dropzone.classList.add('drag-active');
       });
     });

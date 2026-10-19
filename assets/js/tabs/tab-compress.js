@@ -13,6 +13,7 @@ import {
   trackToolUsage
 } from '../core/utils.js';
 import { isValidPdfFile } from '../core/validators.js';
+import { ensureAllPdfEngines, ensurePdfJsLoaded } from '../core/engine-loader.js';
 
 export async function handleCompressFileSelected(file) {
   if (!file) return;
@@ -31,6 +32,7 @@ export async function handleCompressFileSelected(file) {
   try {
     const arrayBuffer = await file.arrayBuffer();
 
+    await ensurePdfJsLoaded().catch(() => {});
     let pdfjsDoc;
     try {
       const bufferCopy = new Uint8Array(arrayBuffer.slice(0));
@@ -168,6 +170,7 @@ export async function renderCompressComparisonPreview() {
   if (elements.compressNextPageBtn) elements.compressNextPageBtn.disabled = compressState.previewPageNum >= compressState.totalPages;
 
   try {
+    await ensurePdfJsLoaded().catch(() => {});
     const bufferCopy = new Uint8Array(compressState.arrayBuffer.slice(0));
     const pdfjsDoc = await pdfjsLib.getDocument({ data: bufferCopy }).promise;
 
@@ -262,6 +265,7 @@ export async function renderCompressComparisonPreview() {
 
 export async function executeCompressPDF() {
   if (elements.executeCompressBtn && elements.executeCompressBtn.disabled) return;
+  await ensureAllPdfEngines().catch(() => {});
   if (!compressState.arrayBuffer || !window.PDFLib) {
     alert('No PDF file loaded or PDF-Lib is not ready.');
     return;
@@ -467,6 +471,7 @@ export function initCompressTab(switchTab) {
   } = elements;
 
   if (compressDropzone && compressFileInput) {
+    compressDropzone.addEventListener('mouseenter', () => ensureAllPdfEngines().catch(() => {}), { once: true, passive: true });
     compressDropzone.addEventListener('click', () => compressFileInput.click());
     compressDropzone.addEventListener('keydown', (e) => {
       if (e.key === 'Enter' || e.key === ' ') {
@@ -484,6 +489,7 @@ export function initCompressTab(switchTab) {
       compressDropzone.addEventListener(eventName, (e) => {
         e.preventDefault();
         e.stopPropagation();
+        ensureAllPdfEngines().catch(() => {});
         compressDropzone.classList.add('drag-active');
       });
     });

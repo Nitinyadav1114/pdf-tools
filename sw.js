@@ -1,4 +1,4 @@
-const CACHE_NAME = 'pdf-tools-v17';
+const CACHE_NAME = 'pdf-tools-v18';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
@@ -21,6 +21,7 @@ const ASSETS_TO_CACHE = [
   './assets/css/tabs/tab-pdftoimages.css',
   './assets/js/app.js',
   './assets/js/worker.js',
+  './assets/js/core/engine-loader.js',
   './assets/js/core/worker-pool.js',
   './assets/js/core/state.js',
   './assets/js/core/dom.js',

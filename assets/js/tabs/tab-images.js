@@ -12,6 +12,7 @@ import {
   trackToolUsage
 } from '../core/utils.js';
 import { isValidImageFile } from '../core/validators.js';
+import { ensurePdfLibLoaded } from '../core/engine-loader.js';
 
 export async function handleImageFilesAdded(fileList) {
   if (!fileList || fileList.length === 0) return;
@@ -32,6 +33,10 @@ export async function handleImageFilesAdded(fileList) {
     } else {
       validImages.push(f);
     }
+  }
+
+  if (validImages.length > 0) {
+    ensurePdfLibLoaded().catch(() => {});
   }
 
   if (invalidImages.length > 0 && validImages.length === 0) {
@@ -221,6 +226,10 @@ export async function executeImagesToPDF() {
   const ctx = offCanvas.getContext('2d');
 
   try {
+    await ensurePdfLibLoaded().catch(() => {});
+    if (!window.PDFLib) {
+      throw new Error('PDF-Lib engine is not loaded.');
+    }
     const pdfDoc = await PDFLib.PDFDocument.create();
     const total = imagesState.images.length;
 
@@ -433,6 +442,7 @@ export function initImagesTab(switchTab, handleCompressFileSelected) {
   }
 
   if (imagesDropzone && imagesFileInput) {
+    imagesDropzone.addEventListener('mouseenter', () => ensurePdfLibLoaded().catch(() => {}), { once: true, passive: true });
     imagesDropzone.addEventListener('click', () => imagesFileInput.click());
     imagesDropzone.addEventListener('keydown', (e) => {
       if (e.key === 'Enter' || e.key === ' ') {
@@ -451,6 +461,7 @@ export function initImagesTab(switchTab, handleCompressFileSelected) {
       imagesDropzone.addEventListener(eventName, (e) => {
         e.preventDefault();
         e.stopPropagation();
+        ensurePdfLibLoaded().catch(() => {});
         imagesDropzone.classList.add('drag-active');
       });
     });

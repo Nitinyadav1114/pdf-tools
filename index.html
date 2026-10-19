@@ -32,7 +32,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=block" rel="stylesheet">
 
   <!-- Production Single Minified Stylesheet (Zero-Waterfall Pre-bundled Architecture) -->
-  <link rel="stylesheet" href="assets/css/bundle.min.css?v=17">
+  <link rel="stylesheet" href="assets/css/bundle.min.css?v=18">
 
   <!-- Canonical URL -->
   <link rel="canonical" href="https://nitinyadav1114.github.io/pdf-tools/">
@@ -77,6 +77,10 @@
   <link rel="icon" type="image/png" sizes="32x32" href="assets/icon.png">
   <link rel="apple-touch-icon" href="assets/icon.png">
   <link rel="manifest" href="manifest.json">
+  <!-- Dynamic Engine Prefetching (Low-priority background fetch, zero parse/execution blocking) -->
+  <link rel="prefetch" href="assets/vendor/pdf-lib.min.js" as="script">
+  <link rel="prefetch" href="assets/vendor/pdf.min.js" as="script">
+  <link rel="prefetch" href="assets/vendor/pdf.worker.min.js" as="script">
 
 </head>
 <body class="theme-light">
@@ -2207,12 +2211,11 @@
     </footer>
   </div>
 
-  <!-- Deferred Heavy Vendor PDF Engines (Loaded at bottom of body to ensure zero head-blocking) -->
-  <script defer src="assets/vendor/pdf-lib.min.js" integrity="sha384-weMABwrltA6jWR8DDe9Jp5blk+tZQh7ugpCsF3JwSA53WZM9/14PjS5LAJNHNjAI" crossorigin="anonymous"></script>
-  <script defer src="assets/vendor/pdf.min.js" integrity="sha384-/1qUCSGwTur9vjf/z9lmu/eCUYbpOTgSjmpbMQZ1/CtX2v/WcAIKqRv+U1DUCG6e" crossorigin="anonymous"></script>
+  <!-- Lightweight SortableJS Library (Drag & Drop UI) -->
   <script defer src="assets/vendor/sortable.min.js" integrity="sha384-BSxuMLxX+FCbTdYec3TbXlnMGEEM2QXTFdtDaveen71o+jswm2J36+xFqp8k4VHM" crossorigin="anonymous"></script>
 
-  <script type="module" src="assets/js/app.js?v=17"></script>
+  <!-- Main Orchestrator & Bootloader (PDF-Lib and PDF.js dynamically lazy-loaded on demand) -->
+  <script type="module" src="assets/js/app.js?v=18"></script>
   <script>
     // Register Service Worker for fast browser caching & offline access
     if ('serviceWorker' in navigator) {

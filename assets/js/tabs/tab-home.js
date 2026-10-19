@@ -7,6 +7,7 @@
 import { elements } from '../core/dom.js';
 import { formatBytes, trackToolUsage } from '../core/utils.js';
 import { isValidPdfFile, isValidImageFile } from '../core/validators.js';
+import { ensureAllPdfEngines, preloadEngineForTool } from '../core/engine-loader.js';
 
 let pendingFile = null;
 
@@ -31,6 +32,7 @@ export function initHomeTab(switchTab, handlers = {}) {
 
   function openUniversalModal(file) {
     pendingFile = file;
+    ensureAllPdfEngines().catch(() => {});
     if (modalFileName) modalFileName.textContent = file.name;
     if (modalFileSize) modalFileSize.textContent = formatBytes(file.size);
     if (modal) modal.classList.remove('hidden');
@@ -89,6 +91,7 @@ export function initHomeTab(switchTab, handlers = {}) {
 
   // Setup Home Universal Dropzone
   if (homeDropzone && homeFileInput) {
+    homeDropzone.addEventListener('mouseenter', () => ensureAllPdfEngines().catch(() => {}), { once: true, passive: true });
     homeDropzone.addEventListener('click', (e) => {
       if (e.target.closest('.browse-link') || e.target === homeDropzone || homeDropzone.contains(e.target)) {
         homeFileInput.click();
@@ -106,6 +109,7 @@ export function initHomeTab(switchTab, handlers = {}) {
       homeDropzone.addEventListener(eventName, (e) => {
         e.preventDefault();
         e.stopPropagation();
+        ensureAllPdfEngines().catch(() => {});
         homeDropzone.classList.add('drag-active');
       });
     });
@@ -139,6 +143,10 @@ export function initHomeTab(switchTab, handlers = {}) {
   actionConfigs.forEach(({ id, tab, handler }) => {
     const btn = document.getElementById(id);
     if (btn) {
+      ['mouseenter', 'focus'].forEach(evt => {
+        btn.addEventListener(evt, () => preloadEngineForTool(tab), { once: true, passive: true });
+      });
+
       btn.addEventListener('click', () => {
         const fileToProcess = pendingFile;
         closeUniversalModal();
@@ -153,6 +161,13 @@ export function initHomeTab(switchTab, handlers = {}) {
   });
 
   // Delegated launcher listener for all [data-launch-tab] buttons and cards
+  document.addEventListener('mouseover', (e) => {
+    const launcher = e.target.closest('[data-launch-tab]');
+    if (launcher && launcher.dataset.launchTab) {
+      preloadEngineForTool(launcher.dataset.launchTab);
+    }
+  }, { passive: true });
+
   document.addEventListener('click', (e) => {
     const launcher = e.target.closest('[data-launch-tab]');
     if (launcher && launcher.dataset.launchTab) {

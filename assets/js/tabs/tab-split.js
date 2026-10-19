@@ -18,6 +18,7 @@ import {
 } from '../core/utils.js';
 import { isValidPdfFile } from '../core/validators.js';
 import { createZipArchive } from '../core/zip-builder.js';
+import { ensurePdfLibLoaded } from '../core/engine-loader.js';
 
 /**
  * Parses grouped ranges like "1-3, 4-6, 7-10" into an array of page arrays
@@ -99,6 +100,7 @@ export async function handleSplitFileSelected(file) {
   try {
     splitState.arrayBuffer = await file.arrayBuffer();
 
+    await ensurePdfLibLoaded().catch(() => {});
     if (!window.PDFLib) {
       throw new Error('PDF-Lib library not loaded.');
     }
@@ -204,6 +206,10 @@ export async function executeSplit(switchTab, handleCompressFileSelected) {
   updateProgress(5, 'Preparing document pages...');
 
   try {
+    await ensurePdfLibLoaded().catch(() => {});
+    if (!window.PDFLib) {
+      throw new Error('PDF-Lib library not loaded.');
+    }
     const srcDoc = await PDFLib.PDFDocument.load(splitState.arrayBuffer, { ignoreEncryption: true });
 
     if (mode === 'extract') {
@@ -438,6 +444,7 @@ export function initSplitTab(switchTab, handleCompressFileSelected) {
   } = elements;
 
   if (splitDropzone && splitFileInput) {
+    splitDropzone.addEventListener('mouseenter', () => ensurePdfLibLoaded().catch(() => {}), { once: true, passive: true });
     splitDropzone.addEventListener('click', () => splitFileInput.click());
     splitDropzone.addEventListener('keydown', (e) => {
       if (e.key === 'Enter' || e.key === ' ') {
@@ -448,6 +455,7 @@ export function initSplitTab(switchTab, handleCompressFileSelected) {
 
     splitDropzone.addEventListener('dragover', (e) => {
       e.preventDefault();
+      ensurePdfLibLoaded().catch(() => {});
       splitDropzone.classList.add('drag-active');
     });
 

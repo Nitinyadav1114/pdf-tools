@@ -41,6 +41,13 @@ import { initImagesTab, handleImageFilesAdded } from './tabs/tab-images.js';
 import { initPdfToImagesTab, handlePdfToImagesFileSelected } from './tabs/tab-pdftoimages.js';
 import { initSplitTab, handleSplitFileSelected, parseRangeGroups } from './tabs/tab-split.js';
 import { initHomeTab } from './tabs/tab-home.js';
+import {
+  ensurePdfLibLoaded,
+  ensurePdfJsLoaded,
+  ensureAllPdfEngines,
+  preloadEngineForTool,
+  initEnginePreloader
+} from './core/engine-loader.js';
 
 // Configure PDF.js worker
 if (typeof window !== 'undefined' && window.pdfjsLib) {
@@ -77,7 +84,19 @@ if (typeof window !== 'undefined') {
   window.getCounterStats = getCounterStats;
   window.openShareModal = openShareModal;
   window.closeShareModal = closeShareModal;
+  window.ensurePdfLibLoaded = ensurePdfLibLoaded;
+  window.ensurePdfJsLoaded = ensurePdfJsLoaded;
+  window.ensureAllPdfEngines = ensureAllPdfEngines;
+  window.preloadEngineForTool = preloadEngineForTool;
 }
+
+export {
+  ensurePdfLibLoaded,
+  ensurePdfJsLoaded,
+  ensureAllPdfEngines,
+  preloadEngineForTool,
+  initEnginePreloader
+};
 
 /**
  * Tab Navigation Controller
@@ -176,6 +195,7 @@ export function switchTab(tab) {
     } catch (e) {}
   }
   trackToolUsage(tab, 'viewed');
+  preloadEngineForTool(tab);
 }
 
 /**
@@ -225,6 +245,7 @@ export function init() {
   initPWAInstallBanner();
   initCounter();
   initShareModal();
+  initEnginePreloader();
 
   // Handle URL query parameters and deep linking
   const urlParams = new URLSearchParams(window.location.search);
