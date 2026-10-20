@@ -33,6 +33,8 @@ import { isValidPdfFile, isValidImageFile } from './core/validators.js';
 import { createZipArchive } from './core/zip-builder.js';
 import { initPWAInstallBanner } from './core/pwa.js';
 import { initCounter, incrementProcessedCounter, getCounterStats } from './core/counter.js';
+import { initCommandPalette } from './core/command-palette.js';
+
 
 import { initMergeTab, setDefaultOutputFilename, handleMergeFilesAdded } from './tabs/tab-merge.js';
 import { initRemoveTab, handleRemoveFileSelected } from './tabs/tab-remove.js';
@@ -268,6 +270,11 @@ export async function init() {
 
   initPWAInstallBanner();
   initCounter();
+  initCommandPalette({
+    switchTab,
+    openShareModal
+  });
+
   initShareModal();
   initEnginePreloader();
 
@@ -285,6 +292,17 @@ export async function init() {
 
   function openMobileDrawer() {
     if (mobileToolsDrawer) mobileToolsDrawer.classList.remove('hidden');
+  }
+
+  
+  const mobileDrawerSearchBtn = document.getElementById('mobileDrawerSearchBtn');
+  if (mobileDrawerSearchBtn) {
+    mobileDrawerSearchBtn.addEventListener('click', () => {
+      closeMobileDrawer();
+      if (typeof window.openCommandPalette === 'function') {
+        window.openCommandPalette();
+      }
+    });
   }
 
   function closeMobileDrawer() {
