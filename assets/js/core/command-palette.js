@@ -133,6 +133,20 @@ export function initCommandPalette(actions = {}) {
       }
     },
     {
+      id: 'action-sound',
+      title: 'Toggle Sound Effects & Haptics',
+      desc: 'Mute or enable micro-audio feedback and mobile haptic ticks',
+      category: 'Actions',
+      icon: 'lucide-volume-2',
+      badge: 'M',
+      keywords: ['sound', 'audio', 'mute', 'unmute', 'volume', 'haptic', 'vibrate', 'feedback'],
+      action: () => {
+        if (typeof window.toggleSound === 'function') {
+          window.toggleSound();
+        }
+      }
+    },
+    {
       id: 'action-share',
       title: 'Share PDF Tools',
       desc: 'Copy app link or share with colleagues and friends',
@@ -204,6 +218,8 @@ export function initCommandPalette(actions = {}) {
   let previousFocusedElement = null;
 
   function openPalette() {
+    if (typeof window.playAudioCue === 'function') window.playAudioCue('pop');
+    if (typeof window.triggerHaptic === 'function') window.triggerHaptic('light');
     previousFocusedElement = document.activeElement;
     modal.classList.remove('hidden');
     input.value = '';
@@ -328,6 +344,8 @@ export function initCommandPalette(actions = {}) {
   function executeCommand(idx) {
     const cmd = filteredCommands[idx];
     if (!cmd) return;
+    if (typeof window.playAudioCue === 'function') window.playAudioCue('click');
+    if (typeof window.triggerHaptic === 'function') window.triggerHaptic('light');
     closePalette();
     try {
       cmd.action();

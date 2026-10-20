@@ -366,6 +366,32 @@ html.dark .privacy-badge {
   transform: scale(1.05);
 }
 
+.sound-toggle-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--surface-secondary);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 0.875rem;
+  flex-shrink: 0;
+}
+
+.sound-toggle-btn:hover {
+  background: var(--border-subtle);
+  color: var(--text-primary);
+  transform: scale(1.05);
+}
+
+.sound-toggle-btn:active {
+  transform: scale(0.95);
+}
+
 .install-app-btn {
   display: inline-flex;
   align-items: center;

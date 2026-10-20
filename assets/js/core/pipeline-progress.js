@@ -199,6 +199,15 @@ export function updatePipelineProgress(toolKey, percent, statusText = '', subTex
   if (container) {
     updateStepperState(container, cfg, clamped, subText);
   }
+
+  if (clamped >= 100) {
+    if (typeof window.playAudioCue === 'function') {
+      window.playAudioCue('success');
+    }
+    if (typeof window.triggerHaptic === 'function') {
+      window.triggerHaptic('success');
+    }
+  }
 }
 
 function updateStepperState(container, cfg, percent, customSubtext = '') {

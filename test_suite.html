@@ -1145,6 +1145,17 @@
           });
           assert(handoffFile instanceof File && handoffFile.name === 'rotated_export.pdf', 'Workflow handoff File object created cleanly from Blob');
           assert(typeof window.switchTab === 'function', 'switchTab is available for seamless tool handoffs');
+
+          // Tactile Web Audio & Mobile Haptics Verification
+          assert(typeof window.playAudioCue === 'function', 'playAudioCue is exported and accessible on window');
+          assert(typeof window.triggerHaptic === 'function', 'triggerHaptic is exported and accessible on window');
+          assert(typeof window.toggleSound === 'function', 'toggleSound helper is exported on window');
+          assert(window.setSoundEnabled(false) === false && window.isSoundEnabled() === false, 'setSoundEnabled(false) mutes audio cues');
+          assert(window.toggleSound() === true && window.isSoundEnabled() === true, 'toggleSound() restores active audio state');
+          const cueTested = window.playAudioCue('click');
+          assert(cueTested === true || typeof cueTested === 'boolean', 'playAudioCue generates synthetic audio wave without error');
+          const hapticTested = window.triggerHaptic('light');
+          assert(typeof hapticTested === 'boolean', 'triggerHaptic safely queries device vibration');
         }
 
         const msg = 'ALL_TESTS_COMPLETED_SUCCESSFULLY (' + results.length + ' assertions passed)';

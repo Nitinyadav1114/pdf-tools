@@ -35,6 +35,7 @@ import { initPWAInstallBanner } from './core/pwa.js';
 import { initCounter, incrementProcessedCounter, getCounterStats } from './core/counter.js';
 import { initCommandPalette } from './core/command-palette.js';
 import { initPipelineProgress, updatePipelineProgress, resetPipelineProgress } from './core/pipeline-progress.js';
+import { initTactileFeedback, playAudioCue, triggerHaptic, toggleSound, isSoundEnabled, setSoundEnabled } from './core/tactile-feedback.js';
 
 
 
@@ -98,6 +99,11 @@ if (typeof window !== 'undefined') {
   window.showToast = showToast;
   window.updatePipelineProgress = updatePipelineProgress;
   window.resetPipelineProgress = resetPipelineProgress;
+  window.playAudioCue = playAudioCue;
+  window.triggerHaptic = triggerHaptic;
+  window.toggleSound = toggleSound;
+  window.isSoundEnabled = isSoundEnabled;
+  window.setSoundEnabled = setSoundEnabled;
 
 }
 
@@ -225,6 +231,8 @@ export function switchTab(tab) {
       window.history.replaceState(null, '', '#' + tab);
     } catch (e) {}
   }
+  playAudioCue('toggle');
+  triggerHaptic('light');
   trackToolUsage(tab, 'viewed');
   return preloadEngineForTool(tab);
 }
@@ -239,6 +247,7 @@ export async function init() {
   }
 
   initTheme();
+  initTactileFeedback();
   setDefaultOutputFilename();
 
   // Initialize individual tool tabs
