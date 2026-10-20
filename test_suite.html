@@ -1156,6 +1156,41 @@
           assert(cueTested === true || typeof cueTested === 'boolean', 'playAudioCue generates synthetic audio wave without error');
           const hapticTested = window.triggerHaptic('light');
           assert(typeof hapticTested === 'boolean', 'triggerHaptic safely queries device vibration');
+
+          // Feature 4: Thumbnail Fullscreen Lightbox & Interactive Zoom
+          assert(typeof window.openLightbox === 'function', 'openLightbox is exported and accessible on window');
+          assert(typeof window.closeLightbox === 'function', 'closeLightbox is exported and accessible on window');
+          assert(typeof window.zoomLightboxBy === 'function', 'zoomLightboxBy helper is exported on window');
+          assert(typeof window.resetLightboxZoom === 'function', 'resetLightboxZoom helper is exported on window');
+          assert(typeof window.rotateLightboxCW === 'function', 'rotateLightboxCW helper is exported on window');
+
+          // Test dummy canvas inspection in lightbox
+          const testCanvas = document.createElement('canvas');
+          testCanvas.width = 100;
+          testCanvas.height = 100;
+          let rotatedAngle = 0;
+          window.openLightbox({
+            type: 'canvas',
+            canvas: testCanvas,
+            title: 'Sample Test Page.pdf',
+            pageNum: 3,
+            totalPages: 8,
+            rotation: 0,
+            onRotate: (r) => { rotatedAngle = r; }
+          });
+
+          const modalEl = document.getElementById('thumbnailLightboxModal');
+          assert(modalEl && !modalEl.classList.contains('hidden'), 'openLightbox successfully displays fullscreen modal');
+          assert(document.getElementById('lightboxPageBadge')?.textContent === 'Page 3 of 8', 'Lightbox page badge displays correct page count');
+
+          window.zoomLightboxBy(0.25);
+          assert(document.getElementById('lightboxZoomPercent')?.textContent === '125%', 'zoomLightboxBy correctly scales zoom to 125%');
+
+          window.rotateLightboxCW();
+          assert(rotatedAngle === 90, 'rotateLightboxCW rotates view by 90 degrees and triggers callback');
+
+          window.closeLightbox();
+          assert(modalEl.classList.contains('hidden'), 'closeLightbox cleanly closes modal and hides overlay');
         }
 
         const msg = 'ALL_TESTS_COMPLETED_SUCCESSFULLY (' + results.length + ' assertions passed)';

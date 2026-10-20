@@ -132,6 +132,31 @@ export function renderImagesGrid() {
   if (elements.imagesGrid) {
     elements.imagesGrid.innerHTML = html;
 
+    elements.imagesGrid.querySelectorAll('.image-card').forEach((card) => {
+      const id = card.dataset.id;
+      const imgItem = imagesState.images.find((x) => x.id === id);
+      const thumb = card.querySelector('.image-thumb-wrapper');
+      if (thumb && imgItem) {
+        thumb.style.cursor = 'zoom-in';
+        thumb.title = 'Click to inspect fullscreen';
+        thumb.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const idx = imagesState.images.findIndex((x) => x.id === id);
+          if (typeof window.openLightbox === 'function') {
+            window.openLightbox({
+              type: 'image',
+              src: imgItem.dataUrl,
+              title: imgItem.name,
+              pageNum: idx + 1,
+              totalPages: imagesState.images.length,
+              rotation: imgItem.rotation || 0,
+              onRotate: () => rotateImage(id, 90)
+            });
+          }
+        });
+      }
+    });
+
     elements.imagesGrid.querySelectorAll('.btn-image-rotate').forEach((btn) => {
       btn.addEventListener('click', (e) => {
         e.stopPropagation();

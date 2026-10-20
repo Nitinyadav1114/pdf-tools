@@ -239,6 +239,9 @@ export function renderPagesGrid() {
         <span class="page-num-pill">Page ${p}</span>
         <span class="page-rot-badge ${rot === 0 ? 'hidden' : ''}">${rot ? rot + '°' : ''}</span>
         <div class="page-card-actions">
+          <button type="button" class="page-action-btn page-zoom-btn" title="Inspect Fullscreen (Zoom & Details)" aria-label="Zoom Page ${p}">
+            <svg class="w-3.5 h-3.5 shrink-0" aria-hidden="true"><use href="#lucide-search"></use></svg>
+          </button>
           <button type="button" class="page-action-btn page-rotate-cw-btn" title="Rotate 90° Clockwise" aria-label="Rotate Page ${p}">
             <span class="material-symbols-outlined text-[15px]">rotate_right</span>
           </button>
@@ -259,6 +262,19 @@ export function renderPagesGrid() {
         rotatePage(p, 90);
       });
     }
+
+    const zoomBtn = card.querySelector('.page-zoom-btn');
+    if (zoomBtn) {
+      zoomBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        triggerPageLightbox(p);
+      });
+    }
+
+    card.addEventListener('dblclick', (e) => {
+      e.stopPropagation();
+      triggerPageLightbox(p);
+    });
 
     card.addEventListener('click', () => {
       togglePageSelection(p);
@@ -663,4 +679,32 @@ export function initRemoveTab(switchTab, handleCompressFileSelected, handleSplit
       if (typeof handleSplitFileSelected === 'function') handleSplitFileSelected(handoffFile);
     });
   }
+}
+
+
+export function triggerPageLightbox(pageNum) {
+  if (!elements.pagesGrid) return;
+  const card = elements.pagesGrid.querySelector(`.page-card[data-page-num="${pageNum}"]`);
+  const canvas = card ? card.querySelector('.page-canvas') : null;
+  const rot = removeState.pageRotations.get(pageNum) || 0;
+
+  if (typeof window.openLightbox === 'function') {
+    window.openLightbox({
+      type: 'canvas',
+      canvas: canvas,
+      title: removeState.file ? removeState.file.name : `Page ${pageNum}`,
+      pageNum: pageNum,
+      totalPages: removeState.totalPages,
+      rotation: rot,
+      onPrev: pageNum > 1 ? () => triggerPageLightbox(pageNum - 1) : null,
+      onNext: pageNum < removeState.totalPages ? () => triggerPageLightbox(pageNum + 1) : null,
+      onRotate: () => {
+        rotatePage(pageNum, 90);
+      }
+    });
+  }
+}
+
+if (typeof window !== 'undefined') {
+  window.triggerPageLightbox = triggerPageLightbox;
 }

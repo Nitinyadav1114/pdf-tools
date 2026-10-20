@@ -36,6 +36,7 @@ import { initCounter, incrementProcessedCounter, getCounterStats } from './core/
 import { initCommandPalette } from './core/command-palette.js';
 import { initPipelineProgress, updatePipelineProgress, resetPipelineProgress } from './core/pipeline-progress.js';
 import { initTactileFeedback, playAudioCue, triggerHaptic, toggleSound, isSoundEnabled, setSoundEnabled } from './core/tactile-feedback.js';
+import { initLightbox, openLightbox, closeLightbox, zoomBy, resetZoom, rotateCW } from './core/lightbox.js';
 
 
 
@@ -104,6 +105,11 @@ if (typeof window !== 'undefined') {
   window.toggleSound = toggleSound;
   window.isSoundEnabled = isSoundEnabled;
   window.setSoundEnabled = setSoundEnabled;
+  window.openLightbox = openLightbox;
+  window.closeLightbox = closeLightbox;
+  window.zoomLightboxBy = zoomBy;
+  window.resetLightboxZoom = resetZoom;
+  window.rotateLightboxCW = rotateCW;
 
 }
 
@@ -248,6 +254,7 @@ export async function init() {
 
   initTheme();
   initTactileFeedback();
+  initLightbox();
   setDefaultOutputFilename();
 
   // Initialize individual tool tabs

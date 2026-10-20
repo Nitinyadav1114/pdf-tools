@@ -2737,3 +2737,68 @@ html.dark .pipeline-subtext {
     transform: translateX(100%);
   }
 }
+
+
+/* Thumbnail Fullscreen Lightbox & Interactive Zoom */
+.lightbox-toolbar {
+  background: rgba(15, 23, 42, 0.88);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5), 0 1px 3px rgba(255, 255, 255, 0.1) inset;
+}
+
+.lightbox-tool-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 32px;
+  height: 32px;
+  border-radius: 9999px;
+  color: #cbd5e1;
+  background: transparent;
+  transition: all 0.15s ease;
+  cursor: pointer;
+  border: none;
+  outline: none;
+}
+
+.lightbox-tool-btn:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.15);
+  color: #ffffff;
+  transform: scale(1.05);
+}
+
+.lightbox-tool-btn:active:not(:disabled) {
+  transform: scale(0.95);
+}
+
+.lightbox-tool-btn:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+
+.page-zoom-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.9);
+  color: #1e293b;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.dark .page-zoom-btn {
+  background: rgba(30, 41, 59, 0.9);
+  color: #f1f5f9;
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.page-zoom-btn:hover {
+  background: #4f46e5;
+  color: #ffffff;
+  transform: scale(1.08);
+}
