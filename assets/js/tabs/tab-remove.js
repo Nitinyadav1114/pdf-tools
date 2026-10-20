@@ -163,7 +163,7 @@ export function rotatePage(pageNum, degreesDelta = 90) {
   const canvas = document.getElementById(`canvas_page_${pageNum}`);
   if (canvas) {
     canvas.style.transform = next !== 0 ? `rotate(${next}deg)` : '';
-    canvas.style.transition = 'transform 0.2s cubic-bezier(0.4, 0, 0.2, 1)';
+    canvas.style.transition = 'transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1)';
   }
   const card = elements.pagesGrid ? elements.pagesGrid.querySelector(`.page-card[data-page-num="${pageNum}"]`) : null;
   if (card) {
@@ -171,6 +171,11 @@ export function rotatePage(pageNum, degreesDelta = 90) {
     if (rotBadge) {
       rotBadge.textContent = next !== 0 ? `${next}°` : '';
       rotBadge.classList.toggle('hidden', next === 0);
+    }
+    const rotateBtn = card.querySelector('.page-rotate-cw-btn');
+    if (rotateBtn) {
+      rotateBtn.classList.add('page-rotate-spin');
+      setTimeout(() => rotateBtn.classList.remove('page-rotate-spin'), 350);
     }
   }
 }

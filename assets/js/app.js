@@ -189,6 +189,26 @@ export function switchTab(tab) {
     }
   }
 
+  // Update floating mobile navigation label & icon
+  const mobileNavTitle = document.getElementById('mobileNavCurrentTitle');
+  const mobileNavIcon = document.getElementById('mobileNavCurrentIcon');
+  if (mobileNavTitle && mobileNavIcon) {
+    const toolMeta = {
+      home: { title: 'All Tools', icon: 'grid' },
+      merge: { title: 'Merge PDFs', icon: 'merge' },
+      split: { title: 'Split PDF', icon: 'split' },
+      remove: { title: 'Remove Pages', icon: 'scissors' },
+      slides: { title: 'Slides to A4', icon: 'layers' },
+      invert: { title: 'Invert Colors', icon: 'sun-moon' },
+      compress: { title: 'Compress PDF', icon: 'minimize-2' },
+      images: { title: 'Image to PDF', icon: 'images' },
+      pdftoimages: { title: 'PDF to Images', icon: 'file-image' }
+    };
+    const meta = toolMeta[tab] || { title: 'All Tools', icon: 'grid' };
+    mobileNavTitle.textContent = meta.title;
+    mobileNavIcon.innerHTML = `<svg class="w-3.5 h-3.5 shrink-0" aria-hidden="true"><use href="#lucide-${meta.icon}"></use></svg>`;
+  }
+
   if (typeof window !== 'undefined' && window.history && window.history.replaceState) {
     try {
       window.history.replaceState(null, '', '#' + tab);
@@ -246,6 +266,57 @@ export async function init() {
   initCounter();
   initShareModal();
   initEnginePreloader();
+
+  // Mobile Floating Navigation & Quick Action Drawer
+  const mobileNavHomeBtn = document.getElementById('mobileNavHomeBtn');
+  const mobileNavToolsBtn = document.getElementById('mobileNavToolsBtn');
+  const mobileNavThemeBtn = document.getElementById('mobileNavThemeBtn');
+  const mobileToolsDrawer = document.getElementById('mobileToolsDrawer');
+  const closeMobileDrawerBtn = document.getElementById('closeMobileDrawerBtn');
+  const closeMobileDrawerBar = document.getElementById('closeMobileDrawerBar');
+
+  if (mobileNavHomeBtn) {
+    mobileNavHomeBtn.addEventListener('click', () => switchTab('home'));
+  }
+
+  function openMobileDrawer() {
+    if (mobileToolsDrawer) mobileToolsDrawer.classList.remove('hidden');
+  }
+
+  function closeMobileDrawer() {
+    if (mobileToolsDrawer) mobileToolsDrawer.classList.add('hidden');
+  }
+
+  if (mobileNavToolsBtn) {
+    mobileNavToolsBtn.addEventListener('click', openMobileDrawer);
+  }
+  if (closeMobileDrawerBtn) {
+    closeMobileDrawerBtn.addEventListener('click', closeMobileDrawer);
+  }
+  if (closeMobileDrawerBar) {
+    closeMobileDrawerBar.addEventListener('click', closeMobileDrawer);
+  }
+  if (mobileToolsDrawer) {
+    mobileToolsDrawer.addEventListener('click', (e) => {
+      if (e.target === mobileToolsDrawer) closeMobileDrawer();
+    });
+  }
+
+  const drawerItems = document.querySelectorAll('[data-drawer-tab]');
+  drawerItems.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const target = btn.dataset.drawerTab;
+      closeMobileDrawer();
+      if (target) switchTab(target);
+    });
+  });
+
+  if (mobileNavThemeBtn) {
+    mobileNavThemeBtn.addEventListener('click', () => {
+      const themeToggle = document.getElementById('themeToggleBtn');
+      if (themeToggle) themeToggle.click();
+    });
+  }
 
   // Handle URL query parameters and direct deep linking
   const urlParams = new URLSearchParams(window.location.search);

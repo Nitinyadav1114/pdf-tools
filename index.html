@@ -32,7 +32,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=block" rel="stylesheet">
 
   <!-- Production Single Minified Stylesheet (Zero-Waterfall Pre-bundled Architecture) -->
-  <link rel="stylesheet" href="assets/css/bundle.min.css?v=21">
+  <link rel="stylesheet" href="assets/css/bundle.min.css?v=22">
 
   <!-- Canonical URL -->
   <link rel="canonical" href="https://nitinyadav1114.github.io/pdf-tools/">
@@ -2225,11 +2225,122 @@
     </footer>
   </div>
 
+  <!-- Floating Mobile Quick Action Pill (Screens < 640px) -->
+  <aside id="mobileFloatingNav" class="mobile-floating-nav sm:hidden" aria-label="Mobile quick navigation">
+    <button type="button" class="mobile-nav-btn" id="mobileNavHomeBtn" aria-label="Home / All Tools">
+      <svg class="w-4 h-4 mb-0.5 shrink-0" aria-hidden="true"><use href="#lucide-grid"></use></svg>
+      <span>Tools</span>
+    </button>
+    <button type="button" class="mobile-nav-current-tool" id="mobileNavToolsBtn" aria-label="Open Tool Selector">
+      <span id="mobileNavCurrentIcon" class="w-3.5 h-3.5 shrink-0 flex items-center justify-center">
+        <svg class="w-3.5 h-3.5 shrink-0" aria-hidden="true"><use href="#lucide-grid"></use></svg>
+      </span>
+      <span id="mobileNavCurrentTitle" class="truncate max-w-[105px]">All Tools</span>
+      <svg class="w-3.5 h-3.5 shrink-0 text-white/70" aria-hidden="true"><use href="#lucide-chevron-up"></use></svg>
+    </button>
+    <button type="button" class="mobile-nav-btn" id="mobileNavThemeBtn" aria-label="Toggle Theme">
+      <svg class="w-4 h-4 mb-0.5 shrink-0 light-icon" aria-hidden="true"><use href="#lucide-moon"></use></svg>
+      <svg class="w-4 h-4 mb-0.5 shrink-0 dark-icon hidden text-amber-400" aria-hidden="true"><use href="#lucide-sun"></use></svg>
+      <span>Theme</span>
+    </button>
+  </aside>
+
+  <!-- Mobile Tools Bottom Drawer (Screens < 640px) -->
+  <div id="mobileToolsDrawer" class="fixed inset-0 z-50 flex items-end justify-center bg-black/60 backdrop-blur-sm hidden sm:hidden" role="dialog" aria-modal="true" aria-labelledby="mobileDrawerTitle">
+    <div class="w-full bg-surface-container-lowest dark:bg-[#131b2e] border-t border-slate-border dark:border-slate-800 rounded-t-3xl shadow-2xl p-5 bottom-sheet-content max-h-[85vh] overflow-y-auto">
+      <div class="bottom-sheet-grab-handle cursor-pointer" id="closeMobileDrawerBar"></div>
+      <div class="flex items-center justify-between mb-3 pb-2 border-b border-slate-200/60 dark:border-slate-800">
+        <h3 id="mobileDrawerTitle" class="text-sm font-bold text-on-surface dark:text-white flex items-center gap-2">
+          <svg class="w-4 h-4 text-indigo-500" aria-hidden="true"><use href="#lucide-grid"></use></svg>
+          Select PDF Tool
+        </h3>
+        <button type="button" id="closeMobileDrawerBtn" class="p-1 rounded-lg text-slate-muted dark:text-slate-400 hover:text-on-surface dark:hover:text-white" aria-label="Close drawer">
+          <svg class="w-4 h-4" aria-hidden="true"><use href="#lucide-x"></use></svg>
+        </button>
+      </div>
+      <div class="grid grid-cols-2 gap-2 text-xs">
+        <button type="button" class="mobile-drawer-tool-item" data-drawer-tab="merge">
+          <div class="w-8 h-8 rounded-lg bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 flex items-center justify-center shrink-0">
+            <svg class="w-4 h-4" aria-hidden="true"><use href="#lucide-merge"></use></svg>
+          </div>
+          <div>
+            <span class="block font-bold text-on-surface dark:text-white text-[12px]">Merge PDFs</span>
+            <span class="block text-[10px] text-slate-muted">Combine files</span>
+          </div>
+        </button>
+        <button type="button" class="mobile-drawer-tool-item" data-drawer-tab="split">
+          <div class="w-8 h-8 rounded-lg bg-orange-500/10 text-orange-600 dark:text-orange-400 flex items-center justify-center shrink-0">
+            <svg class="w-4 h-4" aria-hidden="true"><use href="#lucide-split"></use></svg>
+          </div>
+          <div>
+            <span class="block font-bold text-on-surface dark:text-white text-[12px]">Split PDF</span>
+            <span class="block text-[10px] text-slate-muted">Extract ranges</span>
+          </div>
+        </button>
+        <button type="button" class="mobile-drawer-tool-item" data-drawer-tab="remove">
+          <div class="w-8 h-8 rounded-lg bg-rose-500/10 text-rose-600 dark:text-rose-400 flex items-center justify-center shrink-0">
+            <svg class="w-4 h-4" aria-hidden="true"><use href="#lucide-scissors"></use></svg>
+          </div>
+          <div>
+            <span class="block font-bold text-on-surface dark:text-white text-[12px]">Remove Pages</span>
+            <span class="block text-[10px] text-slate-muted">Delete &amp; rotate</span>
+          </div>
+        </button>
+        <button type="button" class="mobile-drawer-tool-item" data-drawer-tab="compress">
+          <div class="w-8 h-8 rounded-lg bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0">
+            <svg class="w-4 h-4" aria-hidden="true"><use href="#lucide-minimize-2"></use></svg>
+          </div>
+          <div>
+            <span class="block font-bold text-on-surface dark:text-white text-[12px]">Compress PDF</span>
+            <span class="block text-[10px] text-slate-muted">Shrink file size</span>
+          </div>
+        </button>
+        <button type="button" class="mobile-drawer-tool-item" data-drawer-tab="slides">
+          <div class="w-8 h-8 rounded-lg bg-blue-500/10 text-blue-600 dark:text-blue-400 flex items-center justify-center shrink-0">
+            <svg class="w-4 h-4" aria-hidden="true"><use href="#lucide-layers"></use></svg>
+          </div>
+          <div>
+            <span class="block font-bold text-on-surface dark:text-white text-[12px]">Slides to A4</span>
+            <span class="block text-[10px] text-slate-muted">Print handouts</span>
+          </div>
+        </button>
+        <button type="button" class="mobile-drawer-tool-item" data-drawer-tab="invert">
+          <div class="w-8 h-8 rounded-lg bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center shrink-0">
+            <svg class="w-4 h-4" aria-hidden="true"><use href="#lucide-sun-moon"></use></svg>
+          </div>
+          <div>
+            <span class="block font-bold text-on-surface dark:text-white text-[12px]">Invert Colors</span>
+            <span class="block text-[10px] text-slate-muted">Ink saver</span>
+          </div>
+        </button>
+        <button type="button" class="mobile-drawer-tool-item" data-drawer-tab="images">
+          <div class="w-8 h-8 rounded-lg bg-teal-500/10 text-teal-600 dark:text-teal-400 flex items-center justify-center shrink-0">
+            <svg class="w-4 h-4" aria-hidden="true"><use href="#lucide-images"></use></svg>
+          </div>
+          <div>
+            <span class="block font-bold text-on-surface dark:text-white text-[12px]">Image to PDF</span>
+            <span class="block text-[10px] text-slate-muted">JPG/PNG to PDF</span>
+          </div>
+        </button>
+        <button type="button" class="mobile-drawer-tool-item" data-drawer-tab="pdftoimages">
+          <div class="w-8 h-8 rounded-lg bg-sky-500/10 text-sky-600 dark:text-sky-400 flex items-center justify-center shrink-0">
+            <svg class="w-4 h-4" aria-hidden="true"><use href="#lucide-file-image"></use></svg>
+          </div>
+          <div>
+            <span class="block font-bold text-on-surface dark:text-white text-[12px]">PDF to Images</span>
+            <span class="block text-[10px] text-slate-muted">Export to ZIP</span>
+          </div>
+        </button>
+      </div>
+    </div>
+  </div>
+
+
   <!-- Lightweight SortableJS Library (Drag & Drop UI) -->
   <script defer src="assets/vendor/sortable.min.js" integrity="sha384-BSxuMLxX+FCbTdYec3TbXlnMGEEM2QXTFdtDaveen71o+jswm2J36+xFqp8k4VHM" crossorigin="anonymous"></script>
 
   <!-- Main Orchestrator & Bootloader (PDF-Lib and PDF.js dynamically lazy-loaded on demand) -->
-  <script type="module" src="assets/js/app.js?v=21"></script>
+  <script type="module" src="assets/js/app.js?v=22"></script>
   <script>
     // Register Service Worker for fast browser caching & offline access
     if ('serviceWorker' in navigator) {
@@ -2253,8 +2364,9 @@
   </script>
 
   <!-- Home Universal Smart Router Modal -->
-  <div id="homeUniversalModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm hidden" role="dialog" aria-modal="true" aria-labelledby="homeModalTitle">
-    <div class="universal-modal-card">
+  <div id="homeUniversalModal" class="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-black/60 backdrop-blur-sm hidden" role="dialog" aria-modal="true" aria-labelledby="homeModalTitle">
+    <div class="universal-modal-card bottom-sheet-content">
+      <div class="bottom-sheet-grab-handle sm:hidden" onclick="document.getElementById('closeHomeModalBtn') ? document.getElementById('closeHomeModalBtn').click() : null"></div>
       <div class="flex items-start justify-between gap-3 mb-4">
         <div class="flex items-center gap-3">
           <div class="w-10 h-10 rounded-xl bg-primary-container text-white flex items-center justify-center shrink-0 shadow-sm">
@@ -2337,13 +2449,14 @@
   </div>
 
   <!-- Universal Document Share Modal -->
-  <div id="appShareModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm hidden" role="dialog" aria-modal="true" aria-labelledby="shareModalTitle">
-    <div class="w-full max-w-md bg-surface-container-lowest dark:bg-[#131b2e] border border-slate-border dark:border-slate-800 rounded-2xl shadow-2xl overflow-hidden p-6 relative">
+  <div id="appShareModal" class="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-black/60 backdrop-blur-sm hidden" role="dialog" aria-modal="true" aria-labelledby="shareModalTitle">
+    <div class="w-full sm:max-w-md bg-surface-container-lowest dark:bg-[#131b2e] border-t sm:border border-slate-border dark:border-slate-800 rounded-t-3xl sm:rounded-2xl shadow-2xl overflow-hidden p-6 relative bottom-sheet-content">
+      <div class="bottom-sheet-grab-handle sm:hidden" onclick="document.getElementById('closeShareModalBtn') ? document.getElementById('closeShareModalBtn').click() : null"></div>
       
       <!-- Modal Header -->
       <div class="flex items-start justify-between gap-3 mb-4">
         <div class="flex items-center gap-3">
-          <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-primary-container text-white flex items-center justify-center shrink-0 shadow-sm">
+          <div class="share-modal-icon-box w-10 h-10 rounded-xl text-white flex items-center justify-center shrink-0 shadow-sm">
             <svg class="w-5 h-5 shrink-0" aria-hidden="true"><use href="#lucide-share-2"></use></svg>
           </div>
           <div>
@@ -2431,8 +2544,9 @@
   </div>
 
   <!-- PWA Install Instructions Modal -->
-  <div id="pwaInstallModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm hidden" role="dialog" aria-modal="true" aria-labelledby="installModalTitle">
-      <div class="w-full max-w-md bg-surface-container-lowest dark:bg-[#131b2e] border border-slate-border dark:border-slate-800 rounded-2xl shadow-2xl overflow-hidden p-6">
+  <div id="pwaInstallModal" class="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-black/60 backdrop-blur-sm hidden" role="dialog" aria-modal="true" aria-labelledby="installModalTitle">
+      <div class="w-full sm:max-w-md bg-surface-container-lowest dark:bg-[#131b2e] border-t sm:border border-slate-border dark:border-slate-800 rounded-t-3xl sm:rounded-2xl shadow-2xl overflow-hidden p-6 bottom-sheet-content">
+        <div class="bottom-sheet-grab-handle sm:hidden" onclick="document.getElementById('closeInstallModalBtn') ? document.getElementById('closeInstallModalBtn').click() : null"></div>
         <div class="flex items-start justify-between gap-3 mb-4">
           <div class="flex items-center gap-3">
             <div class="w-10 h-10 rounded-xl bg-primary-container text-white flex items-center justify-center shrink-0 shadow-sm">

@@ -1856,3 +1856,221 @@ html.dark .home-modal-btn:hover {
     transform: translateY(0) scale(1);
   }
 }
+
+/* ==========================================================================
+   PHASE 3: MOBILE NATIVE BOTTOM SHEETS & CANVAS DRAG POLISH
+   ========================================================================== */
+
+/* 1. Mobile Native Bottom Sheets */
+@keyframes sheet-slide-up {
+  from {
+    transform: translateY(100%);
+    opacity: 0.92;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.bottom-sheet-grab-handle {
+  width: 44px;
+  height: 5px;
+  border-radius: 9999px;
+  background: rgba(148, 163, 184, 0.4);
+  margin: 0 auto 0.85rem auto;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.bottom-sheet-grab-handle:active {
+  background: rgba(148, 163, 184, 0.7);
+  transform: scaleX(1.15);
+}
+
+@media (max-width: 640px) {
+  .bottom-sheet-content {
+    animation: sheet-slide-up 0.32s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    max-height: 88vh;
+    border-top-left-radius: 24px !important;
+    border-top-right-radius: 24px !important;
+    border-bottom-left-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
+  }
+}
+
+/* 2. Floating Mobile Navigation Bar & Drawer */
+@media (min-width: 641px) {
+  .mobile-floating-nav {
+    display: none !important;
+  }
+}
+
+.mobile-floating-nav {
+  position: fixed;
+  bottom: max(1.1rem, env(safe-area-inset-bottom, 1.1rem));
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 45;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.4rem 0.55rem;
+  border-radius: 9999px;
+  background: rgba(15, 23, 42, 0.88);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  box-shadow: 0 16px 36px -6px rgba(0, 0, 0, 0.45), 0 4px 12px rgba(0, 0, 0, 0.25);
+  color: #fff;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  max-width: calc(100vw - 2rem);
+}
+
+.mobile-floating-nav:hover {
+  border-color: rgba(99, 102, 241, 0.4);
+  box-shadow: 0 20px 42px -6px rgba(0, 0, 0, 0.5), 0 0 20px rgba(99, 102, 241, 0.25);
+}
+
+.mobile-nav-btn {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 0.4rem 0.65rem;
+  border-radius: 9999px;
+  font-size: 0.65rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.8);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  min-width: 44px;
+  min-height: 40px;
+}
+
+.mobile-nav-btn:active {
+  transform: scale(0.92);
+  color: #fff;
+}
+
+.mobile-nav-current-tool {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.45rem 0.95rem;
+  border-radius: 9999px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #fff;
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.85), rgba(79, 70, 229, 0.95));
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  box-shadow: 0 4px 12px rgba(79, 70, 229, 0.35);
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  min-height: 40px;
+}
+
+.mobile-nav-current-tool:active {
+  transform: scale(0.95);
+  box-shadow: 0 2px 6px rgba(79, 70, 229, 0.2);
+}
+
+.mobile-drawer-tool-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.85rem;
+  border-radius: 16px;
+  background: rgba(241, 245, 249, 0.7);
+  border: 1px solid rgba(226, 232, 240, 0.8);
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.18s cubic-bezier(0.4, 0, 0.2, 1);
+  min-height: 52px;
+}
+
+html.dark .mobile-drawer-tool-item,
+body.theme-dark .mobile-drawer-tool-item {
+  background: rgba(30, 41, 59, 0.65);
+  border-color: rgba(51, 65, 85, 0.8);
+}
+
+.mobile-drawer-tool-item:active {
+  transform: scale(0.96);
+  background: rgba(99, 102, 241, 0.15);
+  border-color: rgba(99, 102, 241, 0.4);
+}
+
+/* 3. Interactive 3D Perspective Card Tilt & Cursor Spotlight */
+.home-tool-card {
+  perspective: 1000px;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+.home-tool-card::after {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: 18px;
+  background: radial-gradient(circle 240px at var(--mouse-x, 50%) var(--mouse-y, 0%), var(--card-glow, rgba(99, 102, 241, 0.22)) 0%, transparent 80%);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+  z-index: 0;
+}
+
+.home-tool-card:hover::after {
+  opacity: 1;
+}
+
+/* 4. SortableJS Drag Ghost & Card Lift Physics */
+.sortable-chosen,
+.sortable-drag {
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.45), 0 0 0 2px var(--card-accent, #6366f1) !important;
+  transform: scale(1.045) rotate(1.8deg) !important;
+  cursor: grabbing !important;
+  z-index: 9999 !important;
+  transition: transform 0.15s cubic-bezier(0.2, 0.8, 0.2, 1) !important;
+}
+
+.sortable-ghost {
+  opacity: 0.55 !important;
+  background: rgba(99, 102, 241, 0.08) !important;
+  border: 2px dashed var(--primary, #6366f1) !important;
+  border-radius: 14px !important;
+  animation: sortable-ghost-pulse 1.4s ease-in-out infinite !important;
+}
+
+@keyframes sortable-ghost-pulse {
+  0%, 100% {
+    opacity: 0.4;
+    border-color: rgba(99, 102, 241, 0.5);
+    transform: scale(0.985);
+  }
+  50% {
+    opacity: 0.8;
+    border-color: rgba(99, 102, 241, 1);
+    transform: scale(1);
+  }
+}
+
+/* 5. Page Rotation Snappy Micro-Animations */
+.page-rotate-cw-btn {
+  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), background-color 0.15s ease !important;
+}
+
+.page-rotate-cw-btn.page-rotate-spin {
+  transform: rotate(90deg) scale(0.85);
+}
+
+.page-card .page-canvas {
+  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.share-modal-icon-box {
+  background: linear-gradient(135deg, #6366f1, #4338ca) !important;
+  color: #ffffff !important;
+}
