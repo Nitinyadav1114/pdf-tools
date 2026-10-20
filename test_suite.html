@@ -1191,6 +1191,21 @@
 
           window.closeLightbox();
           assert(modalEl.classList.contains('hidden'), 'closeLightbox cleanly closes modal and hides overlay');
+
+          // Feature 5: Subtle Success Confetti & Glow Bursts
+          assert(typeof window.triggerSuccessBurst === 'function', 'triggerSuccessBurst is exported and accessible on window');
+          assert(typeof window.triggerGlowPulse === 'function', 'triggerGlowPulse is exported and accessible on window');
+
+          const dummyTarget = document.createElement('button');
+          dummyTarget.textContent = 'Download Complete PDF';
+          document.body.appendChild(dummyTarget);
+
+          window.triggerGlowPulse(dummyTarget);
+          assert(dummyTarget.classList.contains('glow-pulse-active'), 'triggerGlowPulse applies dynamic celebration animation');
+
+          window.triggerSuccessBurst({ origin: dummyTarget, particleCount: 30 });
+          const cCanvas = document.getElementById('confettiCanvas');
+          assert(cCanvas && cCanvas.width > 0, 'triggerSuccessBurst activates high-performance celebration canvas');
         }
 
         const msg = 'ALL_TESTS_COMPLETED_SUCCESSFULLY (' + results.length + ' assertions passed)';

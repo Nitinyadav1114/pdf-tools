@@ -1,4 +1,4 @@
-const CACHE_NAME = 'pdf-tools-v28';
+const CACHE_NAME = 'pdf-tools-v29';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
@@ -32,6 +32,7 @@ const ASSETS_TO_CACHE = [
   './assets/js/core/pipeline-progress.js',
   './assets/js/core/tactile-feedback.js',
   './assets/js/core/lightbox.js',
+  './assets/js/core/confetti.js',
   './assets/js/core/pwa.js',
   './assets/js/core/counter.js',
   './assets/js/tabs/tab-home.js',

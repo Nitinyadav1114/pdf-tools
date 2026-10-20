@@ -207,6 +207,9 @@ export function updatePipelineProgress(toolKey, percent, statusText = '', subTex
     if (typeof window.triggerHaptic === 'function') {
       window.triggerHaptic('success');
     }
+    if (typeof window.triggerSuccessBurst === 'function') {
+      window.triggerSuccessBurst({ origin: container });
+    }
   }
 }
 

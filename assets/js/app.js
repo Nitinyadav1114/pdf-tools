@@ -37,6 +37,7 @@ import { initCommandPalette } from './core/command-palette.js';
 import { initPipelineProgress, updatePipelineProgress, resetPipelineProgress } from './core/pipeline-progress.js';
 import { initTactileFeedback, playAudioCue, triggerHaptic, toggleSound, isSoundEnabled, setSoundEnabled } from './core/tactile-feedback.js';
 import { initLightbox, openLightbox, closeLightbox, zoomBy, resetZoom, rotateCW } from './core/lightbox.js';
+import { initConfetti, triggerSuccessBurst, triggerGlowPulse } from './core/confetti.js';
 
 
 
@@ -110,6 +111,8 @@ if (typeof window !== 'undefined') {
   window.zoomLightboxBy = zoomBy;
   window.resetLightboxZoom = resetZoom;
   window.rotateLightboxCW = rotateCW;
+  window.triggerSuccessBurst = triggerSuccessBurst;
+  window.triggerGlowPulse = triggerGlowPulse;
 
 }
 
@@ -255,6 +258,7 @@ export async function init() {
   initTheme();
   initTactileFeedback();
   initLightbox();
+  initConfetti();
   setDefaultOutputFilename();
 
   // Initialize individual tool tabs
