@@ -1706,3 +1706,153 @@ html.dark .home-modal-btn:hover {
   color: #c7d2fe;
 }
 
+
+
+/* ==========================================================================
+   Phase 2: Tactile Micro-Interactions, Shimmer & Interactive Depth
+   ========================================================================== */
+
+/* 1. Luminous Shimmer Call-To-Action Buttons */
+.btn-shimmer {
+  position: relative;
+  overflow: hidden;
+  box-shadow: inset 0 1px 1px 0 rgba(255, 255, 255, 0.35), 0 8px 20px -4px rgba(79, 70, 229, 0.35);
+  transition: all 0.22s cubic-bezier(0.34, 1.56, 0.64, 1);
+  isolation: isolate;
+}
+
+.btn-shimmer::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -60%;
+  width: 220%;
+  height: 200%;
+  background: linear-gradient(
+    60deg,
+    transparent 20%,
+    rgba(255, 255, 255, 0.28) 45%,
+    rgba(255, 255, 255, 0.45) 50%,
+    rgba(255, 255, 255, 0.28) 55%,
+    transparent 80%
+  );
+  transform: rotate(25deg) translateX(-100%);
+  transition: transform 0.65s cubic-bezier(0.4, 0, 0.2, 1);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.btn-shimmer:hover::after {
+  transform: rotate(25deg) translateX(100%);
+}
+
+.btn-shimmer:active,
+.btn-primary:active,
+.btn-cta:active {
+  transform: scale(0.97) translateY(1px) !important;
+  box-shadow: inset 0 1px 2px 0 rgba(0, 0, 0, 0.2), 0 2px 6px -1px rgba(79, 70, 229, 0.2) !important;
+}
+
+/* 2. Interactive Tool Card Halo Glow */
+.home-tool-card::after {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: 18px;
+  background: radial-gradient(circle at 50% 0%, var(--card-glow, rgba(99, 102, 241, 0.15)) 0%, transparent 70%);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+  z-index: 0;
+}
+
+.home-tool-card:hover::after {
+  opacity: 1;
+}
+
+.home-tool-card:active {
+  transform: translateY(-2px) scale(0.985);
+  transition: all 0.12s ease;
+}
+
+/* 3. Breathing Concentric Dropzone Dragover Pulse */
+.dropzone.drag-active,
+.dropzone.dragover,
+.dropzone:has(input:focus-visible) {
+  animation: dropzone-breathe 2s infinite ease-in-out;
+}
+
+@keyframes dropzone-breathe {
+  0%, 100% {
+    border-color: var(--card-accent, #6366f1);
+    box-shadow: 0 0 0 0 var(--card-glow, rgba(99, 102, 241, 0.35)), 0 12px 30px -4px var(--card-glow, rgba(99, 102, 241, 0.2));
+  }
+  50% {
+    border-color: var(--card-accent, #6366f1);
+    box-shadow: 0 0 0 10px var(--card-glow, rgba(99, 102, 241, 0)), 0 18px 40px -4px var(--card-glow, rgba(99, 102, 241, 0.35));
+  }
+}
+
+.dropzone.drag-active .dropzone-icon-box,
+.dropzone.dragover .dropzone-icon-box,
+.dropzone.drag-active .dropzone-icon-wrapper,
+.dropzone.dragover .dropzone-icon-wrapper {
+  animation: icon-float-spring 1.2s infinite alternate cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes icon-float-spring {
+  0% { transform: translateY(0) scale(1); }
+  100% { transform: translateY(-10px) scale(1.12); }
+}
+
+/* 4. Animated Processing Progress Bar */
+.progress-bar-fill.active,
+.progress-bar-animated {
+  background-image: linear-gradient(
+    45deg,
+    rgba(255, 255, 255, 0.15) 25%,
+    transparent 25%,
+    transparent 50%,
+    rgba(255, 255, 255, 0.15) 50%,
+    rgba(255, 255, 255, 0.15) 75%,
+    transparent 75%,
+    transparent
+  );
+  background-size: 1.25rem 1.25rem;
+  animation: progress-stripes 1s linear infinite;
+  position: relative;
+}
+
+.progress-bar-fill::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 16px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.6));
+  border-radius: 9999px;
+  box-shadow: 0 0 12px 2px rgba(255, 255, 255, 0.7);
+}
+
+@keyframes progress-stripes {
+  from { background-position: 1.25rem 0; }
+  to { background-position: 0 0; }
+}
+
+/* 5. Spring-Eased Toast Feedback */
+.feedback-toast,
+#shareModalCopyFeedback:not(.hidden) {
+  animation: toast-spring-in 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+@keyframes toast-spring-in {
+  0% {
+    opacity: 0;
+    transform: translateY(8px) scale(0.96);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
