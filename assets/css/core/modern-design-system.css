@@ -2512,3 +2512,202 @@ html.dark .cmd-match-highlight {
   background: rgba(251, 191, 36, 0.35);
   color: #fef3c7;
 }
+
+
+/* ==========================================================================
+   Step-by-Step Pipeline Progress Indicator Styles
+   Linear-style multi-stage milestone stepper with glowing pulse & shimmer
+   ========================================================================== */
+
+.pipeline-progress-card {
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid rgba(226, 232, 240, 0.85);
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.02);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-radius: 1rem;
+}
+
+body.theme-dark .pipeline-progress-card,
+html.dark .pipeline-progress-card {
+  background: rgba(18, 24, 38, 0.95);
+  border-color: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 15px 30px -8px rgba(0, 0, 0, 0.5);
+}
+
+.pipeline-stepper-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding-bottom: 0.75rem;
+  margin-bottom: 0.75rem;
+  border-bottom: 1px solid rgba(226, 232, 240, 0.7);
+  user-select: none;
+}
+
+body.theme-dark .pipeline-stepper-row,
+html.dark .pipeline-stepper-row {
+  border-bottom-color: rgba(255, 255, 255, 0.07);
+}
+
+.pipeline-step-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  white-space: nowrap;
+}
+
+.step-indicator {
+  width: 22px;
+  height: 22px;
+  border-radius: 9999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 700;
+  flex-shrink: 0;
+  transition: all 0.2s ease;
+}
+
+.step-label {
+  font-size: 11px;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+@media (min-width: 640px) {
+  .step-label {
+    font-size: 12px;
+  }
+}
+
+/* 1. Step Pending */
+.step-pending .step-indicator {
+  background: rgba(241, 245, 249, 1);
+  border: 1px solid rgba(203, 213, 225, 0.8);
+  color: #94a3b8;
+}
+
+body.theme-dark .step-pending .step-indicator,
+html.dark .step-pending .step-indicator {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.12);
+  color: #64748b;
+}
+
+.step-pending .step-label {
+  color: #94a3b8;
+}
+
+body.theme-dark .step-pending .step-label,
+html.dark .step-pending .step-label {
+  color: #64748b;
+}
+
+/* 2. Step Active */
+.step-active .step-indicator {
+  background: #2563eb;
+  border: 1px solid #1d4ed8;
+  color: #ffffff;
+  box-shadow: 0 0 10px rgba(37, 99, 235, 0.5);
+  transform: scale(1.08);
+}
+
+body.theme-dark .step-active .step-indicator,
+html.dark .step-active .step-indicator {
+  background: #3b82f6;
+  border-color: #60a5fa;
+  box-shadow: 0 0 12px rgba(59, 130, 246, 0.6);
+}
+
+.step-active .step-label {
+  color: #0f172a;
+  font-weight: 700;
+}
+
+body.theme-dark .step-active .step-label,
+html.dark .step-active .step-label {
+  color: #f8fafc;
+}
+
+/* 3. Step Completed */
+.step-completed .step-indicator {
+  background: #10b981;
+  border: 1px solid #059669;
+  color: #ffffff;
+  box-shadow: 0 0 8px rgba(16, 185, 129, 0.35);
+}
+
+body.theme-dark .step-completed .step-indicator,
+html.dark .step-completed .step-indicator {
+  background: #059669;
+  border-color: #34d399;
+}
+
+.step-completed .step-label {
+  color: #059669;
+  font-weight: 600;
+}
+
+body.theme-dark .step-completed .step-label,
+html.dark .step-completed .step-label {
+  color: #34d399;
+}
+
+/* Connector Line */
+.pipeline-step-connector {
+  flex: 1;
+  height: 2px;
+  background: rgba(226, 232, 240, 0.8);
+  border-radius: 9999px;
+  margin: 0 0.25rem;
+  transition: background-color 0.3s ease;
+}
+
+body.theme-dark .pipeline-step-connector,
+html.dark .pipeline-step-connector {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.pipeline-step-connector.connector-completed {
+  background: #10b981 !important;
+}
+
+/* Subtext Ticker */
+.pipeline-subtext {
+  display: block;
+  font-size: 11px;
+  color: #64748b;
+  margin-top: 2px;
+  font-weight: normal;
+  transition: color 0.2s ease;
+}
+
+body.theme-dark .pipeline-subtext,
+html.dark .pipeline-subtext {
+  color: #94a3b8;
+}
+
+/* Progress Shimmer Animation */
+.progress-shimmer-highlight {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.4) 50%, transparent 100%);
+  animation: pipelineShimmerSweep 1.8s infinite linear;
+}
+
+@keyframes pipelineShimmerSweep {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}

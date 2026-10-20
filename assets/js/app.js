@@ -34,6 +34,8 @@ import { createZipArchive } from './core/zip-builder.js';
 import { initPWAInstallBanner } from './core/pwa.js';
 import { initCounter, incrementProcessedCounter, getCounterStats } from './core/counter.js';
 import { initCommandPalette } from './core/command-palette.js';
+import { initPipelineProgress, updatePipelineProgress, resetPipelineProgress } from './core/pipeline-progress.js';
+
 
 
 import { initMergeTab, setDefaultOutputFilename, handleMergeFilesAdded } from './tabs/tab-merge.js';
@@ -94,6 +96,9 @@ if (typeof window !== 'undefined') {
   window.preloadEngineForTool = preloadEngineForTool;
   window.toggleThemeWithTransition = toggleThemeWithTransition;
   window.showToast = showToast;
+  window.updatePipelineProgress = updatePipelineProgress;
+  window.resetPipelineProgress = resetPipelineProgress;
+
 }
 
 export {
@@ -270,6 +275,7 @@ export async function init() {
 
   initPWAInstallBanner();
   initCounter();
+  initPipelineProgress();
   initCommandPalette({
     switchTab,
     openShareModal
