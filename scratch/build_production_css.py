@@ -1,6 +1,10 @@
 import os, re
 
+REPO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
 def minify_css(css: str) -> str:
+    # Ensure space around */ and * to prevent accidental unclosed comments
+    css = re.sub(r'\*/\*', '*/ *', css)
     # Remove comments
     css = re.sub(r'/\*[\s\S]*?\*/', '', css)
     # Normalize whitespace
@@ -56,18 +60,21 @@ def build():
 """
     parts.append(material_symbols_css)
 
-    for path in FILES:
-        if os.path.exists(path):
-            with open(path, "r", encoding="utf-8") as f:
+    for rel_path in FILES:
+        abs_path = os.path.join(REPO_ROOT, rel_path)
+        if os.path.exists(abs_path):
+            with open(abs_path, "r", encoding="utf-8") as f:
                 parts.append(f.read())
         else:
-            print(f"Warning: {path} not found!")
+            print(f"Warning: {abs_path} not found!")
 
     combined = "\n".join(parts)
     minified = minify_css(combined)
 
-    os.makedirs("assets/css", exist_ok=True)
-    with open("assets/css/bundle.min.css", "w", encoding="utf-8") as f:
+    out_dir = os.path.join(REPO_ROOT, "assets", "css")
+    os.makedirs(out_dir, exist_ok=True)
+    out_file = os.path.join(out_dir, "bundle.min.css")
+    with open(out_file, "w", encoding="utf-8") as f:
         f.write(minified)
 
     print(f"Original total size: {len(combined)} bytes")
