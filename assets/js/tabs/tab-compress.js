@@ -19,13 +19,13 @@ export async function handleCompressFileSelected(file) {
   if (!file) return;
 
   if (!file.type.includes('pdf') && !file.name.toLowerCase().endsWith('.pdf')) {
-    alert('Please upload a valid PDF file.');
+    showToast('Please upload a valid PDF file.', 'warning');
     return;
   }
 
   const isGenuinePdf = await isValidPdfFile(file);
   if (!isGenuinePdf) {
-    alert(`Security Warning: "${file.name}" is not a genuine or valid PDF document (missing %PDF- header). Upload rejected.`);
+    showToast(`Security Warning: "${file.name}" is not a genuine PDF document. Upload rejected.`, 'error');
     return;
   }
 
@@ -42,7 +42,7 @@ export async function handleCompressFileSelected(file) {
       pdfjsDoc = await pdfjsLib.getDocument({ data: bufferCopy }).promise;
     } catch (loadErr) {
       if (isPasswordProtectedError(loadErr)) {
-        alert('🔒 This PDF document is password-protected or encrypted. Please remove password protection before compressing.');
+        showToast('🔒 Document is encrypted. Please remove password protection before compressing.', 'error');
         return;
       }
       throw loadErr;
@@ -70,7 +70,7 @@ export async function handleCompressFileSelected(file) {
     await renderCompressComparisonPreview();
   } catch (err) {
     console.error('Error loading PDF for compression:', err);
-    alert('Failed to load PDF: ' + (err.message || 'Unknown error'));
+    showToast('Failed to load PDF: ' + (err.message || 'Unknown error'), 'error');
   }
 }
 
@@ -270,7 +270,7 @@ export async function executeCompressPDF() {
   if (elements.executeCompressBtn && elements.executeCompressBtn.disabled) return;
   await ensureAllPdfEngines().catch(() => {});
   if (!compressState.arrayBuffer || !window.PDFLib || !window.pdfjsLib) {
-    alert('No PDF file loaded or PDF engines are not ready.');
+    showToast('No PDF file loaded or PDF engines are not ready.', 'warning');
     return;
   }
 
@@ -441,7 +441,7 @@ export async function executeCompressPDF() {
       return;
     }
     console.error('Error compressing PDF:', err);
-    alert('Failed to compress PDF: ' + (err.message || 'Unknown error'));
+    showToast('Failed to compress PDF: ' + (err.message || 'Unknown error'), 'error');
   } finally {
     offCanvas.width = 0;
     offCanvas.height = 0;
@@ -488,21 +488,34 @@ export function initCompressTab(switchTab) {
       }
     });
 
-    ['dragenter', 'dragover'].forEach((eventName) => {
-      compressDropzone.addEventListener(eventName, (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        ensureAllPdfEngines().catch(() => {});
-        compressDropzone.classList.add('drag-active');
-      });
+    let compressDragCounter = 0;
+    compressDropzone.addEventListener('dragenter', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      ensureAllPdfEngines().catch(() => {});
+      compressDragCounter++;
+      compressDropzone.classList.add('drag-active');
     });
 
-    ['dragleave', 'drop'].forEach((eventName) => {
-      compressDropzone.addEventListener(eventName, (e) => {
-        e.preventDefault();
-        e.stopPropagation();
+    compressDropzone.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+    });
+
+    compressDropzone.addEventListener('dragleave', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      compressDragCounter = Math.max(0, compressDragCounter - 1);
+      if (compressDragCounter === 0) {
         compressDropzone.classList.remove('drag-active');
-      });
+      }
+    });
+
+    compressDropzone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      compressDragCounter = 0;
+      compressDropzone.classList.remove('drag-active');
     });
 
     compressDropzone.addEventListener('drop', (e) => {

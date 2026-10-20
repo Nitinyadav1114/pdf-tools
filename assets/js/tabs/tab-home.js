@@ -5,7 +5,7 @@
  */
 
 import { elements } from '../core/dom.js';
-import { formatBytes, trackToolUsage } from '../core/utils.js';
+import { formatBytes, trackToolUsage, showToast } from '../core/utils.js';
 import { isValidPdfFile, isValidImageFile } from '../core/validators.js';
 import { ensureAllPdfEngines, preloadEngineForTool } from '../core/engine-loader.js';
 
@@ -61,6 +61,11 @@ export function initHomeTab(switchTab, handlers = {}) {
     const imageFiles = files.filter(f => /\.(jpe?g|png|webp|gif|bmp)$/i.test(f.name) || f.type.startsWith('image/'));
     const pdfFiles = files.filter(f => f.name.toLowerCase().endsWith('.pdf') || f.type === 'application/pdf');
 
+    if (imageFiles.length === 0 && pdfFiles.length === 0) {
+      showToast('Please upload valid PDF documents or images (JPG, PNG, WebP).', 'warning');
+      return;
+    }
+
     if (imageFiles.length > 0 && pdfFiles.length === 0) {
       if (typeof handleImageFilesAdded === 'function') {
         handleImageFilesAdded(imageFiles);
@@ -82,7 +87,7 @@ export function initHomeTab(switchTab, handlers = {}) {
       const file = pdfFiles[0];
       const isGenuine = await isValidPdfFile(file);
       if (!isGenuine) {
-        alert(`Security Warning: "${file.name}" is not a genuine PDF document. Upload rejected.`);
+        showToast(`Security Warning: "${file.name}" is not a genuine PDF document. Upload rejected.`, 'error');
         return;
       }
       openUniversalModal(file);
@@ -105,24 +110,34 @@ export function initHomeTab(switchTab, handlers = {}) {
       }
     });
 
-    ['dragenter', 'dragover'].forEach(eventName => {
-      homeDropzone.addEventListener(eventName, (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        ensureAllPdfEngines().catch(() => {});
-        homeDropzone.classList.add('drag-active');
-      });
+    let homeDragCounter = 0;
+    homeDropzone.addEventListener('dragenter', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      ensureAllPdfEngines().catch(() => {});
+      homeDragCounter++;
+      homeDropzone.classList.add('drag-active');
     });
 
-    ['dragleave', 'drop'].forEach(eventName => {
-      homeDropzone.addEventListener(eventName, (e) => {
-        e.preventDefault();
-        e.stopPropagation();
+    homeDropzone.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+    });
+
+    homeDropzone.addEventListener('dragleave', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      homeDragCounter = Math.max(0, homeDragCounter - 1);
+      if (homeDragCounter === 0) {
         homeDropzone.classList.remove('drag-active');
-      });
+      }
     });
 
     homeDropzone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      homeDragCounter = 0;
+      homeDropzone.classList.remove('drag-active');
       if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files.length > 0) {
         routeDroppedFiles(e.dataTransfer.files);
       }
@@ -179,26 +194,49 @@ export function initHomeTab(switchTab, handlers = {}) {
     }
   });
 
-  // 3D Perspective Tilt & Cursor Spotlight Tracking
-  const toolCards = document.querySelectorAll('.home-tool-card');
-  toolCards.forEach(card => {
-    card.addEventListener('mousemove', (e) => {
-      const rect = card.getBoundingClientRect();
-      const x = e.clientX - rect.left;
-      const y = e.clientY - rect.top;
-      const centerX = rect.width / 2;
-      const centerY = rect.height / 2;
-      const rotateX = ((y - centerY) / centerY) * -5;
-      const rotateY = ((x - centerX) / centerX) * 5;
-      card.style.setProperty('--mouse-x', `${((x / rect.width) * 100).toFixed(1)}%`);
-      card.style.setProperty('--mouse-y', `${((y / rect.height) * 100).toFixed(1)}%`);
-      card.style.transform = `perspective(800px) rotateX(${rotateX.toFixed(2)}deg) rotateY(${rotateY.toFixed(2)}deg) translateY(-4px)`;
-    }, { passive: true });
+  // 3D Perspective Tilt & Cursor Spotlight Tracking (60/120 FPS Throttled)
+  const supportsHover = typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+  const prefersReducedMotion = typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-    card.addEventListener('mouseleave', () => {
-      card.style.transform = '';
-      card.style.setProperty('--mouse-x', '50%');
-      card.style.setProperty('--mouse-y', '0%');
-    }, { passive: true });
-  });
+  if (supportsHover && !prefersReducedMotion) {
+    const toolCards = document.querySelectorAll('.home-tool-card');
+    toolCards.forEach(card => {
+      let rect = null;
+      let rafId = null;
+
+      card.addEventListener('mouseenter', () => {
+        rect = card.getBoundingClientRect();
+      }, { passive: true });
+
+      card.addEventListener('mousemove', (e) => {
+        if (!rect) rect = card.getBoundingClientRect();
+        if (rafId) return;
+
+        rafId = requestAnimationFrame(() => {
+          rafId = null;
+          if (!rect) return;
+          const x = e.clientX - rect.left;
+          const y = e.clientY - rect.top;
+          const centerX = rect.width / 2;
+          const centerY = rect.height / 2;
+          const rotateX = ((y - centerY) / centerY) * -5;
+          const rotateY = ((x - centerX) / centerX) * 5;
+          card.style.setProperty('--mouse-x', `${((x / rect.width) * 100).toFixed(1)}%`);
+          card.style.setProperty('--mouse-y', `${((y / rect.height) * 100).toFixed(1)}%`);
+          card.style.transform = `perspective(800px) rotateX(${rotateX.toFixed(2)}deg) rotateY(${rotateY.toFixed(2)}deg) translateY(-4px)`;
+        });
+      }, { passive: true });
+
+      card.addEventListener('mouseleave', () => {
+        if (rafId) {
+          cancelAnimationFrame(rafId);
+          rafId = null;
+        }
+        rect = null;
+        card.style.transform = '';
+        card.style.setProperty('--mouse-x', '50%');
+        card.style.setProperty('--mouse-y', '0%');
+      }, { passive: true });
+    });
+  }
 }

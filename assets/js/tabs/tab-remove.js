@@ -21,16 +21,20 @@ const MAX_CONCURRENT_THUMBNAILS = 3;
 
 export async function handleRemoveFileSelected(file) {
   if (!file || (file.type !== 'application/pdf' && !file.name.toLowerCase().endsWith('.pdf'))) {
-    alert('Please select a valid PDF file.');
+    showToast('Please select a valid PDF file.', 'warning');
     return;
   }
 
   const isGenuinePdf = await isValidPdfFile(file);
   if (!isGenuinePdf) {
-    alert(`Security Warning: "${file.name}" is not a genuine or valid PDF document (missing %PDF- header). Upload rejected.`);
+    showToast(`Security Warning: "${file.name}" is not a genuine PDF document. Upload rejected.`, 'error');
     return;
   }
 
+  if (removeState.pdfDoc) {
+    removeState.pdfDoc.destroy().catch(() => {});
+    removeState.pdfDoc = null;
+  }
   removeState.file = file;
   removeState.selectedPages.clear();
   if (elements.removeResultCard) elements.removeResultCard.classList.add('hidden');
@@ -76,12 +80,12 @@ export async function handleRemoveFileSelected(file) {
     }
   } catch (err) {
     if (isPasswordProtectedError(err)) {
-      alert('🔒 This PDF document is password-protected or encrypted.\nPlease remove password protection before uploading it.');
+      showToast('🔒 This PDF document is encrypted. Please remove password protection before uploading.', 'error');
       resetRemoveWorkspace();
       return;
     }
     console.error('Failed to load PDF for page removal:', err);
-    alert('Could not open this PDF: ' + (err.message || 'Unknown error'));
+    showToast('Could not open this PDF: ' + (err.message || 'Unknown error'), 'error');
     resetRemoveWorkspace();
   }
 }
@@ -111,6 +115,9 @@ export function resetRemoveWorkspace() {
     removeState.sortableInstance = null;
   }
   removeState.pageRotations.clear();
+  if (removeState.pdfDoc) {
+    removeState.pdfDoc.destroy().catch(() => {});
+  }
   removeState.file = null;
   removeState.arrayBuffer = null;
   removeState.pdfDoc = null;
@@ -414,13 +421,13 @@ export function clearPageSelection() {
 export async function executeRemovePages() {
   if (elements.executeRemoveBtn && elements.executeRemoveBtn.disabled) return;
   if (!removeState.file || removeState.totalPages === 0) {
-    alert('Please upload a PDF first.');
+    showToast('Please upload a PDF first.', 'warning');
     return;
   }
 
   const hasRotations = Array.from(removeState.pageRotations.values()).some((r) => r !== 0);
   if (removeState.selectedPages.size === 0 && !hasRotations && !removeState.sortableInstance) {
-    alert('Please select at least 1 page to delete, or rotate/reorder pages.');
+    showToast('Please select at least 1 page to delete, or rotate/reorder pages.', 'warning');
     return;
   }
 
@@ -433,13 +440,13 @@ export async function executeRemovePages() {
   const keptPages = orderedPageNums.filter((p) => !removeState.selectedPages.has(p));
 
   if (keptPages.length === 0) {
-    alert('Cannot delete all pages! You must keep at least 1 page.');
+    showToast('Cannot delete all pages! You must keep at least 1 page.', 'warning');
     return;
   }
 
   await ensurePdfLibLoaded().catch(() => {});
   if (!window.PDFLib) {
-    alert('PDF-Lib is not loaded.');
+    showToast('PDF-Lib engine could not be loaded.', 'error');
     return;
   }
 
@@ -513,7 +520,7 @@ export async function executeRemovePages() {
       return;
     }
     console.error('Error removing pages:', err);
-    alert('Failed to delete pages: ' + (err.message || 'Unknown error occurred'));
+    showToast('Failed to delete pages: ' + (err.message || 'Unknown error occurred'), 'error');
   } finally {
     removeState.isCancelled = false;
     if (elements.executeRemoveBtn) elements.executeRemoveBtn.disabled = false;
@@ -565,21 +572,34 @@ export function initRemoveTab(switchTab, handleCompressFileSelected, handleSplit
       }
     });
 
-    ['dragenter', 'dragover'].forEach((eventName) => {
-      removeDropzone.addEventListener(eventName, (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        ensureAllPdfEngines().catch(() => {});
-        removeDropzone.classList.add('drag-active');
-      });
+    let removeDragCounter = 0;
+    removeDropzone.addEventListener('dragenter', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      ensureAllPdfEngines().catch(() => {});
+      removeDragCounter++;
+      removeDropzone.classList.add('drag-active');
     });
 
-    ['dragleave', 'drop'].forEach((eventName) => {
-      removeDropzone.addEventListener(eventName, (e) => {
-        e.preventDefault();
-        e.stopPropagation();
+    removeDropzone.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+    });
+
+    removeDropzone.addEventListener('dragleave', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      removeDragCounter = Math.max(0, removeDragCounter - 1);
+      if (removeDragCounter === 0) {
         removeDropzone.classList.remove('drag-active');
-      });
+      }
+    });
+
+    removeDropzone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      removeDragCounter = 0;
+      removeDropzone.classList.remove('drag-active');
     });
 
     removeDropzone.addEventListener('drop', (e) => {

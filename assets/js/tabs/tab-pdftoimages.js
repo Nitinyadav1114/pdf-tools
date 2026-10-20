@@ -21,13 +21,13 @@ export async function handlePdfToImagesFileSelected(file) {
   if (!file) return;
 
   if (!file.type.includes('pdf') && !file.name.toLowerCase().endsWith('.pdf')) {
-    alert('Please upload a valid PDF file.');
+    showToast('Please upload a valid PDF file.', 'warning');
     return;
   }
 
   const isGenuinePdf = await isValidPdfFile(file);
   if (!isGenuinePdf) {
-    alert(`Security Warning: "${file.name}" is not a genuine or valid PDF document (missing %PDF- header). Upload rejected.`);
+    showToast(`Security Warning: "${file.name}" is not a genuine PDF document. Upload rejected.`, 'error');
     return;
   }
 
@@ -44,7 +44,7 @@ export async function handlePdfToImagesFileSelected(file) {
       pdfjsDoc = await pdfjsLib.getDocument({ data: bufferCopy }).promise;
     } catch (loadErr) {
       if (isPasswordProtectedError(loadErr)) {
-        alert('🔒 This PDF document is password-protected or encrypted. Please remove password protection before converting.');
+        showToast('🔒 Document is encrypted. Please remove password protection before converting.', 'error');
         return;
       }
       throw loadErr;
@@ -76,14 +76,14 @@ export async function handlePdfToImagesFileSelected(file) {
     if (elements.pdfToImagesProgressContainer) elements.pdfToImagesProgressContainer.classList.add('hidden');
   } catch (err) {
     console.error('Failed to load PDF for images conversion:', err);
-    alert('Failed to load PDF: ' + (err.message || 'Unknown error'));
+    showToast('Failed to load PDF: ' + (err.message || 'Unknown error'), 'error');
   }
 }
 
 export async function convertPdfToImages() {
   if (elements.pdfToImagesExecuteBtn && elements.pdfToImagesExecuteBtn.disabled) return;
   if (!pdfToImagesState.pdfjsDoc) {
-    alert('Please upload a PDF document first.');
+    showToast('Please upload a PDF document first.', 'warning');
     return;
   }
 
@@ -95,7 +95,7 @@ export async function convertPdfToImages() {
     const pageSet = parsePageInput(inputStr, pdfToImagesState.totalPages);
     targetPages = Array.from(pageSet).sort((a, b) => a - b);
     if (targetPages.length === 0) {
-      alert('Please specify valid page numbers to convert (e.g. 1, 3, 5-8).');
+      showToast('Please specify valid page numbers to convert (e.g. 1, 3, 5-8).', 'warning');
       return;
     }
   }
@@ -115,6 +115,12 @@ export async function convertPdfToImages() {
   if (!window.pdfjsLib) {
     throw new Error('PDF.js engine could not be loaded.');
   }
+  // Clean up previous image blob URLs from memory
+  pdfToImagesState.images.forEach((img) => {
+    if (img.dataUrl) URL.revokeObjectURL(img.dataUrl);
+  });
+  pdfToImagesState.images = [];
+
   const total = targetPages.length;
   const generatedImages = [];
 
@@ -198,7 +204,7 @@ export async function convertPdfToImages() {
       if (elements.pdfToImagesProgressContainer) elements.pdfToImagesProgressContainer.classList.add('hidden');
     } else {
       console.error('Error converting PDF to images:', err);
-      alert('Failed to convert PDF to images: ' + (err.message || 'Unknown error'));
+      showToast('Failed to convert PDF to images: ' + (err.message || 'Unknown error'), 'error');
       if (elements.pdfToImagesProgressContainer) elements.pdfToImagesProgressContainer.classList.add('hidden');
     }
   } finally {
@@ -265,7 +271,7 @@ export function showPdfImagePreviewModal(img) {
 
 export async function downloadAllPdfImagesZip() {
   if (!pdfToImagesState.images || pdfToImagesState.images.length === 0) {
-    alert('No converted images available.');
+    showToast('No converted images available.', 'warning');
     return;
   }
 
@@ -302,7 +308,7 @@ export async function downloadAllPdfImagesZip() {
     trackToolUsage('pdftoimages_zip_downloaded');
   } catch (err) {
     console.error('Failed to create ZIP:', err);
-    alert('Failed to generate ZIP archive: ' + (err.message || 'Unknown error'));
+    showToast('Failed to generate ZIP archive: ' + (err.message || 'Unknown error'), 'error');
   } finally {
     if (elements.pdfToImagesDownloadZipBtn) {
       elements.pdfToImagesDownloadZipBtn.disabled = false;
@@ -320,7 +326,7 @@ export async function downloadAllPdfImagesZip() {
 
 export async function sharePdfImages() {
   if (!pdfToImagesState.images || pdfToImagesState.images.length === 0) {
-    alert('No converted images to share.');
+    showToast('No converted images to share.', 'warning');
     return;
   }
 
@@ -335,6 +341,9 @@ export async function sharePdfImages() {
 }
 
 export function resetPdfToImages() {
+  if (pdfToImagesState.pdfjsDoc) {
+    pdfToImagesState.pdfjsDoc.destroy().catch(() => {});
+  }
   pdfToImagesState.file = null;
   pdfToImagesState.arrayBuffer = null;
   pdfToImagesState.pdfjsDoc = null;
@@ -389,21 +398,34 @@ export function initPdfToImagesTab() {
       }
     });
 
-    ['dragenter', 'dragover'].forEach((eventName) => {
-      pdfToImagesDropzone.addEventListener(eventName, (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        ensurePdfJsLoaded().catch(() => {});
-        pdfToImagesDropzone.classList.add('drag-active');
-      });
+    let pdftoimagesDragCounter = 0;
+    pdfToImagesDropzone.addEventListener('dragenter', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      ensurePdfJsLoaded().catch(() => {});
+      pdftoimagesDragCounter++;
+      pdfToImagesDropzone.classList.add('drag-active');
     });
 
-    ['dragleave', 'drop'].forEach((eventName) => {
-      pdfToImagesDropzone.addEventListener(eventName, (e) => {
-        e.preventDefault();
-        e.stopPropagation();
+    pdfToImagesDropzone.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+    });
+
+    pdfToImagesDropzone.addEventListener('dragleave', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      pdftoimagesDragCounter = Math.max(0, pdftoimagesDragCounter - 1);
+      if (pdftoimagesDragCounter === 0) {
         pdfToImagesDropzone.classList.remove('drag-active');
-      });
+      }
+    });
+
+    pdfToImagesDropzone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      pdftoimagesDragCounter = 0;
+      pdfToImagesDropzone.classList.remove('drag-active');
     });
 
     pdfToImagesDropzone.addEventListener('drop', (e) => {

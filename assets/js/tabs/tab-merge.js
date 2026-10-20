@@ -11,7 +11,8 @@ import {
   escapeHtml,
   isPasswordProtectedError,
   handleSharePdf,
-  trackToolUsage
+  trackToolUsage,
+  showToast
 } from '../core/utils.js';
 import { isValidPdfFile } from '../core/validators.js';
 import { ensureAllPdfEngines, ensurePdfLibLoaded } from '../core/engine-loader.js';
@@ -48,14 +49,14 @@ export async function handleMergeFilesAdded(fileList) {
   }
 
   if (invalidFiles.length > 0 && validPdfs.length === 0) {
-    alert(`Security Warning: The selected file(s) [${invalidFiles.join(', ')}] are not genuine or valid PDF documents. Upload rejected.`);
+    showToast(`Security Warning: Excluded invalid or non-PDF files: [${invalidFiles.join(', ')}]`, 'error');
     return;
   } else if (invalidFiles.length > 0) {
-    alert(`Security Notice: Excluded invalid or non-PDF file(s): ${invalidFiles.join(', ')}`);
+    showToast(`Security Notice: Excluded invalid file(s): ${invalidFiles.join(', ')}`, 'info');
   }
 
   if (validPdfs.length === 0) {
-    alert('Please select valid PDF files.');
+    showToast('Please select valid PDF files.', 'warning');
     return;
   }
 
@@ -100,9 +101,10 @@ async function processMergeMetadata() {
         }
 
         if (window.pdfjsLib) {
+          let pdfDoc = null;
           try {
             const loadingTask = pdfjsLib.getDocument({ data: new Uint8Array(arrayBuffer.slice(0)) });
-            const pdfDoc = await loadingTask.promise;
+            pdfDoc = await loadingTask.promise;
             if (item.pageCount === null) item.pageCount = pdfDoc.numPages;
 
             const page = await pdfDoc.getPage(1);
@@ -113,8 +115,12 @@ async function processMergeMetadata() {
             const ctx = canvas.getContext('2d');
             await page.render({ canvasContext: ctx, viewport }).promise;
             item.thumbnailUrl = canvas.toDataURL('image/jpeg', 0.8);
+            canvas.width = 0;
+            canvas.height = 0;
           } catch (pe) {
             console.warn('PDF.js thumbnail warning:', pe);
+          } finally {
+            if (pdfDoc) pdfDoc.destroy().catch(() => {});
           }
         }
       } catch (err) {
@@ -359,13 +365,13 @@ function updateMergeSummaryStats() {
 export async function mergePdfs() {
   if (elements.mergeBtn && elements.mergeBtn.disabled) return;
   if (mergeState.files.length < 2) {
-    alert('Please add at least 2 PDF files to merge.');
+    showToast('Please add at least 2 PDF files to merge.', 'warning');
     return;
   }
 
   await ensurePdfLibLoaded().catch(() => {});
   if (!window.PDFLib) {
-    alert('PDF-Lib is not loaded. Please check your local files.');
+    showToast('PDF-Lib engine could not be loaded.', 'error');
     return;
   }
 
@@ -455,7 +461,7 @@ export async function mergePdfs() {
       return;
     }
     console.error('Merge error:', err);
-    alert('Failed to merge PDFs: ' + (err.message || 'Unknown error occurred'));
+    showToast('Failed to merge PDFs: ' + (err.message || 'Unknown error occurred'), 'error');
   } finally {
     mergeState.isCancelled = false;
     if (elements.mergeBtn) elements.mergeBtn.disabled = false;
@@ -505,21 +511,34 @@ export function initMergeTab(switchTab, handleCompressFileSelected) {
       }
     });
 
-    ['dragenter', 'dragover'].forEach((eventName) => {
-      dropzone.addEventListener(eventName, (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        ensureAllPdfEngines().catch(() => {});
-        dropzone.classList.add('drag-active');
-      });
+    let mergeDragCounter = 0;
+    dropzone.addEventListener('dragenter', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      ensureAllPdfEngines().catch(() => {});
+      mergeDragCounter++;
+      dropzone.classList.add('drag-active');
     });
 
-    ['dragleave', 'drop'].forEach((eventName) => {
-      dropzone.addEventListener(eventName, (e) => {
-        e.preventDefault();
-        e.stopPropagation();
+    dropzone.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+    });
+
+    dropzone.addEventListener('dragleave', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      mergeDragCounter = Math.max(0, mergeDragCounter - 1);
+      if (mergeDragCounter === 0) {
         dropzone.classList.remove('drag-active');
-      });
+      }
+    });
+
+    dropzone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      mergeDragCounter = 0;
+      dropzone.classList.remove('drag-active');
     });
 
     dropzone.addEventListener('drop', (e) => {

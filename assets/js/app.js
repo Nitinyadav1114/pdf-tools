@@ -26,7 +26,8 @@ import {
   initShareModal,
   openShareModal,
   closeShareModal,
-  toggleThemeWithTransition
+  toggleThemeWithTransition,
+  showToast
 } from './core/utils.js';
 import { isValidPdfFile, isValidImageFile } from './core/validators.js';
 import { createZipArchive } from './core/zip-builder.js';
@@ -90,6 +91,7 @@ if (typeof window !== 'undefined') {
   window.ensureAllPdfEngines = ensureAllPdfEngines;
   window.preloadEngineForTool = preloadEngineForTool;
   window.toggleThemeWithTransition = toggleThemeWithTransition;
+  window.showToast = showToast;
 }
 
 export {

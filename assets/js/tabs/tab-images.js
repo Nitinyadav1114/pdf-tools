@@ -9,7 +9,8 @@ import {
   formatBytes,
   escapeHtml,
   handleSharePdf,
-  trackToolUsage
+  trackToolUsage,
+  showToast
 } from '../core/utils.js';
 import { isValidImageFile } from '../core/validators.js';
 import { ensurePdfLibLoaded } from '../core/engine-loader.js';
@@ -40,14 +41,14 @@ export async function handleImageFilesAdded(fileList) {
   }
 
   if (invalidImages.length > 0 && validImages.length === 0) {
-    alert(`Security Warning: The selected file(s) [${invalidImages.join(', ')}] are not genuine image files (corrupted or unrecognized format). Upload rejected.`);
+    showToast(`Security Warning: Excluded invalid or non-image files: [${invalidImages.join(', ')}]`, 'error');
     return;
   } else if (invalidImages.length > 0) {
-    alert(`Security Notice: Excluded invalid or corrupted image file(s): ${invalidImages.join(', ')}`);
+    showToast(`Security Notice: Excluded invalid image file(s): ${invalidImages.join(', ')}`, 'info');
   }
 
   if (validImages.length === 0) {
-    alert('Please select valid image files (JPG, PNG, WebP, GIF, BMP).');
+    showToast('Please select valid image files (JPG, PNG, WebP, GIF, BMP).', 'warning');
     return;
   }
 
@@ -212,7 +213,7 @@ export function clearAllImages() {
 export async function executeImagesToPDF() {
   if (elements.executeImagesBtn && elements.executeImagesBtn.disabled) return;
   if (!imagesState.images || imagesState.images.length === 0) {
-    alert('Please add at least one image to convert.');
+    showToast('Please add at least one image to convert.', 'warning');
     return;
   }
 
@@ -385,7 +386,7 @@ export async function executeImagesToPDF() {
       return;
     }
     console.error('Error converting images to PDF:', err);
-    alert('Failed to convert images: ' + (err.message || 'Unknown error'));
+    showToast('Failed to convert images: ' + (err.message || 'Unknown error'), 'error');
   } finally {
     offCanvas.width = 0;
     offCanvas.height = 0;
@@ -457,21 +458,34 @@ export function initImagesTab(switchTab, handleCompressFileSelected) {
       }
     });
 
-    ['dragenter', 'dragover'].forEach((eventName) => {
-      imagesDropzone.addEventListener(eventName, (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        ensurePdfLibLoaded().catch(() => {});
-        imagesDropzone.classList.add('drag-active');
-      });
+    let imagesDragCounter = 0;
+    imagesDropzone.addEventListener('dragenter', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      ensurePdfLibLoaded().catch(() => {});
+      imagesDragCounter++;
+      imagesDropzone.classList.add('drag-active');
     });
 
-    ['dragleave', 'drop'].forEach((eventName) => {
-      imagesDropzone.addEventListener(eventName, (e) => {
-        e.preventDefault();
-        e.stopPropagation();
+    imagesDropzone.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+    });
+
+    imagesDropzone.addEventListener('dragleave', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      imagesDragCounter = Math.max(0, imagesDragCounter - 1);
+      if (imagesDragCounter === 0) {
         imagesDropzone.classList.remove('drag-active');
-      });
+      }
+    });
+
+    imagesDropzone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      imagesDragCounter = 0;
+      imagesDropzone.classList.remove('drag-active');
     });
 
     imagesDropzone.addEventListener('drop', (e) => {

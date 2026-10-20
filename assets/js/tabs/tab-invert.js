@@ -19,13 +19,13 @@ import { ensureAllPdfEngines, ensurePdfJsLoaded } from '../core/engine-loader.js
 export async function handleInvertFileSelected(file) {
   if (!file) return;
   if (file.type !== 'application/pdf' && !file.name.toLowerCase().endsWith('.pdf')) {
-    alert('Please upload a valid PDF document.');
+    showToast('Please upload a valid PDF document.', 'warning');
     return;
   }
 
   const isGenuinePdf = await isValidPdfFile(file);
   if (!isGenuinePdf) {
-    alert(`Security Warning: "${file.name}" is not a genuine or valid PDF document (missing %PDF- header). Upload rejected.`);
+    showToast(`Security Warning: "${file.name}" is not a genuine PDF document. Upload rejected.`, 'error');
     return;
   }
 
@@ -36,6 +36,10 @@ export async function handleInvertFileSelected(file) {
     if (elements.invertWorkspace) elements.invertWorkspace.classList.remove('hidden');
     if (elements.invertResultCard) elements.invertResultCard.classList.add('hidden');
 
+    if (invertState.pdfDoc) {
+      invertState.pdfDoc.destroy().catch(() => {});
+      invertState.pdfDoc = null;
+    }
     const arrayBuffer = await file.arrayBuffer();
     invertState.file = file;
     invertState.arrayBuffer = arrayBuffer;
@@ -60,17 +64,20 @@ export async function handleInvertFileSelected(file) {
     updateInvertHint();
   } catch (err) {
     if (isPasswordProtectedError(err)) {
-      alert('🔒 This PDF document is password-protected or encrypted.\nPlease remove password protection before uploading it.');
+      showToast('🔒 Document is encrypted. Please remove password protection before inverting.', 'error');
       resetInvertWorkspace();
       return;
     }
     console.error('Error loading PDF for inversion:', err);
-    alert('Could not open PDF document: ' + (err.message || 'Unknown error'));
+    showToast('Could not open PDF document: ' + (err.message || 'Unknown error'), 'error');
     resetInvertWorkspace();
   }
 }
 
 export function resetInvertWorkspace() {
+  if (invertState.pdfDoc) {
+    invertState.pdfDoc.destroy().catch(() => {});
+  }
   invertState.file = null;
   invertState.arrayBuffer = null;
   invertState.pdfDoc = null;
@@ -349,13 +356,13 @@ export function updateInvertHint() {
 export async function executeInvertPdf() {
   if (elements.executeInvertBtn && elements.executeInvertBtn.disabled) return;
   if (!invertState.file || invertState.totalPages === 0) {
-    alert('Please upload a PDF document first.');
+    showToast('Please upload a PDF document first.', 'warning');
     return;
   }
 
   await ensureAllPdfEngines().catch(() => {});
   if (!window.PDFLib || !window.pdfjsLib) {
-    alert('PDF libraries are not loaded.');
+    showToast('PDF libraries are not loaded.', 'error');
     return;
   }
 
@@ -514,7 +521,7 @@ export async function executeInvertPdf() {
       return;
     }
     console.error('Error inverting PDF:', err);
-    alert('Failed to invert PDF: ' + (err.message || 'Unknown error'));
+    showToast('Failed to invert PDF: ' + (err.message || 'Unknown error'), 'error');
   } finally {
     offCanvas.width = 0;
     offCanvas.height = 0;
@@ -568,21 +575,34 @@ export function initInvertTab(switchTab) {
       }
     });
 
-    ['dragenter', 'dragover'].forEach((eventName) => {
-      invertDropzone.addEventListener(eventName, (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        ensureAllPdfEngines().catch(() => {});
-        invertDropzone.classList.add('drag-active');
-      });
+    let invertDragCounter = 0;
+    invertDropzone.addEventListener('dragenter', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      ensureAllPdfEngines().catch(() => {});
+      invertDragCounter++;
+      invertDropzone.classList.add('drag-active');
     });
 
-    ['dragleave', 'drop'].forEach((eventName) => {
-      invertDropzone.addEventListener(eventName, (e) => {
-        e.preventDefault();
-        e.stopPropagation();
+    invertDropzone.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+    });
+
+    invertDropzone.addEventListener('dragleave', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      invertDragCounter = Math.max(0, invertDragCounter - 1);
+      if (invertDragCounter === 0) {
         invertDropzone.classList.remove('drag-active');
-      });
+      }
+    });
+
+    invertDropzone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      invertDragCounter = 0;
+      invertDropzone.classList.remove('drag-active');
     });
 
     invertDropzone.addEventListener('drop', (e) => {

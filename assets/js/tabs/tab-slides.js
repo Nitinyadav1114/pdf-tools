@@ -47,16 +47,20 @@ export const MARGIN_CONFIG = {
 
 export async function handleSlidesFileSelected(file) {
   if (!file || (file.type !== 'application/pdf' && !file.name.toLowerCase().endsWith('.pdf'))) {
-    alert('Please select a valid PDF file.');
+    showToast('Please select a valid PDF file.', 'warning');
     return;
   }
 
   const isGenuinePdf = await isValidPdfFile(file);
   if (!isGenuinePdf) {
-    alert(`Security Warning: "${file.name}" is not a genuine or valid PDF document (missing %PDF- header). Upload rejected.`);
+    showToast(`Security Warning: "${file.name}" is not a genuine PDF document. Upload rejected.`, 'error');
     return;
   }
 
+  if (slidesState.pdfDoc) {
+    slidesState.pdfDoc.destroy().catch(() => {});
+    slidesState.pdfDoc = null;
+  }
   slidesState.file = file;
   slidesState.previewThumbnails = {};
   if (elements.slidesResultCard) elements.slidesResultCard.classList.add('hidden');
@@ -107,6 +111,8 @@ export async function handleSlidesFileSelected(file) {
               const ctx = canvas.getContext('2d');
               await page.render({ canvasContext: ctx, viewport }).promise;
               slidesState.previewThumbnails[s] = canvas.toDataURL('image/jpeg', 0.8);
+              canvas.width = 0;
+              canvas.height = 0;
             } catch (err) {
               console.warn('Slide thumbnail preview error:', err);
             }
@@ -117,17 +123,20 @@ export async function handleSlidesFileSelected(file) {
     }
   } catch (err) {
     if (isPasswordProtectedError(err)) {
-      alert('🔒 This presentation PDF is password-protected or encrypted.\nPlease remove password protection before uploading it.');
+      showToast('🔒 Presentation is encrypted. Please remove password protection before uploading.', 'error');
       resetSlidesWorkspace();
       return;
     }
     console.error('Failed to load presentation:', err);
-    alert('Could not open presentation: ' + (err.message || 'Unknown error'));
+    showToast('Could not open presentation: ' + (err.message || 'Unknown error'), 'error');
     resetSlidesWorkspace();
   }
 }
 
 export function resetSlidesWorkspace() {
+  if (slidesState.pdfDoc) {
+    slidesState.pdfDoc.destroy().catch(() => {});
+  }
   slidesState.file = null;
   slidesState.arrayBuffer = null;
   slidesState.pdfDoc = null;
@@ -272,13 +281,13 @@ export function renderA4SheetPreview() {
 export async function executeGenerateSlidesA4() {
   if (elements.executeSlidesBtn && elements.executeSlidesBtn.disabled) return;
   if (!slidesState.file || slidesState.totalSlides === 0) {
-    alert('Please upload a presentation PDF first.');
+    showToast('Please upload a presentation PDF first.', 'warning');
     return;
   }
 
   await ensurePdfLibLoaded().catch(() => {});
   if (!window.PDFLib) {
-    alert('PDF-Lib is not loaded.');
+    showToast('PDF-Lib engine is not loaded.', 'error');
     return;
   }
 
@@ -626,7 +635,7 @@ export async function executeGenerateSlidesA4() {
       return;
     }
     console.error('Error generating A4 handout:', err);
-    alert('Failed to generate A4 handout: ' + (err.message || 'Unknown error'));
+    showToast('Failed to generate handout: ' + (err.message || 'Unknown error'), 'error');
   } finally {
     slidesState.isCancelled = false;
     if (elements.executeSlidesBtn) elements.executeSlidesBtn.disabled = false;
@@ -675,21 +684,34 @@ export function initSlidesTab(switchTab, handleInvertFileSelected) {
       }
     });
 
-    ['dragenter', 'dragover'].forEach((eventName) => {
-      slidesDropzone.addEventListener(eventName, (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        ensureAllPdfEngines().catch(() => {});
-        slidesDropzone.classList.add('drag-active');
-      });
+    let slidesDragCounter = 0;
+    slidesDropzone.addEventListener('dragenter', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      ensureAllPdfEngines().catch(() => {});
+      slidesDragCounter++;
+      slidesDropzone.classList.add('drag-active');
     });
 
-    ['dragleave', 'drop'].forEach((eventName) => {
-      slidesDropzone.addEventListener(eventName, (e) => {
-        e.preventDefault();
-        e.stopPropagation();
+    slidesDropzone.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+    });
+
+    slidesDropzone.addEventListener('dragleave', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      slidesDragCounter = Math.max(0, slidesDragCounter - 1);
+      if (slidesDragCounter === 0) {
         slidesDropzone.classList.remove('drag-active');
-      });
+      }
+    });
+
+    slidesDropzone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      slidesDragCounter = 0;
+      slidesDropzone.classList.remove('drag-active');
     });
 
     slidesDropzone.addEventListener('drop', (e) => {

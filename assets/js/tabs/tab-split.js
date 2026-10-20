@@ -69,16 +69,19 @@ export function parseRangeGroups(inputStr, totalPages) {
 
 export async function handleSplitFileSelected(file) {
   if (!file || (file.type !== 'application/pdf' && !file.name.toLowerCase().endsWith('.pdf'))) {
-    alert('Please select a valid PDF file.');
+    showToast('Please select a valid PDF file.', 'warning');
     return;
   }
 
   const isGenuinePdf = await isValidPdfFile(file);
   if (!isGenuinePdf) {
-    alert(`Security Warning: "${file.name}" is not a genuine or valid PDF document (missing %PDF- header). Upload rejected.`);
+    showToast(`Security Warning: "${file.name}" is not a genuine PDF document. Upload rejected.`, 'error');
     return;
   }
 
+  if (splitState.outputUrl) {
+    URL.revokeObjectURL(splitState.outputUrl);
+  }
   splitState.file = file;
   splitState.outputBlob = null;
   splitState.outputUrl = null;
@@ -131,17 +134,20 @@ export async function handleSplitFileSelected(file) {
     }
   } catch (err) {
     if (isPasswordProtectedError(err)) {
-      alert('🔒 This PDF document is password-protected or encrypted.\nPlease unlock or remove the password before splitting.');
+      showToast('🔒 Document is encrypted. Please remove password protection before splitting.', 'error');
       resetSplitWorkspace();
       return;
     }
     console.error('Failed to load PDF for split:', err);
-    alert('Could not open this PDF: ' + (err.message || 'Unknown error'));
+    showToast('Could not open this PDF: ' + (err.message || 'Unknown error'), 'error');
     resetSplitWorkspace();
   }
 }
 
 export function resetSplitWorkspace() {
+  if (splitState.outputUrl) {
+    URL.revokeObjectURL(splitState.outputUrl);
+  }
   splitState.file = null;
   splitState.arrayBuffer = null;
   splitState.srcDoc = null;
@@ -160,7 +166,7 @@ export function resetSplitWorkspace() {
 
 export async function executeSplit(switchTab, handleCompressFileSelected) {
   if (!splitState.arrayBuffer || !splitState.srcDoc || splitState.totalPages === 0) {
-    alert('Please select a valid PDF file first.');
+    showToast('Please select a valid PDF file first.', 'warning');
     return;
   }
 
@@ -421,7 +427,7 @@ export async function executeSplit(switchTab, handleCompressFileSelected) {
       return;
     }
     console.error('Split failed:', err);
-    alert('Split failed: ' + (err.message || 'Unknown error'));
+    showToast('Split failed: ' + (err.message || 'Unknown error'), 'error');
     if (splitProgressContainer) splitProgressContainer.classList.add('hidden');
   } finally {
     splitState.isProcessing = false;
@@ -470,7 +476,7 @@ export function initSplitTab(switchTab, handleCompressFileSelected) {
       if (files.length > 0) {
         handleSplitFileSelected(files[0]);
       } else {
-        alert('Please drop a valid PDF file.');
+        showToast('Please drop a valid PDF file.', 'warning');
       }
     });
 
