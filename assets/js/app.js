@@ -25,7 +25,8 @@ import {
   handleSharePdf,
   initShareModal,
   openShareModal,
-  closeShareModal
+  closeShareModal,
+  toggleThemeWithTransition
 } from './core/utils.js';
 import { isValidPdfFile, isValidImageFile } from './core/validators.js';
 import { createZipArchive } from './core/zip-builder.js';
@@ -88,6 +89,7 @@ if (typeof window !== 'undefined') {
   window.ensurePdfJsLoaded = ensurePdfJsLoaded;
   window.ensureAllPdfEngines = ensureAllPdfEngines;
   window.preloadEngineForTool = preloadEngineForTool;
+  window.toggleThemeWithTransition = toggleThemeWithTransition;
 }
 
 export {
@@ -312,9 +314,8 @@ export async function init() {
   });
 
   if (mobileNavThemeBtn) {
-    mobileNavThemeBtn.addEventListener('click', () => {
-      const themeToggle = document.getElementById('themeToggleBtn');
-      if (themeToggle) themeToggle.click();
+    mobileNavThemeBtn.addEventListener('click', (e) => {
+      toggleThemeWithTransition(e);
     });
   }
 

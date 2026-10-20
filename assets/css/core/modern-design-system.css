@@ -2074,3 +2074,90 @@ body.theme-dark .mobile-drawer-tool-item {
   background: linear-gradient(135deg, #6366f1, #4338ca) !important;
   color: #ffffff !important;
 }
+
+/* ==========================================================================
+   PHASE 5: APPLE-STYLE ODOMETER TICKER & VIEW TRANSITIONS THEME MORPH
+   ========================================================================== */
+
+/* 1. Apple-Style Mechanical Odometer Rolling Ticker */
+.odometer-wrap {
+  display: inline-flex;
+  align-items: baseline;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+
+.odometer-digit-box {
+  display: inline-block;
+  height: 1.22em;
+  line-height: 1.22em;
+  overflow: hidden;
+  position: relative;
+  vertical-align: baseline;
+  text-align: center;
+  min-width: 0.62em;
+}
+
+.odometer-strip {
+  display: flex;
+  flex-direction: column;
+  transform: translateY(calc(var(--digit, 0) * -1.22em));
+  transition: transform 0.85s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform;
+}
+
+.odometer-strip span {
+  height: 1.22em;
+  line-height: 1.22em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.odometer-symbol {
+  display: inline-block;
+  margin: 0 0.04em;
+}
+
+/* 2. Pulsing Live Impact Status Dot */
+.live-impact-pulse {
+  position: relative;
+  display: inline-flex;
+  border-radius: 9999px;
+}
+
+.live-impact-pulse::after {
+  content: '';
+  position: absolute;
+  inset: -3px;
+  border-radius: 9999px;
+  background: rgba(16, 185, 129, 0.45);
+  animation: live-heartbeat-glow 2.2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  pointer-events: none;
+}
+
+@keyframes live-heartbeat-glow {
+  0%, 100% {
+    transform: scale(0.9);
+    opacity: 0.25;
+  }
+  50% {
+    transform: scale(1.65);
+    opacity: 0.75;
+  }
+}
+
+/* 3. View Transitions API Circular Ripple Morph */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+::view-transition-old(root) {
+  z-index: 1;
+}
+
+::view-transition-new(root) {
+  z-index: 9999;
+}

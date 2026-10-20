@@ -347,6 +347,72 @@ export function trackToolUsage(toolName, eventType = 'used', count = 1) {
 }
 
 /**
+ * Toggle Light / Dark theme with modern View Transitions circular ripple morph
+ */
+export function toggleThemeWithTransition(event) {
+  const isLight = document.body.classList.contains('theme-light');
+  const newTheme = isLight ? 'theme-dark' : 'theme-light';
+
+  function applyThemeChange() {
+    document.body.classList.toggle('theme-dark', newTheme === 'theme-dark');
+    document.body.classList.toggle('theme-light', newTheme !== 'theme-dark');
+    if (typeof document !== 'undefined' && document.documentElement) {
+      document.documentElement.classList.toggle('dark', newTheme === 'theme-dark');
+    }
+    localStorage.setItem('pdf_merger_theme', newTheme);
+  }
+
+  // Check if browser supports View Transitions API and user hasn't requested reduced motion
+  const prefersReducedMotion = typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (!document.startViewTransition || prefersReducedMotion) {
+    applyThemeChange();
+    return;
+  }
+
+  // Origin coordinates of toggle click/tap
+  let x = window.innerWidth / 2;
+  let y = 40;
+  if (event && event.clientX) {
+    x = event.clientX;
+    y = event.clientY;
+  } else {
+    const btn = document.getElementById('themeToggleBtn');
+    if (btn) {
+      const rect = btn.getBoundingClientRect();
+      x = rect.left + rect.width / 2;
+      y = rect.top + rect.height / 2;
+    }
+  }
+
+  const endRadius = Math.hypot(
+    Math.max(x, window.innerWidth - x),
+    Math.max(y, window.innerHeight - y)
+  );
+
+  const transition = document.startViewTransition(() => {
+    applyThemeChange();
+  });
+
+  if (transition && transition.ready) {
+    transition.ready.then(() => {
+      document.documentElement.animate(
+        {
+          clipPath: [
+            `circle(0px at ${x}px ${y}px)`,
+            `circle(${endRadius}px at ${x}px ${y}px)`
+          ]
+        },
+        {
+          duration: 480,
+          easing: 'cubic-bezier(0.16, 1, 0.3, 1)',
+          pseudoElement: '::view-transition-new(root)'
+        }
+      );
+    }).catch(() => {});
+  }
+}
+
+/**
  * Initialize Light / Dark theme toggling
  */
 export function initTheme() {
@@ -358,15 +424,8 @@ export function initTheme() {
   }
   const themeToggleBtn = document.getElementById('themeToggleBtn');
   if (themeToggleBtn) {
-    themeToggleBtn.addEventListener('click', () => {
-      const isLight = document.body.classList.contains('theme-light');
-      const newTheme = isLight ? 'theme-dark' : 'theme-light';
-      document.body.classList.toggle('theme-dark', newTheme === 'theme-dark');
-      document.body.classList.toggle('theme-light', newTheme !== 'theme-dark');
-      if (document.documentElement) {
-        document.documentElement.classList.toggle('dark', newTheme === 'theme-dark');
-      }
-      localStorage.setItem('pdf_merger_theme', newTheme);
+    themeToggleBtn.addEventListener('click', (e) => {
+      toggleThemeWithTransition(e);
     });
   }
 }

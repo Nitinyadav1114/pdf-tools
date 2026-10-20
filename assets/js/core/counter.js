@@ -31,6 +31,80 @@ export function formatStatNumber(num) {
 }
 
 /**
+ * Renders or updates an Apple-style mechanical odometer ticker
+ */
+export function renderOdometer(container, targetNumber) {
+  if (!container || typeof targetNumber !== 'number' || isNaN(targetNumber)) return;
+
+  const formattedStr = targetNumber.toLocaleString() + '+';
+  container.setAttribute('aria-label', formattedStr);
+
+  let wrap = container.querySelector('.odometer-wrap');
+  if (!wrap) {
+    container.innerHTML = '';
+    wrap = document.createElement('span');
+    wrap.className = 'odometer-wrap';
+    container.appendChild(wrap);
+  }
+
+  const chars = formattedStr.split('');
+  const existingStrips = wrap.querySelectorAll('.odometer-strip');
+  const digitChars = chars.filter((c) => /\d/.test(c));
+
+  // If existing strips match the digit count, smoothly update their target digits
+  if (existingStrips.length === digitChars.length && existingStrips.length > 0) {
+    let digitIdx = 0;
+    chars.forEach((char) => {
+      if (/\d/.test(char)) {
+        const strip = existingStrips[digitIdx];
+        if (strip) {
+          strip.style.transitionDelay = `${digitIdx * 35}ms`;
+          strip.style.setProperty('--digit', char);
+        }
+        digitIdx++;
+      }
+    });
+    return;
+  }
+
+  // Otherwise, construct digit boxes and animate from 0 to target
+  wrap.innerHTML = '';
+  let digitIdx = 0;
+  chars.forEach((char) => {
+    if (/\d/.test(char)) {
+      const digit = parseInt(char, 10);
+      const digitBox = document.createElement('span');
+      digitBox.className = 'odometer-digit-box';
+
+      const strip = document.createElement('span');
+      strip.className = 'odometer-strip';
+      strip.style.setProperty('--digit', '0');
+      strip.style.transitionDelay = `${digitIdx * 45}ms`;
+
+      for (let i = 0; i <= 9; i++) {
+        const span = document.createElement('span');
+        span.textContent = i;
+        strip.appendChild(span);
+      }
+
+      digitBox.appendChild(strip);
+      wrap.appendChild(digitBox);
+      digitIdx++;
+
+      // Trigger the slide
+      requestAnimationFrame(() => {
+        strip.style.setProperty('--digit', String(digit));
+      });
+    } else {
+      const symbolSpan = document.createElement('span');
+      symbolSpan.className = 'odometer-symbol';
+      symbolSpan.textContent = char;
+      wrap.appendChild(symbolSpan);
+    }
+  });
+}
+
+/**
  * Update the DOM elements displaying the stats
  */
 export function updateStatsUI(stats, animateProcessed = false) {
@@ -39,11 +113,11 @@ export function updateStatsUI(stats, animateProcessed = false) {
   const processedEl = document.getElementById('statProcessedCount');
 
   if (visitorsEl && typeof stats.visitors === 'number') {
-    visitorsEl.textContent = formatStatNumber(stats.visitors);
+    renderOdometer(visitorsEl, stats.visitors);
   }
 
   if (processedEl && typeof stats.processed === 'number') {
-    processedEl.textContent = formatStatNumber(stats.processed);
+    renderOdometer(processedEl, stats.processed);
     if (animateProcessed) {
       processedEl.classList.remove('stat-pulse-highlight');
       // Trigger reflow to restart CSS animation
