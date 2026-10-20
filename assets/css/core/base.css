@@ -8,6 +8,7 @@ body {
   font-family: var(--font-sans);
   background-color: var(--bg-app);
   background-image: var(--bg-mesh);
+  background-size: var(--bg-mesh-size, auto);
   background-attachment: fixed;
   color: var(--text-main);
   line-height: 1.5;
@@ -138,10 +139,10 @@ body {
   border-color: var(--border-hover);
 }
 
-body.theme-light .dark-icon { display: none; }
-body.theme-light .light-icon { display: inline-block; }
-body.theme-dark .light-icon { display: none; }
-body.theme-dark .dark-icon { display: inline-block; }
+body.theme-light .dark-icon { display: none !important; }
+body.theme-light .light-icon { display: inline-block !important; }
+body.theme-dark .light-icon, html.dark .light-icon { display: none !important; }
+body.theme-dark .dark-icon, html.dark .dark-icon { display: inline-block !important; }
 
 /* Utilities */
 .hidden {

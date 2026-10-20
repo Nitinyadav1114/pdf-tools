@@ -30,7 +30,8 @@
 
 body.theme-light {
   --bg-app: #f8fafc;
-  --bg-mesh: radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.08) 0px, transparent 50%), radial-gradient(at 100% 100%, rgba(16, 185, 129, 0.05) 0px, transparent 50%);
+  --bg-mesh: radial-gradient(rgba(100, 116, 139, 0.12) 1px, transparent 1px), radial-gradient(at 15% 15%, rgba(99, 102, 241, 0.08) 0px, transparent 50%), radial-gradient(at 85% 85%, rgba(16, 185, 129, 0.06) 0px, transparent 50%);
+  --bg-mesh-size: 24px 24px, 100% 100%, 100% 100%;
   --bg-main: #f8fafc;
   --bg-card: rgba(255, 255, 255, 0.85);
   --bg-card-secondary: #f1f5f9;
@@ -52,7 +53,8 @@ html.dark {
   --primary: #818cf8;
   --primary-hover: #a5b4fc;
   --bg-app: #0a0f1d;
-  --bg-mesh: radial-gradient(at 50% 0%, rgba(79, 70, 229, 0.18) 0px, transparent 65%), radial-gradient(at 100% 100%, rgba(16, 185, 129, 0.06) 0px, transparent 50%);
+  --bg-mesh: radial-gradient(rgba(148, 163, 184, 0.1) 1px, transparent 1px), radial-gradient(at 50% 0%, rgba(79, 70, 229, 0.22) 0px, transparent 65%), radial-gradient(at 100% 100%, rgba(16, 185, 129, 0.08) 0px, transparent 50%);
+  --bg-mesh-size: 24px 24px, 100% 100%, 100% 100%;
   --bg-main: #0a0f1d;
   --bg-card: rgba(19, 27, 46, 0.85);
   --bg-card-secondary: #1a233a;

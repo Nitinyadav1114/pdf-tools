@@ -95,6 +95,16 @@ html.dark .dropzone.drag-active {
   box-shadow: 0 8px 24px var(--tool-pdftoimages-glow);
 }
 
+#splitTabView .dropzone:hover, #splitTabView .dropzone.drag-active {
+  border-color: var(--tool-split, #ea580c);
+  box-shadow: 0 20px 40px -8px var(--tool-split-glow, rgba(234, 88, 12, 0.25));
+}
+#splitTabView .dropzone:hover .dropzone-icon-wrapper, #splitTabView .dropzone.drag-active .dropzone-icon-wrapper {
+  background-color: var(--tool-split, #ea580c);
+  color: #ffffff;
+  box-shadow: 0 8px 24px var(--tool-split-glow, rgba(234, 88, 12, 0.25));
+}
+
 .dropzone:focus-visible {
   outline: 2px solid var(--primary);
   outline-offset: 2px;
