@@ -154,88 +154,102 @@ export function switchTab(tab) {
     appMainSubtitle
   } = elements;
 
-  [tabHomeBtn, tabMergeBtn, tabRemoveBtn, tabSlidesBtn, tabInvertBtn, tabCompressBtn, tabImagesBtn, tabPdfToImagesBtn, tabSplitBtn].forEach((btn) => {
-    if (btn) btn.classList.remove('active');
-  });
+  const performDomUpdate = () => {
+    [tabHomeBtn, tabMergeBtn, tabRemoveBtn, tabSlidesBtn, tabInvertBtn, tabCompressBtn, tabImagesBtn, tabPdfToImagesBtn, tabSplitBtn].forEach((btn) => {
+      if (btn) btn.classList.remove('active');
+    });
 
-  [homeTabView, mergeTabView, removeTabView, slidesTabView, invertTabView, compressTabView, imagesTabView, pdfToImagesTabView, splitTabView].forEach((view) => {
-    if (view) view.classList.add('hidden');
-  });
+    [homeTabView, mergeTabView, removeTabView, slidesTabView, invertTabView, compressTabView, imagesTabView, pdfToImagesTabView, splitTabView].forEach((view) => {
+      if (view) view.classList.add('hidden');
+    });
 
-  let activeBtn = null;
-  if (tab === 'home') {
-    activeBtn = tabHomeBtn;
-    if (tabHomeBtn) tabHomeBtn.classList.add('active');
-    if (homeTabView) homeTabView.classList.remove('hidden');
-    if (appMainSubtitle) appMainSubtitle.textContent = '100% In-Browser & Private PDF Tools • Zero Server Uploads';
-  } else if (tab === 'merge') {
-    activeBtn = tabMergeBtn;
-    if (tabMergeBtn) tabMergeBtn.classList.add('active');
-    if (mergeTabView) mergeTabView.classList.remove('hidden');
-    if (appMainSubtitle) appMainSubtitle.textContent = 'Sort by timestamp or drag & drop to reorder';
-  } else if (tab === 'remove') {
-    activeBtn = tabRemoveBtn;
-    if (tabRemoveBtn) tabRemoveBtn.classList.add('active');
-    if (removeTabView) removeTabView.classList.remove('hidden');
-    if (appMainSubtitle) appMainSubtitle.textContent = 'Select, rotate, and organize pages with live visual preview';
-  } else if (tab === 'slides') {
-    activeBtn = tabSlidesBtn;
-    if (tabSlidesBtn) tabSlidesBtn.classList.add('active');
-    if (slidesTabView) slidesTabView.classList.remove('hidden');
-    if (appMainSubtitle) appMainSubtitle.textContent = 'Fit 3 presentation slides per A4 page for printing & notes';
-  } else if (tab === 'invert') {
-    activeBtn = tabInvertBtn;
-    if (tabInvertBtn) tabInvertBtn.classList.add('active');
-    if (invertTabView) invertTabView.classList.remove('hidden');
-    if (appMainSubtitle) appMainSubtitle.textContent = 'Invert dark PDF pages to clean white paper for hardcopy printing';
-  } else if (tab === 'compress') {
-    activeBtn = tabCompressBtn;
-    if (tabCompressBtn) tabCompressBtn.classList.add('active');
-    if (compressTabView) compressTabView.classList.remove('hidden');
-    if (appMainSubtitle) appMainSubtitle.textContent = 'Compress and shrink large PDF files with zero or visually-lossless quality';
-  } else if (tab === 'images') {
-    activeBtn = tabImagesBtn;
-    if (tabImagesBtn) tabImagesBtn.classList.add('active');
-    if (imagesTabView) imagesTabView.classList.remove('hidden');
-    if (appMainSubtitle) appMainSubtitle.textContent = 'Convert JPG, PNG, and WebP images into a single clean PDF document';
-  } else if (tab === 'pdftoimages') {
-    activeBtn = tabPdfToImagesBtn;
-    if (tabPdfToImagesBtn) tabPdfToImagesBtn.classList.add('active');
-    if (pdfToImagesTabView) pdfToImagesTabView.classList.remove('hidden');
-    if (appMainSubtitle) appMainSubtitle.textContent = 'Convert PDF pages into high-resolution JPG or PNG images & download as ZIP';
-  } else if (tab === 'split') {
-    activeBtn = tabSplitBtn;
-    if (tabSplitBtn) tabSplitBtn.classList.add('active');
-    if (splitTabView) splitTabView.classList.remove('hidden');
-    if (appMainSubtitle) appMainSubtitle.textContent = 'Extract specific page ranges or split into multiple separate PDF documents';
-  }
-
-  if (activeBtn && typeof activeBtn.scrollIntoView === 'function') {
-    try {
-      activeBtn.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
-    } catch (e) {
-      // Fallback
+    let activeBtn = null;
+    if (tab === 'home') {
+      activeBtn = tabHomeBtn;
+      if (tabHomeBtn) tabHomeBtn.classList.add('active');
+      if (homeTabView) homeTabView.classList.remove('hidden');
+      if (appMainSubtitle) appMainSubtitle.textContent = '100% In-Browser & Private PDF Tools • Zero Server Uploads';
+    } else if (tab === 'merge') {
+      activeBtn = tabMergeBtn;
+      if (tabMergeBtn) tabMergeBtn.classList.add('active');
+      if (mergeTabView) mergeTabView.classList.remove('hidden');
+      if (appMainSubtitle) appMainSubtitle.textContent = 'Sort by timestamp or drag & drop to reorder';
+    } else if (tab === 'remove') {
+      activeBtn = tabRemoveBtn;
+      if (tabRemoveBtn) tabRemoveBtn.classList.add('active');
+      if (removeTabView) removeTabView.classList.remove('hidden');
+      if (appMainSubtitle) appMainSubtitle.textContent = 'Select, rotate, and organize pages with live visual preview';
+    } else if (tab === 'slides') {
+      activeBtn = tabSlidesBtn;
+      if (tabSlidesBtn) tabSlidesBtn.classList.add('active');
+      if (slidesTabView) slidesTabView.classList.remove('hidden');
+      if (appMainSubtitle) appMainSubtitle.textContent = 'Fit 3 presentation slides per A4 page for printing & notes';
+    } else if (tab === 'invert') {
+      activeBtn = tabInvertBtn;
+      if (tabInvertBtn) tabInvertBtn.classList.add('active');
+      if (invertTabView) invertTabView.classList.remove('hidden');
+      if (appMainSubtitle) appMainSubtitle.textContent = 'Invert dark PDF pages to clean white paper for hardcopy printing';
+    } else if (tab === 'compress') {
+      activeBtn = tabCompressBtn;
+      if (tabCompressBtn) tabCompressBtn.classList.add('active');
+      if (compressTabView) compressTabView.classList.remove('hidden');
+      if (appMainSubtitle) appMainSubtitle.textContent = 'Compress and shrink large PDF files with zero or visually-lossless quality';
+    } else if (tab === 'images') {
+      activeBtn = tabImagesBtn;
+      if (tabImagesBtn) tabImagesBtn.classList.add('active');
+      if (imagesTabView) imagesTabView.classList.remove('hidden');
+      if (appMainSubtitle) appMainSubtitle.textContent = 'Convert JPG, PNG, and WebP images into a single clean PDF document';
+    } else if (tab === 'pdftoimages') {
+      activeBtn = tabPdfToImagesBtn;
+      if (tabPdfToImagesBtn) tabPdfToImagesBtn.classList.add('active');
+      if (pdfToImagesTabView) pdfToImagesTabView.classList.remove('hidden');
+      if (appMainSubtitle) appMainSubtitle.textContent = 'Convert PDF pages into high-resolution JPG or PNG images & download as ZIP';
+    } else if (tab === 'split') {
+      activeBtn = tabSplitBtn;
+      if (tabSplitBtn) tabSplitBtn.classList.add('active');
+      if (splitTabView) splitTabView.classList.remove('hidden');
+      if (appMainSubtitle) appMainSubtitle.textContent = 'Extract specific page ranges or split into multiple separate PDF documents';
     }
-  }
 
-  // Update floating mobile navigation label & icon
-  const mobileNavTitle = document.getElementById('mobileNavCurrentTitle');
-  const mobileNavIcon = document.getElementById('mobileNavCurrentIcon');
-  if (mobileNavTitle && mobileNavIcon) {
-    const toolMeta = {
-      home: { title: 'All Tools', icon: 'grid' },
-      merge: { title: 'Merge PDFs', icon: 'merge' },
-      split: { title: 'Split PDF', icon: 'split' },
-      remove: { title: 'Remove Pages', icon: 'scissors' },
-      slides: { title: 'Slides to A4', icon: 'layers' },
-      invert: { title: 'Invert Colors', icon: 'sun-moon' },
-      compress: { title: 'Compress PDF', icon: 'minimize-2' },
-      images: { title: 'Image to PDF', icon: 'images' },
-      pdftoimages: { title: 'PDF to Images', icon: 'file-image' }
-    };
-    const meta = toolMeta[tab] || { title: 'All Tools', icon: 'grid' };
-    mobileNavTitle.textContent = meta.title;
-    mobileNavIcon.innerHTML = `<svg class="w-3.5 h-3.5 shrink-0" aria-hidden="true"><use href="#lucide-${meta.icon}"></use></svg>`;
+    if (activeBtn && typeof activeBtn.scrollIntoView === 'function') {
+      try {
+        activeBtn.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+      } catch (e) {
+        // Fallback
+      }
+    }
+
+    // Update floating mobile navigation label & icon
+    const mobileNavTitle = document.getElementById('mobileNavCurrentTitle');
+    const mobileNavIcon = document.getElementById('mobileNavCurrentIcon');
+    if (mobileNavTitle && mobileNavIcon) {
+      const toolMeta = {
+        home: { title: 'All Tools', icon: 'grid' },
+        merge: { title: 'Merge PDFs', icon: 'merge' },
+        split: { title: 'Split PDF', icon: 'split' },
+        remove: { title: 'Remove Pages', icon: 'scissors' },
+        slides: { title: 'Slides to A4', icon: 'layers' },
+        invert: { title: 'Invert Colors', icon: 'sun-moon' },
+        compress: { title: 'Compress PDF', icon: 'minimize-2' },
+        images: { title: 'Image to PDF', icon: 'images' },
+        pdftoimages: { title: 'PDF to Images', icon: 'file-image' }
+      };
+      const meta = toolMeta[tab] || { title: 'All Tools', icon: 'grid' };
+      mobileNavTitle.textContent = meta.title;
+      mobileNavIcon.innerHTML = `<svg class="w-3.5 h-3.5 shrink-0" aria-hidden="true"><use href="#lucide-${meta.icon}"></use></svg>`;
+    }
+  };
+
+  const hasReducedMotion = typeof window !== 'undefined' &&
+    window.matchMedia &&
+    window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  if (typeof document !== 'undefined' && document.startViewTransition && !hasReducedMotion) {
+    document.startViewTransition(() => {
+      performDomUpdate();
+    });
+  } else {
+    performDomUpdate();
   }
 
   if (typeof window !== 'undefined' && window.history && window.history.replaceState) {

@@ -149,10 +149,55 @@ html.dark .nav-tab[data-tab="pdftoimages"].active {
   color: #38bdf8;
 }
 
+/* Zero CLS Containment & Layout Stability */
 .tab-view {
   display: block;
+  min-height: clamp(480px, 65vh, 720px);
+  contain-intrinsic-size: 1px 480px;
+  content-visibility: auto;
+  view-transition-name: active-tab-view;
 }
 
 .tab-view.hidden {
   display: none !important;
+}
+
+/* Native View Transitions & Smooth Cross-Fades */
+::view-transition-old(active-tab-view),
+::view-transition-new(active-tab-view) {
+  animation-duration: 0.18s;
+  animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+::view-transition-old(active-tab-view) {
+  animation-name: fade-out-tab;
+}
+
+::view-transition-new(active-tab-view) {
+  animation-name: fade-in-tab;
+}
+
+@keyframes fade-out-tab {
+  from { opacity: 1; transform: scale(1); }
+  to { opacity: 0; transform: scale(0.995); }
+}
+
+@keyframes fade-in-tab {
+  from { opacity: 0; transform: scale(1.005); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+/* Reduced Motion Override */
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(active-tab-view),
+  ::view-transition-new(active-tab-view) {
+    animation: none !important;
+  }
+}
+
+/* Dropzone & Workspace Sizing Safeguards for CLS 0.000 */
+.dropzone-unified,
+.dropzone {
+  min-height: 220px;
+  contain-intrinsic-size: 1px 220px;
 }
