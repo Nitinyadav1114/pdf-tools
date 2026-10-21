@@ -32,7 +32,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=block" rel="stylesheet">
 
   <!-- Production Single Minified Stylesheet (Zero-Waterfall Pre-bundled Architecture) -->
-  <link rel="stylesheet" href="assets/css/bundle.min.css?v=29">
+  <link rel="stylesheet" href="assets/css/bundle.min.css?v=34">
 
   <!-- Canonical URL -->
   <link rel="canonical" href="https://nitinyadav1114.github.io/pdf-tools/">
@@ -120,7 +120,7 @@
         </div>
       </div>
       <div class="header-right">
-        <div class="privacy-badge">
+        <div class="privacy-badge hidden sm:inline-flex">
           <span class="privacy-dot">
             <span class="privacy-dot-ping"></span>
             <span class="privacy-dot-solid"></span>
@@ -191,15 +191,6 @@
       </nav>
     </div>
 
-    <!-- Security & Engine Micro-Banner -->
-    <div id="privacyEngineBanner" class="trust-badge-row">
-      <span class="trust-badge-item"><span class="w-2 h-2 rounded-full bg-emerald-500 inline-block mr-1.5"></span>100% Client-Side Engine</span>
-      <span class="trust-badge-sep">•</span>
-      <span class="trust-badge-item">Zero Cloud Uploads</span>
-      <span class="trust-badge-sep">•</span>
-      <span class="trust-badge-item">Instant RAM Purge</span>
-    </div>
-
     <!-- Main Content -->
     <main class="main-content w-full flex flex-col">
       <!-- ============================================== -->
@@ -213,8 +204,8 @@
             <span>100% In-Browser • Zero Cloud Uploads • Instant RAM Purge</span>
           </div>
           <h1 class="home-hero-title">
-            Private, Fast &amp; Powerful<br>
-            <span class="home-hero-gradient">PDF Suite in Your Browser</span>
+            Private. Fast.<br>
+            <span class="home-hero-gradient">100% In-Browser.</span>
           </h1>
           <p class="home-hero-desc">
             No server uploads. No waiting in queue. No artificial limits or subscriptions.<br class="hidden sm:inline">
@@ -225,6 +216,22 @@
         <!-- Universal Smart Dropzone -->
         <section class="dropzone-section mb-10">
           <div id="homeDropzone" class="dropzone universal-dropzone cursor-pointer" tabindex="0" role="button" aria-label="Drop any PDF or images here to start">
+            <!-- Filee.sh OS Window Bar Header -->
+            <div class="dropzone-os-header">
+              <div class="dropzone-os-dots">
+                <span class="os-dot os-dot-close" title="Close"></span>
+                <span class="os-dot os-dot-min" title="Minimize"></span>
+                <span class="os-dot os-dot-max" title="Expand"></span>
+              </div>
+              <div class="dropzone-os-title">
+                <svg class="w-3.5 h-3.5 text-indigo-500 shrink-0 inline-block mr-1" aria-hidden="true"><use href="#lucide-file-text"></use></svg>
+                <span>PDF Tools • Smart Workspace</span>
+              </div>
+              <div class="dropzone-os-badge">
+                <span class="os-status-pulse"></span>
+                <span>Local Sandbox</span>
+              </div>
+            </div>
             <div class="dropzone-ambient-orb blur-3xl pointer-events-none"></div>
             <input type="file" id="homeFileInput" multiple accept=".pdf,image/*,application/pdf" class="file-input-hidden hidden" aria-label="Select files for smart routing">
             <div class="dropzone-content">
@@ -549,6 +556,80 @@
             </button>
           </div>
         </section>
+      
+        <!-- 4-Card Feature Mosaic -->
+    <div class="preset-grid mb-6 pt-2">
+      <div class="file-card flex-col items-start gap-1 p-4">
+        <div class="dropzone-icon-box" style="width: 36px; height: 36px; margin-bottom: 0.5rem; border-radius: 10px;">
+          <span class="material-symbols-outlined text-[20px]">layers</span>
+        </div>
+        <span class="text-xs font-bold text-on-surface dark:text-white">Unlimited Batching</span>
+        <span class="text-[11px] text-slate-muted dark:text-slate-400 leading-tight">Combine as many documents as your RAM supports.</span>
+      </div>
+      <div class="file-card flex-col items-start gap-1 p-4">
+        <div class="dropzone-icon-box" style="width: 36px; height: 36px; margin-bottom: 0.5rem; border-radius: 10px; color: #10b981;">
+          <span class="material-symbols-outlined text-[20px]">lock_clock</span>
+        </div>
+        <span class="text-xs font-bold text-on-surface dark:text-white">Immediate RAM Purge</span>
+        <span class="text-[11px] text-slate-muted dark:text-slate-400 leading-tight">Cached buffers clear as soon as the tab closes.</span>
+      </div>
+      <div class="file-card flex-col items-start gap-1 p-4">
+        <div class="dropzone-icon-box" style="width: 36px; height: 36px; margin-bottom: 0.5rem; border-radius: 10px; color: #6366f1;">
+          <span class="material-symbols-outlined text-[20px]">speed</span>
+        </div>
+        <span class="text-xs font-bold text-on-surface dark:text-white">Instant Export</span>
+        <span class="text-[11px] text-slate-muted dark:text-slate-400 leading-tight">No upload queues or remote render wait times.</span>
+      </div>
+      <div class="file-card flex-col items-start gap-1 p-4">
+        <div class="dropzone-icon-box" style="width: 36px; height: 36px; margin-bottom: 0.5rem; border-radius: 10px; color: #f59e0b;">
+          <span class="material-symbols-outlined text-[20px]">offline_pin</span>
+        </div>
+        <span class="text-xs font-bold text-on-surface dark:text-white">PWA Ready</span>
+        <span class="text-[11px] text-slate-muted dark:text-slate-400 leading-tight">Works flawlessly without active Wi-Fi connection.</span>
+      </div>
+    </div>
+
+    <!-- Live Global Impact & Privacy Telemetry Section -->
+    <section id="footerStatsCard" class="workspace-card mb-6 text-center">
+      <div class="flex flex-col items-center max-w-2xl mx-auto">
+        <!-- Top Status Indicators -->
+        <div class="flex items-center justify-between w-full mb-4">
+          <div class="flex items-center gap-2">
+            <span class="live-impact-pulse w-2.5 h-2.5 rounded-full bg-[#10b981]"></span>
+            <span class="text-[11px] uppercase tracking-wider text-slate-muted dark:text-slate-400 font-bold">LIVE GLOBAL IMPACT</span>
+          </div>
+          <span class="privacy-badge" style="padding: 0.2rem 0.6rem; font-size: 0.7rem;">100% Private</span>
+        </div>
+        <!-- 2-Metric Dual Showcase -->
+        <div class="w-full grid grid-cols-1 sm:grid-cols-2 gap-4 p-4 rounded-xl mb-3 border border-slate-200/60 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-900/60">
+          <!-- Metric 1: Visitors -->
+          <div class="flex items-center justify-center gap-4 py-2 sm:border-r border-slate-200/60 dark:border-slate-800">
+            <div class="w-12 h-12 rounded-xl bg-indigo-50 dark:bg-indigo-950/60 text-primary-container dark:text-indigo-400 flex items-center justify-center shrink-0 shadow-sm border border-indigo-100 dark:border-indigo-900/40">
+              <span class="material-symbols-outlined text-[26px]">groups</span>
+            </div>
+            <div class="flex flex-col text-left">
+              <span class="text-2xl font-bold tracking-tight text-on-surface dark:text-white" id="statVisitorsCount">1,480+</span>
+              <span class="text-xs text-slate-muted dark:text-slate-400">Visitors Worldwide</span>
+            </div>
+          </div>
+          <!-- Metric 2: Processed Documents -->
+          <div class="flex items-center justify-center gap-4 py-2">
+            <div class="w-12 h-12 rounded-xl bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0 shadow-sm border border-emerald-100 dark:border-emerald-900/40">
+              <svg class="w-6 h-6 shrink-0" aria-hidden="true"><use href="#lucide-shield-check"></use></svg>
+            </div>
+            <div class="flex flex-col text-left">
+              <span class="text-2xl font-bold tracking-tight text-on-surface dark:text-white" id="statProcessedCount">3,920+</span>
+              <span class="text-xs text-slate-muted dark:text-slate-400">PDFs Processed Privately</span>
+            </div>
+          </div>
+        </div>
+        <!-- Footnote Verification -->
+        <div class="flex items-center justify-center gap-1.5 text-slate-muted dark:text-slate-400 text-xs mt-1">
+          <svg class="w-4 h-4 text-amber-500 shrink-0" aria-hidden="true"><use href="#lucide-zap"></use></svg>
+          <span>Counters update anonymously • Zero file bytes are ever uploaded to any server</span>
+        </div>
+      </div>
+    </section>
       </div>
 
       <!-- ============================================== -->
@@ -2133,79 +2214,7 @@
       </div>
     </main>
 
-    <!-- 4-Card Feature Mosaic -->
-    <div class="preset-grid mb-6 pt-2">
-      <div class="file-card flex-col items-start gap-1 p-4">
-        <div class="dropzone-icon-box" style="width: 36px; height: 36px; margin-bottom: 0.5rem; border-radius: 10px;">
-          <span class="material-symbols-outlined text-[20px]">layers</span>
-        </div>
-        <span class="text-xs font-bold text-on-surface dark:text-white">Unlimited Batching</span>
-        <span class="text-[11px] text-slate-muted dark:text-slate-400 leading-tight">Combine as many documents as your RAM supports.</span>
-      </div>
-      <div class="file-card flex-col items-start gap-1 p-4">
-        <div class="dropzone-icon-box" style="width: 36px; height: 36px; margin-bottom: 0.5rem; border-radius: 10px; color: #10b981;">
-          <span class="material-symbols-outlined text-[20px]">lock_clock</span>
-        </div>
-        <span class="text-xs font-bold text-on-surface dark:text-white">Immediate RAM Purge</span>
-        <span class="text-[11px] text-slate-muted dark:text-slate-400 leading-tight">Cached buffers clear as soon as the tab closes.</span>
-      </div>
-      <div class="file-card flex-col items-start gap-1 p-4">
-        <div class="dropzone-icon-box" style="width: 36px; height: 36px; margin-bottom: 0.5rem; border-radius: 10px; color: #6366f1;">
-          <span class="material-symbols-outlined text-[20px]">speed</span>
-        </div>
-        <span class="text-xs font-bold text-on-surface dark:text-white">Instant Export</span>
-        <span class="text-[11px] text-slate-muted dark:text-slate-400 leading-tight">No upload queues or remote render wait times.</span>
-      </div>
-      <div class="file-card flex-col items-start gap-1 p-4">
-        <div class="dropzone-icon-box" style="width: 36px; height: 36px; margin-bottom: 0.5rem; border-radius: 10px; color: #f59e0b;">
-          <span class="material-symbols-outlined text-[20px]">offline_pin</span>
-        </div>
-        <span class="text-xs font-bold text-on-surface dark:text-white">PWA Ready</span>
-        <span class="text-[11px] text-slate-muted dark:text-slate-400 leading-tight">Works flawlessly without active Wi-Fi connection.</span>
-      </div>
-    </div>
-
-    <!-- Live Global Impact & Privacy Telemetry Section -->
-    <section id="footerStatsCard" class="workspace-card mb-6 text-center">
-      <div class="flex flex-col items-center max-w-2xl mx-auto">
-        <!-- Top Status Indicators -->
-        <div class="flex items-center justify-between w-full mb-4">
-          <div class="flex items-center gap-2">
-            <span class="live-impact-pulse w-2.5 h-2.5 rounded-full bg-[#10b981]"></span>
-            <span class="text-[11px] uppercase tracking-wider text-slate-muted dark:text-slate-400 font-bold">LIVE GLOBAL IMPACT</span>
-          </div>
-          <span class="privacy-badge" style="padding: 0.2rem 0.6rem; font-size: 0.7rem;">100% Private</span>
-        </div>
-        <!-- 2-Metric Dual Showcase -->
-        <div class="w-full grid grid-cols-1 sm:grid-cols-2 gap-4 p-4 rounded-xl mb-3 border border-slate-200/60 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-900/60">
-          <!-- Metric 1: Visitors -->
-          <div class="flex items-center justify-center gap-4 py-2 sm:border-r border-slate-200/60 dark:border-slate-800">
-            <div class="w-12 h-12 rounded-xl bg-indigo-50 dark:bg-indigo-950/60 text-primary-container dark:text-indigo-400 flex items-center justify-center shrink-0 shadow-sm border border-indigo-100 dark:border-indigo-900/40">
-              <span class="material-symbols-outlined text-[26px]">groups</span>
-            </div>
-            <div class="flex flex-col text-left">
-              <span class="text-2xl font-bold tracking-tight text-on-surface dark:text-white" id="statVisitorsCount">1,480+</span>
-              <span class="text-xs text-slate-muted dark:text-slate-400">Visitors Worldwide</span>
-            </div>
-          </div>
-          <!-- Metric 2: Processed Documents -->
-          <div class="flex items-center justify-center gap-4 py-2">
-            <div class="w-12 h-12 rounded-xl bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0 shadow-sm border border-emerald-100 dark:border-emerald-900/40">
-              <svg class="w-6 h-6 shrink-0" aria-hidden="true"><use href="#lucide-shield-check"></use></svg>
-            </div>
-            <div class="flex flex-col text-left">
-              <span class="text-2xl font-bold tracking-tight text-on-surface dark:text-white" id="statProcessedCount">3,920+</span>
-              <span class="text-xs text-slate-muted dark:text-slate-400">PDFs Processed Privately</span>
-            </div>
-          </div>
-        </div>
-        <!-- Footnote Verification -->
-        <div class="flex items-center justify-center gap-1.5 text-slate-muted dark:text-slate-400 text-xs mt-1">
-          <svg class="w-4 h-4 text-amber-500 shrink-0" aria-hidden="true"><use href="#lucide-zap"></use></svg>
-          <span>Counters update anonymously • Zero file bytes are ever uploaded to any server</span>
-        </div>
-      </div>
-    </section>
+    
 
     <!-- Mobile PWA Install Banner -->
     <div id="pwaInstallBanner" class="pwa-install-banner hidden mb-6 workspace-card flex items-center justify-between gap-3">
@@ -2357,7 +2366,7 @@
   <script defer src="assets/vendor/sortable.min.js" integrity="sha384-BSxuMLxX+FCbTdYec3TbXlnMGEEM2QXTFdtDaveen71o+jswm2J36+xFqp8k4VHM" crossorigin="anonymous"></script>
 
   <!-- Main Orchestrator & Bootloader (PDF-Lib and PDF.js dynamically lazy-loaded on demand) -->
-  <script type="module" src="assets/js/app.js?v=29"></script>
+  <script type="module" src="assets/js/app.js?v=34"></script>
   <script>
     // Register Service Worker for fast browser caching & offline access
     if ('serviceWorker' in navigator) {

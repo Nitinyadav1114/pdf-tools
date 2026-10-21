@@ -479,3 +479,16 @@
     grid-template-columns: repeat(2, 1fr);
   }
 }
+
+
+/* Mobile Bottom Floating Dock Clearance (Bug 4) & Privacy Badge Declutter (Bug 3) */
+@media (max-width: 640px) {
+  .app-container,
+  .tab-view,
+  main.main-content {
+    padding-bottom: 6.5rem !important;
+  }
+  .app-header .privacy-badge {
+    display: none !important;
+  }
+}
