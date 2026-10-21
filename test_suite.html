@@ -1206,6 +1206,30 @@
           window.triggerSuccessBurst({ origin: dummyTarget, particleCount: 30 });
           const cCanvas = document.getElementById('confettiCanvas');
           assert(cCanvas && cCanvas.width > 0, 'triggerSuccessBurst activates high-performance celebration canvas');
+
+          // Performance Feature 1: Dynamic Engine Lazy Loading & Idle Preloader
+          assert(typeof window.ensurePdfLibLoaded === 'function', 'ensurePdfLibLoaded helper is exported on window');
+          assert(typeof window.ensurePdfJsLoaded === 'function', 'ensurePdfJsLoaded helper is exported on window');
+          assert(typeof window.ensureAllPdfEngines === 'function', 'ensureAllPdfEngines helper is exported on window');
+          assert(typeof window.preloadEngineForTool === 'function', 'preloadEngineForTool helper is exported on window');
+
+          const loadedLib = await window.ensurePdfLibLoaded();
+          assert(loadedLib === window.PDFLib && !!loadedLib.PDFDocument, 'ensurePdfLibLoaded resolves directly to PDFLib global');
+
+          const loadedJs = await window.ensurePdfJsLoaded();
+          assert(loadedJs === window.pdfjsLib && !!loadedJs.getDocument, 'ensurePdfJsLoaded resolves directly to pdfjsLib global');
+
+          const bothEngines = await window.ensureAllPdfEngines();
+          assert(Array.isArray(bothEngines) && bothEngines[0] === window.PDFLib && bothEngines[1] === window.pdfjsLib, 'ensureAllPdfEngines resolves both engines in parallel');
+
+          const preloadedMerge = await window.preloadEngineForTool('merge');
+          assert(Array.isArray(preloadedMerge) && preloadedMerge[0] === window.PDFLib, 'preloadEngineForTool(merge) preloads all engines');
+
+          const preloadedImages = await window.preloadEngineForTool('images');
+          assert(preloadedImages === window.PDFLib, 'preloadEngineForTool(images) preloads PDFLib for photo conversions');
+
+          const preloadedPdfToImages = await window.preloadEngineForTool('pdftoimages');
+          assert(preloadedPdfToImages === window.pdfjsLib, 'preloadEngineForTool(pdftoimages) preloads pdfjsLib for rasterization');
         }
 
         const msg = 'ALL_TESTS_COMPLETED_SUCCESSFULLY (' + results.length + ' assertions passed)';
