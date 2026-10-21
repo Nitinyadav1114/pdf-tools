@@ -1307,6 +1307,41 @@
           });
           const batchOutputs = await Promise.all(batchJobs);
           assert(batchOutputs.length === 4 && batchOutputs.every(o => o && o.buffer && o.buffer.byteLength > 0), 'Concurrent multithreaded offscreen image encoding executes cleanly without starvation');
+
+          // Performance Feature 3: Canvas Buffer Virtualization & Aggressive RAM Eviction
+          assert(typeof window.evictPageCanvas === 'function', 'evictPageCanvas helper is exported on window');
+          assert(typeof window.rehydratePageCanvas === 'function', 'rehydratePageCanvas helper is exported on window');
+          assert(typeof window.MAX_ACTIVE_CANVASES === 'number' && window.MAX_ACTIVE_CANVASES > 0, 'MAX_ACTIVE_CANVASES memory boundary is configured');
+
+          // 3a: Create simulated page card with active 200x280 canvas
+          const virtCard = document.createElement('div');
+          virtCard.className = 'page-card';
+          virtCard.dataset.pageNum = '99';
+          virtCard.innerHTML = `
+            <div class="page-canvas-wrapper">
+              <canvas class="page-canvas" id="canvas_page_99" width="200" height="280"></canvas>
+              <div class="page-fallback-label" style="display: none;">Page 99</div>
+            </div>
+          `;
+          document.body.appendChild(virtCard);
+          window.removeState.renderedPages.add(99);
+
+          // 3b: Evict offscreen canvas buffer to zero memory
+          window.evictPageCanvas(99);
+          const virtCanvas = document.getElementById('canvas_page_99');
+          assert(virtCanvas && virtCanvas.width === 0 && virtCanvas.height === 0, 'evictPageCanvas resets canvas dimensions to 0 to reclaim GPU VRAM');
+          assert(window.removeState.renderedPages.has(99) === false, 'evictPageCanvas updates active rendered pages registry');
+
+          const virtFallback = virtCard.querySelector('.page-fallback-label');
+          assert(virtFallback && virtFallback.style.display !== 'none', 'evictPageCanvas displays lightweight fallback label during eviction');
+
+          // 3c: Rehydrate canvas buffer request
+          window.rehydratePageCanvas(99);
+          assert(window.removeState.thumbnailQueue.includes(99), 'rehydratePageCanvas schedules page for rendering in queue');
+
+          // Clean up simulated DOM
+          window.removeState.thumbnailQueue = window.removeState.thumbnailQueue.filter(p => p !== 99);
+          virtCard.remove();
         }
 
         const msg = 'ALL_TESTS_COMPLETED_SUCCESSFULLY (' + results.length + ' assertions passed)';

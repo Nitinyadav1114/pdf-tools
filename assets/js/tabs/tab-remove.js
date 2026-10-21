@@ -18,6 +18,27 @@ import { isValidPdfFile } from '../core/validators.js';
 import { ensureAllPdfEngines, ensurePdfLibLoaded } from '../core/engine-loader.js';
 
 const MAX_CONCURRENT_THUMBNAILS = 3;
+export const MAX_ACTIVE_CANVASES = 18;
+
+export function evictPageCanvas(pageNum) {
+  const canvas = document.getElementById(`canvas_page_${pageNum}`);
+  if (canvas && canvas.width > 0) {
+    canvas.width = 0;
+    canvas.height = 0;
+    removeState.renderedPages.delete(pageNum);
+    const card = canvas.closest('.page-card');
+    if (card) {
+      const fallback = card.querySelector('.page-fallback-label');
+      if (fallback) fallback.style.display = 'block';
+    }
+  }
+}
+
+export function rehydratePageCanvas(pageNum) {
+  if (!removeState.renderedPages.has(pageNum)) {
+    queueThumbnailRender(pageNum);
+  }
+}
 
 export async function handleRemoveFileSelected(file) {
   if (!file || (file.type !== 'application/pdf' && !file.name.toLowerCase().endsWith('.pdf'))) {
@@ -207,19 +228,26 @@ export function renderPagesGrid() {
 
   const hasObserver = typeof window.IntersectionObserver !== 'undefined';
   if (hasObserver) {
-    removeState.observer = new IntersectionObserver((entries, observer) => {
+    removeState.observer = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
+        const pageNum = parseInt(entry.target.dataset.pageNum, 10);
+        if (!pageNum) return;
+
         if (entry.isIntersecting) {
-          const pageNum = parseInt(entry.target.dataset.pageNum, 10);
-          if (pageNum && !removeState.renderedPages.has(pageNum)) {
+          // Pre-render thumbnail 500px before entering viewport
+          if (!removeState.renderedPages.has(pageNum)) {
             queueThumbnailRender(pageNum);
           }
-          observer.unobserve(entry.target);
+        } else {
+          // Virtualize & evict offscreen canvas buffers if document is large and active canvases exceed budget
+          if (removeState.totalPages > 12 && removeState.renderedPages.size > MAX_ACTIVE_CANVASES) {
+            evictPageCanvas(pageNum);
+          }
         }
       });
     }, {
       root: null,
-      rootMargin: '350px 0px',
+      rootMargin: '500px 0px 500px 0px',
       threshold: 0.01,
     });
   }
@@ -317,6 +345,11 @@ async function renderPageThumbnail(pageNum) {
     await page.render({ canvasContext: ctx, viewport }).promise;
 
     removeState.renderedPages.add(pageNum);
+
+    const rot = removeState.pageRotations.get(pageNum) || 0;
+    if (rot !== 0) {
+      canvas.style.transform = `rotate(${rot}deg)`;
+    }
 
     const card = canvas.closest('.page-card');
     if (card) {
@@ -682,10 +715,15 @@ export function initRemoveTab(switchTab, handleCompressFileSelected, handleSplit
 }
 
 
-export function triggerPageLightbox(pageNum) {
+export async function triggerPageLightbox(pageNum) {
   if (!elements.pagesGrid) return;
   const card = elements.pagesGrid.querySelector(`.page-card[data-page-num="${pageNum}"]`);
-  const canvas = card ? card.querySelector('.page-canvas') : null;
+  let canvas = card ? card.querySelector('.page-canvas') : null;
+
+  if (canvas && (canvas.width === 0 || !removeState.renderedPages.has(pageNum))) {
+    await renderPageThumbnail(pageNum);
+    canvas = card.querySelector('.page-canvas');
+  }
   const rot = removeState.pageRotations.get(pageNum) || 0;
 
   if (typeof window.openLightbox === 'function') {
@@ -707,4 +745,8 @@ export function triggerPageLightbox(pageNum) {
 
 if (typeof window !== 'undefined') {
   window.triggerPageLightbox = triggerPageLightbox;
+  window.evictPageCanvas = evictPageCanvas;
+  window.rehydratePageCanvas = rehydratePageCanvas;
+  window.renderPageThumbnail = renderPageThumbnail;
+  window.MAX_ACTIVE_CANVASES = MAX_ACTIVE_CANVASES;
 }

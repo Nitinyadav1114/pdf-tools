@@ -42,7 +42,7 @@ import { initConfetti, triggerSuccessBurst, triggerGlowPulse } from './core/conf
 
 
 import { initMergeTab, setDefaultOutputFilename, handleMergeFilesAdded } from './tabs/tab-merge.js';
-import { initRemoveTab, handleRemoveFileSelected } from './tabs/tab-remove.js';
+import { initRemoveTab, handleRemoveFileSelected, evictPageCanvas, rehydratePageCanvas, MAX_ACTIVE_CANVASES } from './tabs/tab-remove.js';
 import { initSlidesTab, handleSlidesFileSelected } from './tabs/tab-slides.js';
 import { initInvertTab, handleInvertFileSelected } from './tabs/tab-invert.js';
 import { initCompressTab, handleCompressFileSelected } from './tabs/tab-compress.js';
@@ -113,6 +113,9 @@ if (typeof window !== 'undefined') {
   window.rotateLightboxCW = rotateCW;
   window.triggerSuccessBurst = triggerSuccessBurst;
   window.triggerGlowPulse = triggerGlowPulse;
+  window.evictPageCanvas = evictPageCanvas;
+  window.rehydratePageCanvas = rehydratePageCanvas;
+  window.MAX_ACTIVE_CANVASES = MAX_ACTIVE_CANVASES;
 
 }
 
