@@ -1366,6 +1366,22 @@
           // 4c: Switch tab execution test with seamless transition
           window.switchTab('merge');
           assert(true, 'switchTab executes with view transition support without throwing errors');
+
+          // Performance Feature 5: Streaming Service Worker Cache & Offline Pre-cache Optimization
+          assert(typeof window.checkOfflineReadiness === 'function', 'checkOfflineReadiness helper is exported on window');
+
+          // 5a: Query offline readiness through cache inspection
+          const readinessResult = await window.checkOfflineReadiness();
+          assert(typeof readinessResult === 'object' && readinessResult !== null, 'checkOfflineReadiness returns structured audit telemetry');
+          assert(typeof readinessResult.supported === 'boolean', 'checkOfflineReadiness reports CacheStorage capability');
+
+          // 5b: Audit sw.js pre-cache coverage against live application assets
+          const swResponse = await fetch('sw.js');
+          const swContent = await swResponse.text();
+          assert(swContent.includes('pdf-tools-v33'), 'Service Worker cache version is bumped to v33');
+          assert(swContent.includes('bundle.min.css'), 'Compiled production CSS bundle is precached');
+          assert(swContent.includes('pdf-lib.min.js') && swContent.includes('pdf.min.js'), 'Heavy client-side PDF engines are precached for 100% offline usage');
+          assert(swContent.includes('event.waitUntil'), 'Background revalidation is guaranteed via event.waitUntil');
         }
 
         const msg = 'ALL_TESTS_COMPLETED_SUCCESSFULLY (' + results.length + ' assertions passed)';

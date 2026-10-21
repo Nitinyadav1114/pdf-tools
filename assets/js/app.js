@@ -31,7 +31,7 @@ import {
 } from './core/utils.js';
 import { isValidPdfFile, isValidImageFile } from './core/validators.js';
 import { createZipArchive } from './core/zip-builder.js';
-import { initPWAInstallBanner } from './core/pwa.js';
+import { initPWAInstallBanner, checkOfflineReadiness } from './core/pwa.js';
 import { initCounter, incrementProcessedCounter, getCounterStats } from './core/counter.js';
 import { initCommandPalette } from './core/command-palette.js';
 import { initPipelineProgress, updatePipelineProgress, resetPipelineProgress } from './core/pipeline-progress.js';
@@ -116,6 +116,7 @@ if (typeof window !== 'undefined') {
   window.evictPageCanvas = evictPageCanvas;
   window.rehydratePageCanvas = rehydratePageCanvas;
   window.MAX_ACTIVE_CANVASES = MAX_ACTIVE_CANVASES;
+  window.checkOfflineReadiness = checkOfflineReadiness;
 
 }
 

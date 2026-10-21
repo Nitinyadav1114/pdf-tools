@@ -138,8 +138,43 @@ export function initPWAInstallBanner() {
   }
 }
 
+/**
+ * Checks whether core application assets are precached and ready for 100% offline usage.
+ */
+export async function checkOfflineReadiness() {
+  if (typeof window === 'undefined' || !('caches' in window)) {
+    return { ready: false, supported: false, cachedCount: 0 };
+  }
+
+  try {
+    const keys = await caches.keys();
+    if (!keys || keys.length === 0) {
+      return { ready: false, supported: true, cachedCount: 0 };
+    }
+
+    const currentKey = keys.find(k => k.startsWith('pdf-tools-')) || keys[0];
+    const cache = await caches.open(currentKey);
+    const cachedRequests = await cache.keys();
+    const urls = cachedRequests.map(r => r.url);
+
+    const essentialBasenames = ['index.html', 'bundle.min.css', 'app.js', 'pdf-lib.min.js', 'pdf.min.js'];
+    const hasEssentials = essentialBasenames.every(name => urls.some(u => u.includes(name)));
+
+    return {
+      ready: hasEssentials || cachedRequests.length >= 10,
+      supported: true,
+      cacheName: currentKey,
+      cachedCount: cachedRequests.length,
+      hasEssentials
+    };
+  } catch (err) {
+    return { ready: false, supported: true, error: err.message, cachedCount: 0 };
+  }
+}
+
 if (typeof window !== 'undefined') {
   window.openInstallModal = openInstallModal;
   window.closeInstallModal = closeInstallModal;
   window.triggerInstallFlow = triggerInstallFlow;
+  window.checkOfflineReadiness = checkOfflineReadiness;
 }

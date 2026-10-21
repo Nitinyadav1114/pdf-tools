@@ -1,4 +1,4 @@
-const CACHE_NAME = 'pdf-tools-v32';
+const CACHE_NAME = 'pdf-tools-v33';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
@@ -102,16 +102,18 @@ self.addEventListener('fetch', (event) => {
     caches.match(event.request, { ignoreSearch: true }).then((cachedResponse) => {
       if (cachedResponse) {
         // Cache hit: serve from cache immediately, then revalidate in background if online
-        fetch(event.request)
-          .then((networkResponse) => {
-            if (networkResponse && networkResponse.status === 200 && (networkResponse.type === 'basic' || networkResponse.type === 'cors')) {
-              const clone = networkResponse.clone();
-              caches.open(CACHE_NAME).then((cache) => cache.put(event.request, clone));
-            }
-          })
-          .catch(() => {
-            // App is offline, cachedResponse is already successfully served
-          });
+        event.waitUntil(
+          fetch(event.request)
+            .then((networkResponse) => {
+              if (networkResponse && networkResponse.status === 200 && (networkResponse.type === 'basic' || networkResponse.type === 'cors')) {
+                const clone = networkResponse.clone();
+                caches.open(CACHE_NAME).then((cache) => cache.put(event.request, clone));
+              }
+            })
+            .catch(() => {
+              // App is offline, cachedResponse is already successfully served
+            })
+        );
         return cachedResponse;
       }
 
