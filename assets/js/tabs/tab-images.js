@@ -14,6 +14,7 @@ import {
 } from '../core/utils.js';
 import { isValidImageFile } from '../core/validators.js';
 import { ensurePdfLibLoaded } from '../core/engine-loader.js';
+import { appWorkerPool } from '../core/worker-pool.js';
 
 export async function handleImageFilesAdded(fileList) {
   if (!fileList || fileList.length === 0) return;
@@ -268,35 +269,61 @@ export async function executeImagesToPDF() {
         `Converting image ${i + 1} of ${total} (${imgData.name})...`
       );
 
-      const img = new Image();
-      img.src = imgData.dataUrl;
-      await new Promise((resolve, reject) => {
-        if (img.complete) return resolve();
-        img.onload = () => resolve();
-        img.onerror = () => reject(new Error(`Failed to load image: ${imgData.name}`));
-      });
-
       const rot = (imgData.rotation || 0) % 360;
-      const isQuarterTurn = (rot === 90 || rot === 270);
-      const drawWidth = isQuarterTurn ? img.naturalHeight : img.naturalWidth;
-      const drawHeight = isQuarterTurn ? img.naturalWidth : img.naturalHeight;
-
-      offCanvas.width = drawWidth;
-      offCanvas.height = drawHeight;
-      ctx.clearRect(0, 0, drawWidth, drawHeight);
-
-      ctx.save();
-      ctx.translate(drawWidth / 2, drawHeight / 2);
-      ctx.rotate((rot * Math.PI) / 180);
-      ctx.drawImage(img, -img.naturalWidth / 2, -img.naturalHeight / 2);
-      ctx.restore();
-
       const isPng = imgData.type === 'image/png';
       const exportMime = isPng ? 'image/png' : 'image/jpeg';
       const exportQuality = isPng ? undefined : 0.92;
 
-      const blob = await new Promise((resolve) => offCanvas.toBlob(resolve, exportMime, exportQuality));
-      const arrayBuffer = await blob.arrayBuffer();
+      let arrayBuffer = null;
+
+      // Offload image processing & encoding to dedicated web worker pool for silky 60 FPS
+      if (appWorkerPool && appWorkerPool.isAvailable && appWorkerPool.hasOffscreenCanvas) {
+        try {
+          if (imgData.file) {
+            const rawFileBuffer = await imgData.file.arrayBuffer();
+            const slice = rawFileBuffer.slice(0);
+            const workerRes = await appWorkerPool.encodeImageOffscreen({
+              imageBuffer: slice,
+              rotation: rot,
+              mimeType: exportMime,
+              quality: exportQuality
+            });
+            if (workerRes && workerRes.buffer) {
+              arrayBuffer = workerRes.buffer;
+            }
+          }
+        } catch (wErr) {
+          console.warn('[WorkerPool] Images-to-PDF worker offload fallback:', wErr);
+        }
+      }
+
+      // Main-thread fallback if worker pool is unavailable or failed
+      if (!arrayBuffer) {
+        const img = new Image();
+        img.src = imgData.dataUrl;
+        await new Promise((resolve, reject) => {
+          if (img.complete) return resolve();
+          img.onload = () => resolve();
+          img.onerror = () => reject(new Error('Failed to load image: ' + imgData.name));
+        });
+
+        const isQuarterTurn = (rot === 90 || rot === 270);
+        const drawWidth = isQuarterTurn ? img.naturalHeight : img.naturalWidth;
+        const drawHeight = isQuarterTurn ? img.naturalWidth : img.naturalHeight;
+
+        offCanvas.width = drawWidth;
+        offCanvas.height = drawHeight;
+        ctx.clearRect(0, 0, drawWidth, drawHeight);
+
+        ctx.save();
+        ctx.translate(drawWidth / 2, drawHeight / 2);
+        ctx.rotate((rot * Math.PI) / 180);
+        ctx.drawImage(img, -img.naturalWidth / 2, -img.naturalHeight / 2);
+        ctx.restore();
+
+        const blob = await new Promise((resolve) => offCanvas.toBlob(resolve, exportMime, exportQuality));
+        arrayBuffer = await blob.arrayBuffer();
+      }
 
       let pdfImage;
       if (isPng) {

@@ -16,6 +16,7 @@ import {
 } from '../core/utils.js';
 import { isValidPdfFile } from '../core/validators.js';
 import { ensurePdfJsLoaded } from '../core/engine-loader.js';
+import { appWorkerPool } from '../core/worker-pool.js';
 
 export async function handlePdfToImagesFileSelected(file) {
   if (!file) return;
@@ -155,9 +156,31 @@ export async function convertPdfToImages() {
         throw new Error('OPERATION_CANCELLED');
       }
 
-      const blob = await new Promise((resolve) => {
-        canvas.toBlob(resolve, mimeType, mimeType === 'image/jpeg' ? 0.92 : undefined);
-      });
+      let blob = null;
+
+      // Offload raster image encoding to dedicated web worker pool for silky 60 FPS
+      if (appWorkerPool && appWorkerPool.isAvailable && appWorkerPool.hasOffscreenCanvas && typeof createImageBitmap === 'function') {
+        try {
+          const bitmap = await createImageBitmap(canvas);
+          const workerRes = await appWorkerPool.encodeImageOffscreen({
+            bitmap,
+            mimeType,
+            quality: mimeType === 'image/jpeg' ? 0.92 : undefined
+          });
+          if (workerRes && workerRes.buffer) {
+            blob = new Blob([workerRes.buffer], { type: mimeType });
+          }
+        } catch (wErr) {
+          console.warn('[WorkerPool] PDF-to-Images worker offload fallback:', wErr);
+        }
+      }
+
+      // Main-thread fallback if worker pool is unavailable or failed
+      if (!blob) {
+        blob = await new Promise((resolve) => {
+          canvas.toBlob(resolve, mimeType, mimeType === 'image/jpeg' ? 0.92 : undefined);
+        });
+      }
 
       canvas.width = 0;
       canvas.height = 0;

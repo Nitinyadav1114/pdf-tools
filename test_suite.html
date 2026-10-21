@@ -1230,6 +1230,83 @@
 
           const preloadedPdfToImages = await window.preloadEngineForTool('pdftoimages');
           assert(preloadedPdfToImages === window.pdfjsLib, 'preloadEngineForTool(pdftoimages) preloads pdfjsLib for rasterization');
+
+          // Performance Feature 2: Dedicated Multithreaded OffscreenCanvas Web Worker Pipeline
+          assert(typeof window.PDF_TOOLS_WORKER_POOL !== 'undefined', 'PDF_TOOLS_WORKER_POOL is exported on window');
+          assert(typeof window.PDF_TOOLS_WORKER_POOL.encodeImageOffscreen === 'function', 'encodeImageOffscreen helper is available on worker pool');
+
+          // 2a: Encode raw pixel buffer to JPEG with magic bytes check
+          const samplePixels = new Uint8ClampedArray(40 * 20 * 4);
+          for (let p = 0; p < samplePixels.length; p += 4) {
+            samplePixels[p] = 220;     // R
+            samplePixels[p + 1] = 60;  // G
+            samplePixels[p + 2] = 30;  // B
+            samplePixels[p + 3] = 255; // A
+          }
+          const jpegRes = await window.PDF_TOOLS_WORKER_POOL.encodeImageOffscreen({
+            buffer: samplePixels.buffer.slice(0),
+            width: 40,
+            height: 20,
+            rotation: 0,
+            mimeType: 'image/jpeg',
+            quality: 0.90
+          });
+          assert(jpegRes && jpegRes.buffer && jpegRes.buffer.byteLength > 0, 'Offscreen worker encodes image buffer to JPEG ArrayBuffer');
+          const jpegBytes = new Uint8Array(jpegRes.buffer);
+          assert(jpegBytes[0] === 0xFF && jpegBytes[1] === 0xD8 && jpegBytes[2] === 0xFF, 'Worker JPEG export passes SOI magic bytes (FF D8 FF)');
+          assert(jpegRes.width === 40 && jpegRes.height === 20, 'Worker preserves correct 40x20 dimensions for 0-deg orientation');
+
+          // 2b: Encode raw pixel buffer to PNG with magic bytes check
+          const pngRes = await window.PDF_TOOLS_WORKER_POOL.encodeImageOffscreen({
+            buffer: samplePixels.buffer.slice(0),
+            width: 40,
+            height: 20,
+            rotation: 0,
+            mimeType: 'image/png'
+          });
+          assert(pngRes && pngRes.buffer && pngRes.buffer.byteLength > 0, 'Offscreen worker encodes image buffer to PNG ArrayBuffer');
+          const pngBytes = new Uint8Array(pngRes.buffer);
+          assert(pngBytes[0] === 0x89 && pngBytes[1] === 0x50 && pngBytes[2] === 0x4E && pngBytes[3] === 0x47, 'Worker PNG export passes PNG signature magic bytes (89 50 4E 47)');
+
+          // 2c: 90-degree offscreen rotation swaps dimensions
+          const rotRes = await window.PDF_TOOLS_WORKER_POOL.encodeImageOffscreen({
+            buffer: samplePixels.buffer.slice(0),
+            width: 40,
+            height: 20,
+            rotation: 90,
+            mimeType: 'image/jpeg'
+          });
+          assert(rotRes.width === 20 && rotRes.height === 40, 'Worker 90-degree offscreen rotation correctly transforms dimensions (40x20 -> 20x40)');
+
+          // 2d: ImageBitmap offscreen encoding
+          const workerOffscreenCanvas = document.createElement('canvas');
+          workerOffscreenCanvas.width = 30;
+          workerOffscreenCanvas.height = 15;
+          const tCtx = workerOffscreenCanvas.getContext('2d');
+          tCtx.fillStyle = '#10b981';
+          tCtx.fillRect(0, 0, 30, 15);
+          const tBitmap = await createImageBitmap(workerOffscreenCanvas);
+          const bitmapRes = await window.PDF_TOOLS_WORKER_POOL.encodeImageOffscreen({
+            bitmap: tBitmap,
+            mimeType: 'image/jpeg'
+          });
+          assert(bitmapRes && bitmapRes.width === 30 && bitmapRes.height === 15, 'Worker encodes transferred ImageBitmap with zero main-thread block');
+          workerOffscreenCanvas.width = 0;
+          workerOffscreenCanvas.height = 0;
+
+          // 2e: Concurrent batch offscreen image encoding
+          const batchJobs = [1, 2, 3, 4].map(idx => {
+            const bBuf = new Uint8ClampedArray(16 * 16 * 4);
+            bBuf.fill(idx * 50);
+            return window.PDF_TOOLS_WORKER_POOL.encodeImageOffscreen({
+              buffer: bBuf.buffer,
+              width: 16,
+              height: 16,
+              mimeType: 'image/jpeg'
+            });
+          });
+          const batchOutputs = await Promise.all(batchJobs);
+          assert(batchOutputs.length === 4 && batchOutputs.every(o => o && o.buffer && o.buffer.byteLength > 0), 'Concurrent multithreaded offscreen image encoding executes cleanly without starvation');
         }
 
         const msg = 'ALL_TESTS_COMPLETED_SUCCESSFULLY (' + results.length + ' assertions passed)';

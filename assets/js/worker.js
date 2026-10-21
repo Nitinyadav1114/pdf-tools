@@ -76,6 +76,96 @@ self.onmessage = async function (e) {
       return;
     }
 
+    if (type === 'encode-image') {
+      const {
+        buffer,
+        imageBuffer,
+        bitmap,
+        width,
+        height,
+        rotation,
+        mimeType,
+        quality
+      } = payload || {};
+
+      if (typeof OffscreenCanvas === 'undefined') {
+        self.postMessage({ id, success: false, fallback: true, error: 'OffscreenCanvas unsupported in worker' });
+        return;
+      }
+
+      const targetMime = mimeType || 'image/jpeg';
+      const targetQuality = targetMime === 'image/png' ? undefined : (quality !== undefined ? quality : 0.92);
+      const rot = ((rotation || 0) % 360 + 360) % 360;
+      const isQuarterTurn = (rot === 90 || rot === 270);
+
+      let source = null;
+      let srcW = width;
+      let srcH = height;
+
+      if (bitmap) {
+        source = bitmap;
+        srcW = bitmap.width;
+        srcH = bitmap.height;
+      } else if (imageBuffer) {
+        const blob = new Blob([imageBuffer]);
+        source = await createImageBitmap(blob);
+        srcW = source.width;
+        srcH = source.height;
+      } else if (buffer) {
+        if (!width || !height) throw new Error('width and height required for pixel buffer encoding');
+        const tempCanvas = new OffscreenCanvas(width, height);
+        const tempCtx = tempCanvas.getContext('2d');
+        const imgData = new ImageData(new Uint8ClampedArray(buffer), width, height);
+        tempCtx.putImageData(imgData, 0, 0);
+        source = tempCanvas;
+        srcW = width;
+        srcH = height;
+      } else {
+        throw new Error('encode-image requires buffer, imageBuffer, or bitmap');
+      }
+
+      const outW = isQuarterTurn ? srcH : srcW;
+      const outH = isQuarterTurn ? srcW : srcH;
+
+      const offscreen = new OffscreenCanvas(outW, outH);
+      const ctx = offscreen.getContext('2d');
+
+      if (targetMime === 'image/jpeg') {
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(0, 0, outW, outH);
+      }
+
+      if (rot !== 0) {
+        ctx.save();
+        ctx.translate(outW / 2, outH / 2);
+        ctx.rotate((rot * Math.PI) / 180);
+        ctx.drawImage(source, -srcW / 2, -srcH / 2);
+        ctx.restore();
+      } else {
+        ctx.drawImage(source, 0, 0);
+      }
+
+      if (source && source.close && typeof source.close === 'function') {
+        try { source.close(); } catch (e) {}
+      }
+
+      const outBlob = await offscreen.convertToBlob({
+        type: targetMime,
+        quality: targetQuality
+      });
+      const outputBuffer = await outBlob.arrayBuffer();
+
+      self.postMessage({
+        id,
+        success: true,
+        buffer: outputBuffer,
+        width: outW,
+        height: outH,
+        mimeType: targetMime
+      }, [outputBuffer]);
+      return;
+    }
+
     throw new Error(`Unknown task type: ${type}`);
   } catch (err) {
     self.postMessage({

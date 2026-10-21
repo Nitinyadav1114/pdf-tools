@@ -197,6 +197,20 @@ export class WorkerPoolManager {
     });
   }
 
+  async encodeImageOffscreen(options = {}, timeoutMs = 30000) {
+    if (this.initPromise && !this.isAvailable) {
+      await this.initPromise;
+    }
+    if (!this.isAvailable || !this.hasOffscreenCanvas) {
+      throw new Error('WORKER_OFFSCREEN_UNAVAILABLE');
+    }
+    const transferables = [];
+    if (options.bitmap) transferables.push(options.bitmap);
+    if (options.imageBuffer) transferables.push(options.imageBuffer);
+    if (options.buffer) transferables.push(options.buffer);
+    return await this.runTask('encode-image', options, transferables, timeoutMs);
+  }
+
   terminate() {
     this.workers.forEach((w) => {
       try { w.terminate(); } catch (e) {}
