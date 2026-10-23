@@ -1378,10 +1378,31 @@
           // 5b: Audit sw.js pre-cache coverage against live application assets
           const swResponse = await fetch('sw.js');
           const swContent = await swResponse.text();
-          assert(swContent.includes('pdf-tools-v34'), 'Service Worker cache version is bumped to v34');
+          assert(swContent.includes('pdf-tools-v35'), 'Service Worker cache version is bumped to v35');
           assert(swContent.includes('bundle.min.css'), 'Compiled production CSS bundle is precached');
           assert(swContent.includes('pdf-lib.min.js') && swContent.includes('pdf.min.js'), 'Heavy client-side PDF engines are precached for 100% offline usage');
           assert(swContent.includes('event.waitUntil'), 'Background revalidation is guaranteed via event.waitUntil');
+
+          // UI & Interactive Polish: Modernized Spring Dropzone & Multi-file Upload Badges
+          assert(typeof window.showDropzoneSuccessBadge === 'function', 'showDropzoneSuccessBadge helper is exported on window');
+
+          const testDz = document.createElement('div');
+          testDz.className = 'dropzone';
+          document.body.appendChild(testDz);
+
+          window.showDropzoneSuccessBadge(testDz, 3);
+          const spawnedBadge = testDz.querySelector('.dropzone-success-pulse-badge');
+          assert(spawnedBadge !== null, 'showDropzoneSuccessBadge injects active pulse badge into dropzone');
+          assert(spawnedBadge && spawnedBadge.textContent.includes('3 files received'), 'Dropzone success badge accurately displays multi-file count');
+          assert(spawnedBadge && spawnedBadge.querySelector('.badge-dot-ping') !== null, 'Dropzone badge renders animated ping indicator dot');
+
+          testDz.remove();
+
+          const cssResponse = await fetch('assets/css/bundle.min.css');
+          const cssContent = await cssResponse.text();
+          assert(cssContent.includes('.dropzone.drag-active'), 'Compiled CSS bundle includes high-impact .drag-active styling');
+          assert(cssContent.includes('dropzone-success-pulse-badge'), 'Compiled CSS bundle includes multi-file drop badge styles');
+          assert(cssContent.includes('iconBobSpring'), 'Compiled CSS bundle includes spring icon physics and bobbing animations');
         }
 
         const msg = 'ALL_TESTS_COMPLETED_SUCCESSFULLY (' + results.length + ' assertions passed)';

@@ -35,7 +35,7 @@ import { initPWAInstallBanner, checkOfflineReadiness } from './core/pwa.js';
 import { initCounter, incrementProcessedCounter, getCounterStats } from './core/counter.js';
 import { initCommandPalette } from './core/command-palette.js';
 import { initPipelineProgress, updatePipelineProgress, resetPipelineProgress } from './core/pipeline-progress.js';
-import { initTactileFeedback, playAudioCue, triggerHaptic, toggleSound, isSoundEnabled, setSoundEnabled } from './core/tactile-feedback.js';
+import { initTactileFeedback, playAudioCue, triggerHaptic, toggleSound, isSoundEnabled, setSoundEnabled, showDropzoneSuccessBadge } from './core/tactile-feedback.js';
 import { initLightbox, openLightbox, closeLightbox, zoomBy, resetZoom, rotateCW } from './core/lightbox.js';
 import { initConfetti, triggerSuccessBurst, triggerGlowPulse } from './core/confetti.js';
 
@@ -106,6 +106,7 @@ if (typeof window !== 'undefined') {
   window.toggleSound = toggleSound;
   window.isSoundEnabled = isSoundEnabled;
   window.setSoundEnabled = setSoundEnabled;
+  window.showDropzoneSuccessBadge = showDropzoneSuccessBadge;
   window.openLightbox = openLightbox;
   window.closeLightbox = closeLightbox;
   window.zoomLightboxBy = zoomBy;

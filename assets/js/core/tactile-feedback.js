@@ -74,6 +74,39 @@ export function initTactileFeedback() {
   window.isSoundEnabled = isSoundEnabled;
   window.setSoundEnabled = setSoundEnabled;
   window.updateSoundButtonUI = updateSoundButtonUI;
+  window.showDropzoneSuccessBadge = showDropzoneSuccessBadge;
+}
+
+/**
+ * Displays an ephemeral spring badge confirming files dropped into a dropzone.
+ * @param {HTMLElement} dropzoneEl - Target dropzone element
+ * @param {number} count - Number of files received
+ */
+export function showDropzoneSuccessBadge(dropzoneEl, count = 1) {
+  if (!dropzoneEl || typeof dropzoneEl.querySelector !== 'function') return;
+
+  // Clear existing badge if any
+  const existing = dropzoneEl.querySelector('.dropzone-success-pulse-badge');
+  if (existing) existing.remove();
+
+  const badge = document.createElement('div');
+  badge.className = 'dropzone-success-pulse-badge';
+  const label = count > 1 ? `${count} files received` : `1 file received`;
+  badge.innerHTML = `
+    <span class="badge-dot-wrapper">
+      <span class="badge-dot-ping"></span>
+      <span class="badge-dot-core"></span>
+    </span>
+    <span class="badge-text">${label} • Preparing workspace...</span>
+  `;
+  dropzoneEl.appendChild(badge);
+
+  setTimeout(() => {
+    badge.classList.add('fade-out');
+    setTimeout(() => {
+      if (badge.parentNode) badge.parentNode.removeChild(badge);
+    }, 400);
+  }, 1300);
 }
 
 /**
@@ -87,6 +120,10 @@ function attachGlobalDelegates() {
     if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files.length > 0) {
       playAudioCue('pop');
       triggerHaptic('medium');
+      const dropzone = e.target && typeof e.target.closest === 'function' ? e.target.closest('.dropzone') : null;
+      if (dropzone) {
+        showDropzoneSuccessBadge(dropzone, e.dataTransfer.files.length);
+      }
     }
   }, { passive: true });
 
@@ -94,6 +131,11 @@ function attachGlobalDelegates() {
     if (e.target && e.target.matches && e.target.matches('input[type="file"]') && e.target.files && e.target.files.length > 0) {
       playAudioCue('pop');
       triggerHaptic('medium');
+      const dropzone = (typeof e.target.closest === 'function' ? e.target.closest('.dropzone') : null) || 
+                       (e.target.parentElement && e.target.parentElement.classList.contains('dropzone') ? e.target.parentElement : null);
+      if (dropzone) {
+        showDropzoneSuccessBadge(dropzone, e.target.files.length);
+      }
     }
   }, { passive: true });
 

@@ -1,115 +1,40 @@
-/* ========================================= */
-/* Dropzone Styles                           */
-/* ========================================= */
+/* ==========================================================================
+   Modern Dropzone & Spring File Upload System
+   ========================================================================== */
+
 .dropzone-section {
   margin-bottom: 1.75rem;
 }
 
 .dropzone {
-  background-color: var(--dropzone-bg);
+  position: relative;
+  width: 100%;
+  background-color: var(--surface-card, rgba(255, 255, 255, 0.85));
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  border: 2px dashed var(--dropzone-border);
+  border: 2px dashed var(--dropzone-border, var(--border-focus, #cbd5e1));
   border-radius: 24px;
   padding: 2.75rem 2rem;
   text-align: center;
   cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  position: relative;
-  box-shadow: var(--card-shadow);
   overflow: hidden;
+  box-shadow: var(--shadow-card, 0 4px 16px rgba(0, 0, 0, 0.04));
+  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1),
+              box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.25s ease,
+              background-color 0.3s ease;
+  will-change: transform, box-shadow;
+  outline: none;
+  user-select: none;
 }
 
-.dropzone:hover, .dropzone.drag-active {
-  background-color: var(--dropzone-hover);
-  border-color: var(--primary);
-  transform: translateY(-2px);
-  box-shadow: 0 20px 40px -8px rgba(79, 70, 229, 0.16);
-}
-
-body.theme-dark .dropzone:hover,
-html.dark .dropzone:hover,
-body.theme-dark .dropzone.drag-active,
-html.dark .dropzone.drag-active {
-  border-color: #818cf8;
-  box-shadow: 0 20px 40px -8px rgba(99, 102, 241, 0.25);
-}
-
-#mergeTabView .dropzone:hover, #mergeTabView .dropzone.drag-active {
-  border-color: var(--tool-merge);
-  box-shadow: 0 20px 40px -8px var(--tool-merge-glow);
-}
-#removeTabView .dropzone:hover, #removeTabView .dropzone.drag-active {
-  border-color: var(--tool-remove);
-  box-shadow: 0 20px 40px -8px var(--tool-remove-glow);
-}
-#slidesTabView .dropzone:hover, #slidesTabView .dropzone.drag-active {
-  border-color: var(--tool-slides);
-  box-shadow: 0 20px 40px -8px var(--tool-slides-glow);
-}
-#invertTabView .dropzone:hover, #invertTabView .dropzone.drag-active {
-  border-color: var(--tool-invert);
-  box-shadow: 0 20px 40px -8px var(--tool-invert-glow);
-}
-#compressTabView .dropzone:hover, #compressTabView .dropzone.drag-active {
-  border-color: var(--tool-compress);
-  box-shadow: 0 20px 40px -8px var(--tool-compress-glow);
-}
-#imagesTabView .dropzone:hover, #imagesTabView .dropzone.drag-active {
-  border-color: var(--tool-images);
-  box-shadow: 0 20px 40px -8px var(--tool-images-glow);
-}
-#pdfToImagesTabView .dropzone:hover, #pdfToImagesTabView .dropzone.drag-active {
-  border-color: var(--tool-pdftoimages);
-  box-shadow: 0 20px 40px -8px var(--tool-pdftoimages-glow);
-}
-
-#removeTabView .dropzone:hover .dropzone-icon-wrapper, #removeTabView .dropzone.drag-active .dropzone-icon-wrapper {
-  background-color: var(--tool-remove);
-  color: #ffffff;
-  box-shadow: 0 8px 24px var(--tool-remove-glow);
-}
-#slidesTabView .dropzone:hover .dropzone-icon-wrapper, #slidesTabView .dropzone.drag-active .dropzone-icon-wrapper {
-  background-color: var(--tool-slides);
-  color: #ffffff;
-  box-shadow: 0 8px 24px var(--tool-slides-glow);
-}
-#invertTabView .dropzone:hover .dropzone-icon-wrapper, #invertTabView .dropzone.drag-active .dropzone-icon-wrapper {
-  background-color: var(--tool-invert);
-  color: #ffffff;
-  box-shadow: 0 8px 24px var(--tool-invert-glow);
-}
-#compressTabView .dropzone:hover .dropzone-icon-wrapper, #compressTabView .dropzone.drag-active .dropzone-icon-wrapper {
-  background-color: var(--tool-compress);
-  color: #ffffff;
-  box-shadow: 0 8px 24px var(--tool-compress-glow);
-}
-#imagesTabView .dropzone:hover .dropzone-icon-wrapper, #imagesTabView .dropzone.drag-active .dropzone-icon-wrapper {
-  background-color: var(--tool-images);
-  color: #ffffff;
-  box-shadow: 0 8px 24px var(--tool-images-glow);
-}
-#pdfToImagesTabView .dropzone:hover .dropzone-icon-wrapper, #pdfToImagesTabView .dropzone.drag-active .dropzone-icon-wrapper {
-  background-color: var(--tool-pdftoimages);
-  color: #ffffff;
-  box-shadow: 0 8px 24px var(--tool-pdftoimages-glow);
-}
-
-#splitTabView .dropzone:hover, #splitTabView .dropzone.drag-active {
-  border-color: var(--tool-split, #ea580c);
-  box-shadow: 0 20px 40px -8px var(--tool-split-glow, rgba(234, 88, 12, 0.25));
-}
-#splitTabView .dropzone:hover .dropzone-icon-wrapper, #splitTabView .dropzone.drag-active .dropzone-icon-wrapper {
-  background-color: var(--tool-split, #ea580c);
-  color: #ffffff;
-  box-shadow: 0 8px 24px var(--tool-split-glow, rgba(234, 88, 12, 0.25));
-}
-
+/* Accessible focus ring */
 .dropzone:focus-visible {
-  outline: 2px solid var(--primary);
-  outline-offset: 2px;
+  outline: 2px solid var(--primary, #4f46e5);
+  outline-offset: 3px;
 }
 
+/* Hidden file inputs */
 .file-input-hidden {
   position: absolute;
   top: 0;
@@ -121,46 +46,597 @@ html.dark .dropzone.drag-active {
   display: none;
 }
 
-.dropzone-icon-wrapper {
-  color: var(--primary);
-  margin-bottom: 1rem;
-  display: inline-flex;
-  padding: 1.15rem;
-  background-color: var(--primary-light);
-  border-radius: 20px;
-  box-shadow: 0 4px 12px rgba(79, 70, 229, 0.1);
-  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), background-color 0.3s ease, color 0.3s ease;
+/* ==========================================================================
+   Ambient Background Glowing Orbs
+   ========================================================================== */
+.dropzone-ambient-orb {
+  position: absolute;
+  top: -6rem;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 22rem;
+  height: 22rem;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(79, 70, 229, 0.09) 0%, transparent 70%);
+  pointer-events: none;
+  filter: blur(48px);
+  transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
+  opacity: 0.6;
 }
 
-.dropzone:hover .dropzone-icon-wrapper,
-.dropzone.drag-active .dropzone-icon-wrapper {
-  transform: scale(1.1) translateY(-3px);
-  background-color: var(--primary);
-  color: #ffffff;
-  box-shadow: 0 8px 24px rgba(79, 70, 229, 0.35);
+.dropzone:hover .dropzone-ambient-orb {
+  transform: translateX(-50%) scale(1.25);
+  opacity: 0.95;
+}
+
+/* ==========================================================================
+   Dropzone Content & Typography
+   ========================================================================== */
+.dropzone-content {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 .dropzone-title {
-  font-size: 1.25rem;
-  font-weight: 600;
+  font-size: 1.35rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--text-primary, var(--text-main, #0f172a));
   margin-bottom: 0.35rem;
-  color: var(--text-main);
+  transition: color 0.2s ease;
 }
 
 .dropzone-desc {
-  font-size: 0.95rem;
-  color: var(--text-sub);
-  margin-bottom: 0.75rem;
+  font-size: 0.88rem;
+  color: var(--text-muted, var(--text-sub, #64748b));
+  margin-bottom: 1.25rem;
 }
 
 .browse-link {
-  color: var(--primary);
+  color: var(--primary, #4f46e5);
   font-weight: 600;
   text-decoration: underline;
   text-underline-offset: 3px;
+  cursor: pointer;
+  transition: color 0.15s ease;
+}
+
+.browse-link:hover {
+  color: #4338ca;
 }
 
 .dropzone-hint {
   font-size: 0.8rem;
-  color: var(--text-muted);
+  color: var(--text-muted, #94a3b8);
+}
+
+/* ==========================================================================
+   Icon Box with Spring Physics
+   ========================================================================== */
+.dropzone-icon-box,
+.dropzone-icon-wrapper {
+  width: 58px;
+  height: 58px;
+  border-radius: 18px;
+  background: var(--surface-secondary, rgba(241, 245, 249, 0.9));
+  color: #4f46e5;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1.25rem;
+  border: 1px solid var(--border-subtle, rgba(226, 232, 240, 0.8));
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1),
+              background-color 0.25s ease,
+              color 0.25s ease,
+              box-shadow 0.35s ease;
+}
+
+/* Hover Spring Physics */
+.dropzone:hover {
+  transform: translateY(-4px) scale(1.006);
+  border-color: #4f46e5;
+  box-shadow: 0 20px 40px -10px rgba(79, 70, 229, 0.15), 0 0 0 1px rgba(79, 70, 229, 0.08);
+}
+
+.dropzone:hover .dropzone-icon-box,
+.dropzone:hover .dropzone-icon-wrapper {
+  transform: translateY(-5px) scale(1.12) rotate(-2deg);
+  background: #4f46e5;
+  color: #ffffff !important;
+  box-shadow: 0 10px 24px -2px rgba(79, 70, 229, 0.35);
+}
+
+@keyframes iconBobSpring {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+
+.dropzone:hover .dropzone-icon-box svg,
+.dropzone:hover .dropzone-icon-box .material-symbols-outlined,
+.dropzone:hover .dropzone-icon-wrapper svg,
+.dropzone:hover .dropzone-icon-wrapper .material-symbols-outlined {
+  animation: iconBobSpring 1.8s ease-in-out infinite;
+}
+
+/* ==========================================================================
+   Helper Metadata Chips
+   ========================================================================== */
+.dropzone-chips {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.dropzone-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.3rem 0.75rem;
+  border-radius: 9999px;
+  background: var(--surface-secondary, rgba(241, 245, 249, 0.9));
+  border: 1px solid var(--border-subtle, rgba(226, 232, 240, 0.8));
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-secondary, #475569);
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.dropzone:hover .dropzone-chip {
+  border-color: rgba(79, 70, 229, 0.2);
+}
+
+.dropzone-chip-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #4f46e5;
+}
+
+/* ==========================================================================
+   High-Impact Visual Drag-Over State (.drag-active)
+   ========================================================================== */
+.dropzone.drag-active {
+  transform: scale(1.025) translateY(-2px) !important;
+  border-style: dashed !important;
+  border-width: 2.5px !important;
+  border-color: #4f46e5 !important;
+  background-color: rgba(79, 70, 229, 0.08) !important;
+  box-shadow: 0 24px 48px -10px rgba(79, 70, 229, 0.3), 0 0 0 5px rgba(79, 70, 229, 0.2) !important;
+  animation: dropzoneGlowPulse 1.6s ease-in-out infinite alternate !important;
+}
+
+@keyframes dropzoneGlowPulse {
+  0% {
+    box-shadow: 0 20px 40px -10px rgba(79, 70, 229, 0.22), 0 0 0 3px rgba(79, 70, 229, 0.15);
+  }
+  100% {
+    box-shadow: 0 30px 60px -10px rgba(79, 70, 229, 0.4), 0 0 0 7px rgba(79, 70, 229, 0.28);
+  }
+}
+
+.dropzone.drag-active .dropzone-ambient-orb {
+  transform: translateX(-50%) scale(1.4) !important;
+  opacity: 1 !important;
+}
+
+.dropzone.drag-active .dropzone-icon-box,
+.dropzone.drag-active .dropzone-icon-wrapper {
+  background: #4f46e5 !important;
+  color: #ffffff !important;
+  transform: scale(1.22) translateY(-6px) !important;
+  box-shadow: 0 14px 28px -2px rgba(79, 70, 229, 0.4) !important;
+  animation: dragBounceIcon 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) infinite alternate !important;
+}
+
+@keyframes dragBounceIcon {
+  0% { transform: scale(1.2) translateY(-4px); }
+  100% { transform: scale(1.28) translateY(-9px); }
+}
+
+/* Hide chips on dragover, replace with spring pill */
+.dropzone.drag-active .dropzone-chips {
+  opacity: 0;
+  transform: translateY(8px);
+  pointer-events: none;
+}
+
+.dropzone.drag-active::after {
+  content: '✨ Release to add files to workspace';
+  position: absolute;
+  bottom: 1.35rem;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 0.45rem 1.25rem;
+  background: #4f46e5;
+  color: #ffffff;
+  font-size: 0.825rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  border-radius: 9999px;
+  box-shadow: 0 10px 25px -4px rgba(79, 70, 229, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.2);
+  animation: springPillIn 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  z-index: 10;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+@keyframes springPillIn {
+  0% {
+    opacity: 0;
+    transform: translateX(-50%) translateY(12px) scale(0.9);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0) scale(1);
+  }
+}
+
+/* ==========================================================================
+   Tool-Specific Themes (Home, Merge, Remove, Slides, Invert, Compress, Images, PDF to Images, Split)
+   ========================================================================== */
+
+/* Home Tab (Universal Dropzone) */
+#homeTabView .dropzone:hover {
+  border-color: var(--tool-home, #4f46e5);
+  box-shadow: 0 20px 40px -10px var(--tool-home-glow, rgba(79, 70, 229, 0.2)), 0 0 0 1px rgba(79, 70, 229, 0.12);
+}
+#homeTabView .dropzone:hover .dropzone-icon-box {
+  background: var(--tool-home, #4f46e5) !important;
+  color: #ffffff !important;
+  box-shadow: 0 10px 24px -2px var(--tool-home-glow, rgba(79, 70, 229, 0.35));
+}
+#homeTabView .dropzone.drag-active {
+  border-color: #4f46e5 !important;
+  background-color: rgba(79, 70, 229, 0.08) !important;
+  box-shadow: 0 24px 48px -10px rgba(79, 70, 229, 0.3), 0 0 0 5px rgba(79, 70, 229, 0.2) !important;
+}
+#homeTabView .dropzone.drag-active::after {
+  content: '✨ Release to open in Smart Workspace';
+  background: #4f46e5;
+  box-shadow: 0 10px 25px -4px rgba(79, 70, 229, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.2);
+}
+
+/* Tool 1: Merge PDFs (Emerald) */
+#mergeTabView .dropzone:hover {
+  border-color: var(--tool-merge, #10b981);
+  box-shadow: 0 20px 40px -10px var(--tool-merge-glow, rgba(16, 185, 129, 0.2)), 0 0 0 1px rgba(16, 185, 129, 0.12);
+}
+#mergeTabView .dropzone-icon-box { color: var(--tool-merge, #10b981); }
+#mergeTabView .dropzone:hover .dropzone-icon-box {
+  background: var(--tool-merge, #10b981) !important;
+  color: #ffffff !important;
+  box-shadow: 0 10px 24px -2px var(--tool-merge-glow, rgba(16, 185, 129, 0.35));
+}
+#mergeTabView .dropzone.drag-active {
+  border-color: #10b981 !important;
+  background-color: rgba(16, 185, 129, 0.08) !important;
+  box-shadow: 0 24px 48px -10px rgba(16, 185, 129, 0.3), 0 0 0 5px rgba(16, 185, 129, 0.2) !important;
+}
+#mergeTabView .dropzone.drag-active .dropzone-icon-box {
+  background: #10b981 !important;
+  color: #ffffff !important;
+  box-shadow: 0 14px 28px -2px rgba(16, 185, 129, 0.4) !important;
+}
+#mergeTabView .dropzone.drag-active::after {
+  content: '📄 Release to add PDFs to Merge';
+  background: #10b981;
+  box-shadow: 0 10px 25px -4px rgba(16, 185, 129, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.2);
+}
+
+/* Tool 2: Remove Pages (Rose) */
+#removeTabView .dropzone:hover {
+  border-color: var(--tool-remove, #f43f5e);
+  box-shadow: 0 20px 40px -10px var(--tool-remove-glow, rgba(244, 63, 94, 0.2)), 0 0 0 1px rgba(244, 63, 94, 0.12);
+}
+#removeTabView .dropzone-icon-box { color: var(--tool-remove, #f43f5e); }
+#removeTabView .dropzone:hover .dropzone-icon-box {
+  background: var(--tool-remove, #f43f5e) !important;
+  color: #ffffff !important;
+  box-shadow: 0 10px 24px -2px var(--tool-remove-glow, rgba(244, 63, 94, 0.35));
+}
+#removeTabView .dropzone.drag-active {
+  border-color: #f43f5e !important;
+  background-color: rgba(244, 63, 94, 0.08) !important;
+  box-shadow: 0 24px 48px -10px rgba(244, 63, 94, 0.3), 0 0 0 5px rgba(244, 63, 94, 0.2) !important;
+}
+#removeTabView .dropzone.drag-active .dropzone-icon-box {
+  background: #f43f5e !important;
+  color: #ffffff !important;
+  box-shadow: 0 14px 28px -2px rgba(244, 63, 94, 0.4) !important;
+}
+#removeTabView .dropzone.drag-active::after {
+  content: '✂️ Release to inspect & remove pages';
+  background: #f43f5e;
+  box-shadow: 0 10px 25px -4px rgba(244, 63, 94, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.2);
+}
+
+/* Tool 3: Slides to Handouts (Indigo) */
+#slidesTabView .dropzone:hover {
+  border-color: var(--tool-slides, #6366f1);
+  box-shadow: 0 20px 40px -10px var(--tool-slides-glow, rgba(99, 102, 241, 0.2)), 0 0 0 1px rgba(99, 102, 241, 0.12);
+}
+#slidesTabView .dropzone-icon-box { color: var(--tool-slides, #6366f1); }
+#slidesTabView .dropzone:hover .dropzone-icon-box {
+  background: var(--tool-slides, #6366f1) !important;
+  color: #ffffff !important;
+  box-shadow: 0 10px 24px -2px var(--tool-slides-glow, rgba(99, 102, 241, 0.35));
+}
+#slidesTabView .dropzone.drag-active {
+  border-color: #6366f1 !important;
+  background-color: rgba(99, 102, 241, 0.08) !important;
+  box-shadow: 0 24px 48px -10px rgba(99, 102, 241, 0.3), 0 0 0 5px rgba(99, 102, 241, 0.2) !important;
+}
+#slidesTabView .dropzone.drag-active .dropzone-icon-box {
+  background: #6366f1 !important;
+  color: #ffffff !important;
+  box-shadow: 0 14px 28px -2px rgba(99, 102, 241, 0.4) !important;
+}
+#slidesTabView .dropzone.drag-active::after {
+  content: '📑 Release to arrange slides into A4';
+  background: #6366f1;
+  box-shadow: 0 10px 25px -4px rgba(99, 102, 241, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.2);
+}
+
+/* Tool 4: Invert Colors / Ink Saver (Violet) */
+#invertTabView .dropzone:hover {
+  border-color: var(--tool-invert, #8b5cf6);
+  box-shadow: 0 20px 40px -10px var(--tool-invert-glow, rgba(139, 92, 246, 0.2)), 0 0 0 1px rgba(139, 92, 246, 0.12);
+}
+#invertTabView .dropzone-icon-box { color: var(--tool-invert, #8b5cf6); }
+#invertTabView .dropzone:hover .dropzone-icon-box {
+  background: var(--tool-invert, #8b5cf6) !important;
+  color: #ffffff !important;
+  box-shadow: 0 10px 24px -2px var(--tool-invert-glow, rgba(139, 92, 246, 0.35));
+}
+#invertTabView .dropzone.drag-active {
+  border-color: #8b5cf6 !important;
+  background-color: rgba(139, 92, 246, 0.08) !important;
+  box-shadow: 0 24px 48px -10px rgba(139, 92, 246, 0.3), 0 0 0 5px rgba(139, 92, 246, 0.2) !important;
+}
+#invertTabView .dropzone.drag-active .dropzone-icon-box {
+  background: #8b5cf6 !important;
+  color: #ffffff !important;
+  box-shadow: 0 14px 28px -2px rgba(139, 92, 246, 0.4) !important;
+}
+#invertTabView .dropzone.drag-active::after {
+  content: '🎨 Release to invert colors & save ink';
+  background: #8b5cf6;
+  box-shadow: 0 10px 25px -4px rgba(139, 92, 246, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.2);
+}
+
+/* Tool 5: Compress PDF (Amber) */
+#compressTabView .dropzone:hover {
+  border-color: var(--tool-compress, #f59e0b);
+  box-shadow: 0 20px 40px -10px var(--tool-compress-glow, rgba(245, 158, 11, 0.2)), 0 0 0 1px rgba(245, 158, 11, 0.12);
+}
+#compressTabView .dropzone-icon-box { color: var(--tool-compress, #f59e0b); }
+#compressTabView .dropzone:hover .dropzone-icon-box {
+  background: var(--tool-compress, #f59e0b) !important;
+  color: #ffffff !important;
+  box-shadow: 0 10px 24px -2px var(--tool-compress-glow, rgba(245, 158, 11, 0.35));
+}
+#compressTabView .dropzone.drag-active {
+  border-color: #f59e0b !important;
+  background-color: rgba(245, 158, 11, 0.08) !important;
+  box-shadow: 0 24px 48px -10px rgba(245, 158, 11, 0.3), 0 0 0 5px rgba(245, 158, 11, 0.2) !important;
+}
+#compressTabView .dropzone.drag-active .dropzone-icon-box {
+  background: #f59e0b !important;
+  color: #ffffff !important;
+  box-shadow: 0 14px 28px -2px rgba(245, 158, 11, 0.4) !important;
+}
+#compressTabView .dropzone.drag-active::after {
+  content: '🗜️ Release to compress PDF file';
+  background: #f59e0b;
+  box-shadow: 0 10px 25px -4px rgba(245, 158, 11, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.2);
+}
+
+/* Tool 6: Images to PDF (Teal) */
+#imagesTabView .dropzone:hover {
+  border-color: var(--tool-images, #0d9488);
+  box-shadow: 0 20px 40px -10px var(--tool-images-glow, rgba(13, 148, 136, 0.2)), 0 0 0 1px rgba(13, 148, 136, 0.12);
+}
+#imagesTabView .dropzone-icon-box { color: var(--tool-images, #0d9488); }
+#imagesTabView .dropzone:hover .dropzone-icon-box {
+  background: var(--tool-images, #0d9488) !important;
+  color: #ffffff !important;
+  box-shadow: 0 10px 24px -2px var(--tool-images-glow, rgba(13, 148, 136, 0.35));
+}
+#imagesTabView .dropzone.drag-active {
+  border-color: #0d9488 !important;
+  background-color: rgba(13, 148, 136, 0.08) !important;
+  box-shadow: 0 24px 48px -10px rgba(13, 148, 136, 0.3), 0 0 0 5px rgba(13, 148, 136, 0.2) !important;
+}
+#imagesTabView .dropzone.drag-active .dropzone-icon-box {
+  background: #0d9488 !important;
+  color: #ffffff !important;
+  box-shadow: 0 14px 28px -2px rgba(13, 148, 136, 0.4) !important;
+}
+#imagesTabView .dropzone.drag-active::after {
+  content: '🖼️ Release to convert images to PDF';
+  background: #0d9488;
+  box-shadow: 0 10px 25px -4px rgba(13, 148, 136, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.2);
+}
+
+/* Tool 7: PDF to Images (Sky Blue) */
+#pdfToImagesTabView .dropzone:hover {
+  border-color: var(--tool-pdftoimages, #0284c7);
+  box-shadow: 0 20px 40px -10px var(--tool-pdftoimages-glow, rgba(2, 132, 199, 0.2)), 0 0 0 1px rgba(2, 132, 199, 0.12);
+}
+#pdfToImagesTabView .dropzone-icon-box { color: var(--tool-pdftoimages, #0284c7); }
+#pdfToImagesTabView .dropzone:hover .dropzone-icon-box {
+  background: var(--tool-pdftoimages, #0284c7) !important;
+  color: #ffffff !important;
+  box-shadow: 0 10px 24px -2px var(--tool-pdftoimages-glow, rgba(2, 132, 199, 0.35));
+}
+#pdfToImagesTabView .dropzone.drag-active {
+  border-color: #0284c7 !important;
+  background-color: rgba(2, 132, 199, 0.08) !important;
+  box-shadow: 0 24px 48px -10px rgba(2, 132, 199, 0.3), 0 0 0 5px rgba(2, 132, 199, 0.2) !important;
+}
+#pdfToImagesTabView .dropzone.drag-active .dropzone-icon-box {
+  background: #0284c7 !important;
+  color: #ffffff !important;
+  box-shadow: 0 14px 28px -2px rgba(2, 132, 199, 0.4) !important;
+}
+#pdfToImagesTabView .dropzone.drag-active::after {
+  content: '📸 Release to extract PDF pages to images';
+  background: #0284c7;
+  box-shadow: 0 10px 25px -4px rgba(2, 132, 199, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.2);
+}
+
+/* Tool 8: Split PDF (Orange) */
+#splitTabView .dropzone:hover {
+  border-color: var(--tool-split, #ea580c);
+  box-shadow: 0 20px 40px -10px var(--tool-split-glow, rgba(234, 88, 12, 0.2)), 0 0 0 1px rgba(234, 88, 12, 0.12);
+}
+#splitTabView .dropzone-icon-box { color: var(--tool-split, #ea580c); }
+#splitTabView .dropzone:hover .dropzone-icon-box {
+  background: var(--tool-split, #ea580c) !important;
+  color: #ffffff !important;
+  box-shadow: 0 10px 24px -2px var(--tool-split-glow, rgba(234, 88, 12, 0.35));
+}
+#splitTabView .dropzone.drag-active {
+  border-color: #ea580c !important;
+  background-color: rgba(234, 88, 12, 0.08) !important;
+  box-shadow: 0 24px 48px -10px rgba(234, 88, 12, 0.3), 0 0 0 5px rgba(234, 88, 12, 0.2) !important;
+}
+#splitTabView .dropzone.drag-active .dropzone-icon-box {
+  background: #ea580c !important;
+  color: #ffffff !important;
+  box-shadow: 0 14px 28px -2px rgba(234, 88, 12, 0.4) !important;
+}
+#splitTabView .dropzone.drag-active::after {
+  content: '⚡ Release to split PDF pages';
+  background: #ea580c;
+  box-shadow: 0 10px 25px -4px rgba(234, 88, 12, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.2);
+}
+
+/* ==========================================================================
+   Multi-File Success Pulse Badge Overlay
+   ========================================================================== */
+.dropzone-success-pulse-badge {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.8rem 1.6rem;
+  border-radius: 9999px;
+  background: var(--surface-card, #ffffff);
+  color: var(--text-primary, #0f172a);
+  font-size: 0.95rem;
+  font-weight: 700;
+  box-shadow: 0 20px 45px -10px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(79, 70, 229, 0.25);
+  z-index: 50;
+  animation: springBadgePop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  pointer-events: none;
+}
+
+.dropzone-success-pulse-badge.fade-out {
+  opacity: 0;
+  transform: translate(-50%, -60%) scale(0.95);
+  transition: opacity 0.35s ease, transform 0.35s ease;
+}
+
+@keyframes springBadgePop {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -30%) scale(0.7);
+  }
+  100% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+.badge-dot-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 12px;
+  height: 12px;
+}
+
+.badge-dot-ping {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background-color: #10b981;
+  opacity: 0.75;
+  animation: pingDot 1.4s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+.badge-dot-core {
+  position: relative;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: #10b981;
+}
+
+@keyframes pingDot {
+  75%, 100% {
+    transform: scale(2.2);
+    opacity: 0;
+  }
+}
+
+/* ==========================================================================
+   Dark Theme Styling for Dropzones
+   ========================================================================== */
+body.theme-dark .dropzone,
+html.dark .dropzone {
+  background-color: rgba(19, 27, 46, 0.85);
+  border-color: rgba(99, 102, 241, 0.25);
+  box-shadow: 0 8px 24px -4px rgba(0, 0, 0, 0.5);
+}
+
+body.theme-dark .dropzone:hover,
+html.dark .dropzone:hover {
+  background-color: rgba(26, 36, 60, 0.95);
+  border-color: #818cf8;
+  box-shadow: 0 20px 45px -8px rgba(0, 0, 0, 0.65), 0 0 24px -2px rgba(99, 102, 241, 0.25);
+}
+
+body.theme-dark .dropzone.drag-active,
+html.dark .dropzone.drag-active {
+  background-color: rgba(30, 41, 75, 0.95) !important;
+  border-color: #a5b4fc !important;
+  box-shadow: 0 24px 50px -10px rgba(0, 0, 0, 0.7), 0 0 35px 2px rgba(99, 102, 241, 0.4) !important;
+}
+
+body.theme-dark .dropzone-icon-box,
+html.dark .dropzone-icon-box,
+body.theme-dark .dropzone-icon-wrapper,
+html.dark .dropzone-icon-wrapper {
+  background: rgba(30, 41, 59, 0.9);
+  border-color: rgba(51, 65, 85, 0.8);
+  color: #a5b4fc;
+}
+
+body.theme-dark .dropzone-chip,
+html.dark .dropzone-chip {
+  background: rgba(30, 41, 59, 0.8);
+  border-color: rgba(51, 65, 85, 0.7);
+  color: #94a3b8;
+}
+
+body.theme-dark .dropzone-success-pulse-badge,
+html.dark .dropzone-success-pulse-badge {
+  background: #1e293b;
+  color: #f8fafc;
+  box-shadow: 0 20px 45px -10px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(99, 102, 241, 0.4);
 }
