@@ -118,6 +118,8 @@ if (typeof window !== 'undefined') {
   window.rehydratePageCanvas = rehydratePageCanvas;
   window.MAX_ACTIVE_CANVASES = MAX_ACTIVE_CANVASES;
   window.checkOfflineReadiness = checkOfflineReadiness;
+  window.openMobileDrawer = openMobileDrawer;
+  window.closeMobileDrawer = closeMobileDrawer;
 
 }
 
@@ -156,6 +158,7 @@ export function switchTab(tab) {
     appMainSubtitle
   } = elements;
 
+  window.currentTab = tab;
   const performDomUpdate = () => {
     [tabHomeBtn, tabMergeBtn, tabRemoveBtn, tabSlidesBtn, tabInvertBtn, tabCompressBtn, tabImagesBtn, tabPdfToImagesBtn, tabSplitBtn].forEach((btn) => {
       if (btn) btn.classList.remove('active');
@@ -265,6 +268,60 @@ export function switchTab(tab) {
   return preloadEngineForTool(tab);
 }
 
+
+/**
+ * Opens the mobile tool selector bottom drawer with fluid spring physics.
+ */
+export function openMobileDrawer() {
+  const mobileToolsDrawer = document.getElementById('mobileToolsDrawer');
+  if (!mobileToolsDrawer) return;
+  if (typeof window.playAudioCue === 'function') window.playAudioCue('toggle');
+  if (typeof window.triggerHaptic === 'function') window.triggerHaptic('light');
+
+  // Highlight active tool in mobile drawer
+  const drawerItems = document.querySelectorAll('[data-drawer-tab]');
+  const currentTab = window.currentTab || 'home';
+  drawerItems.forEach((btn) => {
+    const tabName = btn.dataset.drawerTab;
+    if (tabName === currentTab) {
+      btn.classList.add('is-active-tool');
+    } else {
+      btn.classList.remove('is-active-tool');
+    }
+  });
+
+  mobileToolsDrawer.classList.remove('hidden');
+  void mobileToolsDrawer.offsetHeight; // Force reflow
+  mobileToolsDrawer.classList.remove('drawer-closing');
+  mobileToolsDrawer.classList.add('drawer-open');
+  if (typeof document !== 'undefined' && document.body) {
+    document.body.style.overflow = 'hidden';
+  }
+}
+
+/**
+ * Closes the mobile tool selector bottom drawer with a smooth slide-down exit animation.
+ */
+export function closeMobileDrawer() {
+  const mobileToolsDrawer = document.getElementById('mobileToolsDrawer');
+  if (!mobileToolsDrawer) return;
+  if (typeof window.playAudioCue === 'function') window.playAudioCue('toggle');
+  if (typeof window.triggerHaptic === 'function') window.triggerHaptic('light');
+
+  mobileToolsDrawer.classList.remove('drawer-open');
+  mobileToolsDrawer.classList.add('drawer-closing');
+  if (typeof document !== 'undefined' && document.body) {
+    document.body.style.overflow = '';
+  }
+
+  setTimeout(() => {
+    if (mobileToolsDrawer.classList.contains('drawer-closing')) {
+      mobileToolsDrawer.classList.add('hidden');
+      mobileToolsDrawer.classList.remove('drawer-closing');
+    }
+  }, 280);
+}
+
 /**
  * Main Application Bootloader
  */
@@ -330,16 +387,15 @@ export async function init() {
   const mobileToolsDrawer = document.getElementById('mobileToolsDrawer');
   const closeMobileDrawerBtn = document.getElementById('closeMobileDrawerBtn');
   const closeMobileDrawerBar = document.getElementById('closeMobileDrawerBar');
+  const drawerItems = document.querySelectorAll('[data-drawer-tab]');
+  const sheetContent = mobileToolsDrawer ? mobileToolsDrawer.querySelector('.bottom-sheet-content') : null;
 
   if (mobileNavHomeBtn) {
     mobileNavHomeBtn.addEventListener('click', () => switchTab('home'));
   }
 
-  function openMobileDrawer() {
-    if (mobileToolsDrawer) mobileToolsDrawer.classList.remove('hidden');
-  }
 
-  
+
   const mobileDrawerSearchBtn = document.getElementById('mobileDrawerSearchBtn');
   if (mobileDrawerSearchBtn) {
     mobileDrawerSearchBtn.addEventListener('click', () => {
@@ -348,10 +404,6 @@ export async function init() {
         window.openCommandPalette();
       }
     });
-  }
-
-  function closeMobileDrawer() {
-    if (mobileToolsDrawer) mobileToolsDrawer.classList.add('hidden');
   }
 
   if (mobileNavToolsBtn) {
@@ -369,7 +421,51 @@ export async function init() {
     });
   }
 
-  const drawerItems = document.querySelectorAll('[data-drawer-tab]');
+  // Keyboard accessibility: Escape closes drawer
+  window.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && mobileToolsDrawer && !mobileToolsDrawer.classList.contains('hidden')) {
+      closeMobileDrawer();
+    }
+  });
+
+  // Touch swipe-down to dismiss
+  if (sheetContent) {
+    let touchStartY = 0;
+    let currentTranslateY = 0;
+    let isDragging = false;
+
+    sheetContent.addEventListener('touchstart', (e) => {
+      if (sheetContent.scrollTop <= 0) {
+        touchStartY = e.touches[0].clientY;
+        isDragging = true;
+      }
+    }, { passive: true });
+
+    sheetContent.addEventListener('touchmove', (e) => {
+      if (!isDragging) return;
+      const touchY = e.touches[0].clientY;
+      const diff = touchY - touchStartY;
+      if (diff > 0) {
+        currentTranslateY = diff;
+        sheetContent.style.transform = 	ranslateY(px);
+        sheetContent.style.transition = 'none';
+      }
+    }, { passive: true });
+
+    sheetContent.addEventListener('touchend', (e) => {
+      if (!isDragging) return;
+      isDragging = false;
+      sheetContent.style.transition = '';
+      if (currentTranslateY > 60) {
+        sheetContent.style.transform = '';
+        closeMobileDrawer();
+      } else {
+        sheetContent.style.transform = '';
+      }
+      currentTranslateY = 0;
+    }, { passive: true });
+  }
+
   drawerItems.forEach((btn) => {
     btn.addEventListener('click', () => {
       const target = btn.dataset.drawerTab;

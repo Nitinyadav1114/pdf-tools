@@ -1940,22 +1940,23 @@ html.dark .home-modal-btn:hover {
   z-index: 45;
   display: flex;
   align-items: center;
-  gap: 0.4rem;
-  padding: 0.4rem 0.55rem;
+  gap: 0.45rem;
+  padding: 0.4rem 0.65rem;
   border-radius: 9999px;
-  background: rgba(15, 23, 42, 0.88);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  box-shadow: 0 16px 36px -6px rgba(0, 0, 0, 0.45), 0 4px 12px rgba(0, 0, 0, 0.25);
+  background: rgba(15, 23, 42, 0.9);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  box-shadow: 0 16px 36px -6px rgba(0, 0, 0, 0.5), 0 4px 12px rgba(0, 0, 0, 0.25);
   color: #fff;
   transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
   max-width: calc(100vw - 2rem);
+  user-select: none;
 }
 
 .mobile-floating-nav:hover {
   border-color: rgba(99, 102, 241, 0.4);
-  box-shadow: 0 20px 42px -6px rgba(0, 0, 0, 0.5), 0 0 20px rgba(99, 102, 241, 0.25);
+  box-shadow: 0 20px 42px -6px rgba(0, 0, 0, 0.55), 0 0 20px rgba(99, 102, 241, 0.25);
 }
 
 .mobile-nav-btn {
@@ -1963,17 +1964,18 @@ html.dark .home-modal-btn:hover {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 0.4rem 0.65rem;
+  padding: 0.4rem 0.75rem;
   border-radius: 9999px;
-  font-size: 0.65rem;
+  font-size: 0.68rem;
   font-weight: 600;
-  color: rgba(255, 255, 255, 0.8);
+  color: rgba(255, 255, 255, 0.85);
   background: transparent;
   border: none;
   cursor: pointer;
-  transition: all 0.15s ease;
-  min-width: 44px;
-  min-height: 40px;
+  transition: all 0.18s cubic-bezier(0.34, 1.56, 0.64, 1);
+  min-width: 48px;
+  min-height: 48px;
+  touch-action: manipulation;
 }
 
 .mobile-nav-btn:active {
@@ -1984,49 +1986,119 @@ html.dark .home-modal-btn:hover {
 .mobile-nav-current-tool {
   display: inline-flex;
   align-items: center;
-  gap: 0.45rem;
-  padding: 0.45rem 0.95rem;
+  gap: 0.5rem;
+  padding: 0.5rem 1.1rem;
   border-radius: 9999px;
-  font-size: 0.78rem;
+  font-size: 0.8125rem;
   font-weight: 700;
   color: #fff;
-  background: linear-gradient(135deg, rgba(99, 102, 241, 0.85), rgba(79, 70, 229, 0.95));
-  border: 1px solid rgba(255, 255, 255, 0.25);
-  box-shadow: 0 4px 12px rgba(79, 70, 229, 0.35);
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.9), rgba(79, 70, 229, 0.98));
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 4px 14px rgba(79, 70, 229, 0.4);
   cursor: pointer;
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  min-height: 40px;
+  transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+  min-height: 48px;
+  touch-action: manipulation;
 }
 
 .mobile-nav-current-tool:active {
   transform: scale(0.95);
-  box-shadow: 0 2px 6px rgba(79, 70, 229, 0.2);
+  box-shadow: 0 2px 6px rgba(79, 70, 229, 0.25);
+}
+
+/* Bottom Sheet Modal Backdrop Transition */
+#mobileToolsDrawer {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+#mobileToolsDrawer.drawer-open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+#mobileToolsDrawer.drawer-closing {
+  opacity: 0;
+  pointer-events: none;
+}
+
+#mobileToolsDrawer .bottom-sheet-content {
+  transform: translateY(100%);
+  transition: transform 0.32s cubic-bezier(0.32, 0.72, 0, 1);
+  will-change: transform;
+  border-top-left-radius: 28px !important;
+  border-top-right-radius: 28px !important;
+  box-shadow: 0 -12px 40px rgba(0, 0, 0, 0.4);
+}
+
+#mobileToolsDrawer.drawer-open .bottom-sheet-content {
+  transform: translateY(0%);
+}
+
+#mobileToolsDrawer.drawer-closing .bottom-sheet-content {
+  transform: translateY(100%);
 }
 
 .mobile-drawer-tool-item {
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  padding: 0.85rem;
-  border-radius: 16px;
-  background: rgba(241, 245, 249, 0.7);
-  border: 1px solid rgba(226, 232, 240, 0.8);
+  padding: 0.9rem;
+  border-radius: 18px;
+  background: rgba(241, 245, 249, 0.75);
+  border: 1px solid rgba(226, 232, 240, 0.85);
   text-align: left;
   cursor: pointer;
-  transition: all 0.18s cubic-bezier(0.4, 0, 0.2, 1);
-  min-height: 52px;
-}
-
-html.dark .mobile-drawer-tool-item,
-body.theme-dark .mobile-drawer-tool-item {
-  background: rgba(30, 41, 59, 0.65);
-  border-color: rgba(51, 65, 85, 0.8);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  min-height: 56px;
+  position: relative;
+  overflow: hidden;
+  user-select: none;
+  touch-action: manipulation;
 }
 
 .mobile-drawer-tool-item:active {
   transform: scale(0.96);
-  background: rgba(99, 102, 241, 0.15);
+  background: rgba(99, 102, 241, 0.12);
   border-color: rgba(99, 102, 241, 0.4);
+}
+
+.mobile-drawer-tool-item.is-active-tool {
+  background: rgba(99, 102, 241, 0.12);
+  border-color: #6366f1;
+  box-shadow: 0 4px 14px -2px rgba(99, 102, 241, 0.25);
+}
+
+.mobile-drawer-tool-item.is-active-tool::after {
+  content: '';
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #6366f1;
+  box-shadow: 0 0 8px #6366f1;
+}
+
+html.dark .mobile-drawer-tool-item,
+body.theme-dark .mobile-drawer-tool-item {
+  background: rgba(30, 41, 59, 0.7);
+  border-color: rgba(51, 65, 85, 0.8);
+}
+
+html.dark .mobile-drawer-tool-item.is-active-tool,
+body.theme-dark .mobile-drawer-tool-item.is-active-tool {
+  background: rgba(99, 102, 241, 0.2);
+  border-color: #818cf8;
+  box-shadow: 0 4px 16px -2px rgba(99, 102, 241, 0.4);
+}
+
+html.dark .mobile-drawer-tool-item.is-active-tool::after,
+body.theme-dark .mobile-drawer-tool-item.is-active-tool::after {
+  background: #818cf8;
+  box-shadow: 0 0 10px #818cf8;
 }
 
 /* 3. Interactive 3D Perspective Card Tilt & Cursor Spotlight */
