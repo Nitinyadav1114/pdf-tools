@@ -1,0 +1,42 @@
+name: Verify & Build PDF Tools
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test-and-build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Setup Node.js LTS
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Install Node Dependencies
+        run: npm ci
+
+      - name: Build Vite Svelte 5 Application
+        run: npm run build
+
+      - name: Verify Static Modern Preview Exists
+        run: |
+          test -f modern-preview.html || exit 1
+          test -d assets/modern || exit 1
+          echo "Production static assets and modern preview verified."

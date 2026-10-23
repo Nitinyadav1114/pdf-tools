@@ -1,0 +1,26 @@
+{
+  "name": "pdf-tools",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build && node scripts/prepare-static.js",
+    "preview": "vite preview",
+    "test:legacy": "python scratch/run_test_suite.py",
+    "test:modern": "python scratch/test_modern_e2e.py",
+    "test": "python scratch/run_test_suite.py && python scratch/test_modern_e2e.py"
+  },
+  "devDependencies": {
+    "@sveltejs/vite-plugin-svelte": "^5.0.3",
+    "@tailwindcss/vite": "^4.0.0",
+    "lucide-svelte": "^0.475.0",
+    "svelte": "^5.20.0",
+    "tailwindcss": "^4.0.0",
+    "vite": "^6.1.0"
+  },
+  "dependencies": {
+    "@lucide/svelte": "^1.61.0",
+    "canvas-confetti": "^1.9.4"
+  }
+}

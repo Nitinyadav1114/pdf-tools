@@ -1,5 +1,6 @@
 # Production build and test folders
 dist/
+node_modules/
 test_samples/
 __pycache__/
 *.pyc
