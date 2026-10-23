@@ -1,7 +1,9 @@
-const CACHE_NAME = 'pdf-tools-v34';
+const CACHE_NAME = 'pdf-tools-v35';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
+  './classic.html',
+  './modern.html',
   './manifest.json',
   './assets/css/bundle.min.css',
   './assets/css/core/modern-design-system.css',

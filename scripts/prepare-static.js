@@ -42,10 +42,23 @@ function prepareStatic() {
   html = html.replace(/\.\/assets\/(main-[^"]+\.css)/g, './assets/modern/$1');
   html = html.replace(/src="\/src\/main\.js"/g, `src="./assets/modern/${mainJsFile}"`);
 
-  // Write modern-preview.html (so modern.html can remain the Vite source file)
+  // Ensure icon, manifest, and vendor prefetch paths point to stable root assets
+  html = html.replace(/href="\.\/assets\/icon-[^"]+\.ico"/g, 'href="assets/icon.ico"');
+  html = html.replace(/href="\.\/assets\/icon-[^"]+\.png"/g, 'href="assets/icon.png"');
+  html = html.replace(/href="\.\/assets\/manifest-[^"]+\.json"/g, 'href="manifest.json"');
+  html = html.replace(/href="\.\/assets\/pdf-lib[^"]+\.js"/g, 'href="assets/vendor/pdf-lib.min.js"');
+  html = html.replace(/href="\.\/assets\/pdf\.worker[^"]+\.js"/g, 'href="assets/vendor/pdf.worker.min.js"');
+  html = html.replace(/href="\.\/assets\/pdf\.min[^"]+\.js"/g, 'href="assets/vendor/pdf.min.js"');
+
+  // Promote modern Svelte 5 app to primary index.html
+  const primaryIndexPath = path.join(ROOT_DIR, 'index.html');
+  fs.writeFileSync(primaryIndexPath, html, 'utf-8');
+  console.log('✓ Promoted modern Svelte 5 app to primary index.html');
+
+  // Also preserve modern-preview.html
   const modernPreviewPath = path.join(ROOT_DIR, 'modern-preview.html');
   fs.writeFileSync(modernPreviewPath, html, 'utf-8');
-  console.log('✓ Created root modern-preview.html for instant static branch hosting');
+  console.log('✓ Updated modern-preview.html');
 }
 
 prepareStatic();

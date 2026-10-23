@@ -52,7 +52,7 @@
 
     <!-- Classic View Link -->
     <a
-      href="index.html"
+      href="classic.html"
       class="hidden sm:inline-flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-black/[0.03] dark:bg-white/[0.06] hover:bg-black/[0.06] dark:hover:bg-white/[0.1] border border-black/[0.08] dark:border-white/[0.1] text-xs font-medium text-[#52505d] dark:text-[#9e9cb0] transition-all"
       title="Switch to Classic Mode"
     >

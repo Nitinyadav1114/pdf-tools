@@ -1378,7 +1378,7 @@
           // 5b: Audit sw.js pre-cache coverage against live application assets
           const swResponse = await fetch('sw.js');
           const swContent = await swResponse.text();
-          assert(swContent.includes('pdf-tools-v34'), 'Service Worker cache version is bumped to v34');
+          assert(swContent.includes('pdf-tools-v35'), 'Service Worker cache version is bumped to v35');
           assert(swContent.includes('bundle.min.css'), 'Compiled production CSS bundle is precached');
           assert(swContent.includes('pdf-lib.min.js') && swContent.includes('pdf.min.js'), 'Heavy client-side PDF engines are precached for 100% offline usage');
           assert(swContent.includes('event.waitUntil'), 'Background revalidation is guaranteed via event.waitUntil');

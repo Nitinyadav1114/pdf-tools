@@ -2,14 +2,75 @@
 <html lang="en" class="dark">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>PDF Tools — 100% In-Browser Private PDF Suite</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover" />
+    <title>PDF Tools — Free, Fast &amp; 100% Private In-Browser PDF Suite</title>
     <meta name="description" content="100% private, client-side PDF suite. Merge, remove, split, compress, invert, and convert PDFs entirely in your browser with zero server uploads." />
-    <link rel="icon" type="image/x-icon" href="./assets/icon-BHKhT1MH.ico" />
-    <script type="module" crossorigin src="./assets/modern/main-Czz-Od9M.js"></script>
+    <meta name="keywords" content="PDF tools, merge PDF, compress PDF, PDF compressor, invert PDF colors, dark to light PDF, slides to A4 handout, remove PDF pages, image to PDF, JPG to PDF, private PDF editor, client-side PDF, in-browser PDF" />
+    <meta name="author" content="PDF Tools" />
+    <meta name="robots" content="index, follow" />
+
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://nitinyadav1114.github.io/pdf-tools/" />
+
+    <!-- Open Graph / Social Sharing -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://nitinyadav1114.github.io/pdf-tools/" />
+    <meta property="og:title" content="PDF Tools — All-in-One Private Browser PDF Suite" />
+    <meta property="og:description" content="Merge, compress, remove pages, convert slides to A4, invert colors, and convert images to PDF. 100% private in your browser — zero file uploads, no app downloads required." />
+    <meta property="og:image" content="https://nitinyadav1114.github.io/pdf-tools/assets/og-preview.png" />
+
+    <!-- Twitter / X -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content="https://nitinyadav1114.github.io/pdf-tools/" />
+    <meta name="twitter:title" content="PDF Tools — All-in-One Private Browser PDF Suite" />
+    <meta name="twitter:description" content="Merge, compress, remove pages, convert slides to A4, invert colors, and convert images to PDF. 100% private in your browser." />
+    <meta name="twitter:image" content="https://nitinyadav1114.github.io/pdf-tools/assets/og-preview.png" />
+
+    <!-- PWA & Mobile Theme -->
+    <meta name="theme-color" content="#4f46e5" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0f0e16" media="(prefers-color-scheme: dark)" />
+    <link rel="icon" type="image/x-icon" href="assets/icon.ico" />
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/icon.png" />
+    <link rel="apple-touch-icon" href="assets/icon.png" />
+    <link rel="manifest" href="manifest.json" />
+
+    <!-- Low-priority background engine prefetching -->
+    <link rel="prefetch" href="assets/vendor/pdf-lib.min.js" as="script" />
+    <link rel="prefetch" href="assets/vendor/pdf.min.js" as="script" />
+    <link rel="prefetch" href="assets/vendor/pdf.worker.min.js" as="script" />
+
+    <!-- JSON-LD Structured Data Schema -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "PDF Tools",
+      "url": "https://nitinyadav1114.github.io/pdf-tools/",
+      "description": "All-in-one free browser PDF tools. Merge PDFs, compress files up to 90%, remove pages, convert slides to A4 handouts, invert colors to save ink, and convert images to PDF. 100% private in browser.",
+      "applicationCategory": "UtilitiesApplication",
+      "operatingSystem": "All",
+      "browserRequirements": "Requires JavaScript. Requires HTML5.",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      }
+    }
+    </script>
+    <script type="module" crossorigin src="./assets/modern/main-dDxiOHxX.js"></script>
     <link rel="stylesheet" crossorigin href="./assets/modern/main-BbAPXGSC.css">
   </head>
   <body class="theme-dark bg-mesh-canvas">
     <div id="app"></div>
+    <script>
+      // Service Worker Registration for Offline PWA Support
+      if ('serviceWorker' in navigator && (window.location.protocol === 'https:' || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('./sw.js').catch((err) => {
+            console.debug('[SW] Registration failed:', err);
+          });
+        });
+      }
+    </script>
   </body>
 </html>
