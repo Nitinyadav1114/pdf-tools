@@ -188,6 +188,8 @@ export function rotatePage(pageNum, degreesDelta = 90) {
   const current = removeState.pageRotations.get(pageNum) || 0;
   const next = ((current + degreesDelta) % 360 + 360) % 360;
   removeState.pageRotations.set(pageNum, next);
+  if (typeof window.playAudioCue === 'function') window.playAudioCue('toggle');
+  if (typeof window.triggerHaptic === 'function') window.triggerHaptic('light');
   const canvas = document.getElementById(`canvas_page_${pageNum}`);
   if (canvas) {
     canvas.style.transform = next !== 0 ? `rotate(${next}deg)` : '';
@@ -204,6 +206,11 @@ export function rotatePage(pageNum, degreesDelta = 90) {
     if (rotateBtn) {
       rotateBtn.classList.add('page-rotate-spin');
       setTimeout(() => rotateBtn.classList.remove('page-rotate-spin'), 350);
+    }
+    const dockRotateCw = card.querySelector('.page-dock-rotate-cw');
+    if (dockRotateCw) {
+      dockRotateCw.classList.add('page-rotate-spin');
+      setTimeout(() => dockRotateCw.classList.remove('page-rotate-spin'), 350);
     }
   }
 }
@@ -262,16 +269,22 @@ export function renderPagesGrid() {
 
     const rot = removeState.pageRotations.get(p) || 0;
 
+    const isMarked = removeState.selectedPages.has(p);
     card.innerHTML = `
       <div class="page-card-header">
-        <span class="page-num-pill">Page ${p}</span>
-        <span class="page-rot-badge ${rot === 0 ? 'hidden' : ''}">${rot ? rot + '°' : ''}</span>
+        <div class="page-header-meta">
+          <span class="page-num-pill">
+            <span class="page-num-dot"></span>
+            <span>Page ${p}</span>
+          </span>
+          <span class="page-rot-badge ${rot === 0 ? 'hidden' : ''}">${rot ? rot + '°' : ''}</span>
+        </div>
         <div class="page-card-actions">
           <button type="button" class="page-action-btn page-zoom-btn" title="Inspect Fullscreen (Zoom & Details)" aria-label="Zoom Page ${p}">
             <svg class="w-3.5 h-3.5 shrink-0" aria-hidden="true"><use href="#lucide-search"></use></svg>
           </button>
           <button type="button" class="page-action-btn page-rotate-cw-btn" title="Rotate 90° Clockwise" aria-label="Rotate Page ${p}">
-            <span class="material-symbols-outlined text-[15px]">rotate_right</span>
+            <svg class="w-3.5 h-3.5 shrink-0" aria-hidden="true"><use href="#lucide-rotate-cw"></use></svg>
           </button>
           <span class="page-status-badge">🗑️ Delete</span>
         </div>
@@ -279,7 +292,25 @@ export function renderPagesGrid() {
       <div class="page-canvas-wrapper">
         <canvas class="page-canvas" id="canvas_page_${p}" style="${rot !== 0 ? `transform: rotate(${rot}deg);` : ''}"></canvas>
         <div class="page-fallback-label">📄 Page ${p}</div>
-        <div class="delete-watermark">🗑️ Delete</div>
+        <div class="delete-watermark">
+          <svg class="w-3.5 h-3.5 shrink-0" aria-hidden="true"><use href="#lucide-trash-2"></use></svg>
+          <span>Marked to Delete</span>
+        </div>
+        <!-- Floating Quick-Action Hover Dock -->
+        <div class="page-hover-dock" role="toolbar" aria-label="Page ${p} quick actions">
+          <button type="button" class="page-dock-btn page-dock-zoom" title="Inspect Fullscreen" aria-label="Inspect Page ${p}">
+            <svg class="w-3.5 h-3.5 shrink-0" aria-hidden="true"><use href="#lucide-search"></use></svg>
+          </button>
+          <button type="button" class="page-dock-btn page-dock-rotate-cw" title="Rotate 90° Clockwise" aria-label="Rotate Page ${p} Clockwise">
+            <svg class="w-3.5 h-3.5 shrink-0" aria-hidden="true"><use href="#lucide-rotate-cw"></use></svg>
+          </button>
+          <button type="button" class="page-dock-btn page-dock-rotate-ccw" title="Rotate 90° Counter-Clockwise" aria-label="Rotate Page ${p} Counter-Clockwise">
+            <svg class="w-3.5 h-3.5 shrink-0" aria-hidden="true"><use href="#lucide-rotate-ccw"></use></svg>
+          </button>
+          <button type="button" class="page-dock-btn page-dock-toggle ${isMarked ? 'is-delete-active' : ''}" title="${isMarked ? 'Restore Page' : 'Mark to Delete'}" aria-label="Toggle Page ${p} Deletion">
+            <svg class="w-3.5 h-3.5 shrink-0" aria-hidden="true"><use href="#lucide-${isMarked ? 'check' : 'trash-2'}"></use></svg>
+          </button>
+        </div>
       </div>
     `;
 
@@ -291,11 +322,43 @@ export function renderPagesGrid() {
       });
     }
 
+    const dockRotateCw = card.querySelector('.page-dock-rotate-cw');
+    if (dockRotateCw) {
+      dockRotateCw.addEventListener('click', (e) => {
+        e.stopPropagation();
+        rotatePage(p, 90);
+      });
+    }
+
+    const dockRotateCcw = card.querySelector('.page-dock-rotate-ccw');
+    if (dockRotateCcw) {
+      dockRotateCcw.addEventListener('click', (e) => {
+        e.stopPropagation();
+        rotatePage(p, -90);
+      });
+    }
+
     const zoomBtn = card.querySelector('.page-zoom-btn');
     if (zoomBtn) {
       zoomBtn.addEventListener('click', (e) => {
         e.stopPropagation();
         triggerPageLightbox(p);
+      });
+    }
+
+    const dockZoom = card.querySelector('.page-dock-zoom');
+    if (dockZoom) {
+      dockZoom.addEventListener('click', (e) => {
+        e.stopPropagation();
+        triggerPageLightbox(p);
+      });
+    }
+
+    const dockToggle = card.querySelector('.page-dock-toggle');
+    if (dockToggle) {
+      dockToggle.addEventListener('click', (e) => {
+        e.stopPropagation();
+        togglePageSelection(p);
       });
     }
 
@@ -364,8 +427,12 @@ async function renderPageThumbnail(pageNum) {
 export function togglePageSelection(pageNum) {
   if (removeState.selectedPages.has(pageNum)) {
     removeState.selectedPages.delete(pageNum);
+    if (typeof window.playAudioCue === 'function') window.playAudioCue('pop');
+    if (typeof window.triggerHaptic === 'function') window.triggerHaptic('light');
   } else {
     removeState.selectedPages.add(pageNum);
+    if (typeof window.playAudioCue === 'function') window.playAudioCue('delete');
+    if (typeof window.triggerHaptic === 'function') window.triggerHaptic('warning');
   }
   syncSelectionToInput();
   updateGridCardStyles();
@@ -377,10 +444,19 @@ function updateGridCardStyles() {
   const cards = elements.pagesGrid.querySelectorAll('.page-card');
   cards.forEach((card) => {
     const p = parseInt(card.dataset.pageNum, 10);
-    if (removeState.selectedPages.has(p)) {
+    const isSelected = removeState.selectedPages.has(p);
+    if (isSelected) {
       card.classList.add('marked-for-deletion');
     } else {
       card.classList.remove('marked-for-deletion');
+    }
+    const dockToggle = card.querySelector('.page-dock-toggle');
+    if (dockToggle) {
+      dockToggle.title = isSelected ? 'Restore Page' : 'Mark to Delete';
+      dockToggle.classList.toggle('is-delete-active', isSelected);
+      dockToggle.innerHTML = isSelected
+        ? `<svg class="w-3.5 h-3.5 shrink-0" aria-hidden="true"><use href="#lucide-check"></use></svg>`
+        : `<svg class="w-3.5 h-3.5 shrink-0" aria-hidden="true"><use href="#lucide-trash-2"></use></svg>`;
     }
   });
 }
@@ -749,4 +825,6 @@ if (typeof window !== 'undefined') {
   window.rehydratePageCanvas = rehydratePageCanvas;
   window.renderPageThumbnail = renderPageThumbnail;
   window.MAX_ACTIVE_CANVASES = MAX_ACTIVE_CANVASES;
+  window.rotatePage = rotatePage;
+  window.togglePageSelection = togglePageSelection;
 }

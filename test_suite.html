@@ -1378,7 +1378,7 @@
           // 5b: Audit sw.js pre-cache coverage against live application assets
           const swResponse = await fetch('sw.js');
           const swContent = await swResponse.text();
-          assert(swContent.includes('pdf-tools-v36'), 'Service Worker cache version is bumped to v36');
+          assert(swContent.includes('pdf-tools-v37'), 'Service Worker cache version is bumped to v37');
           assert(swContent.includes('bundle.min.css'), 'Compiled production CSS bundle is precached');
           assert(swContent.includes('pdf-lib.min.js') && swContent.includes('pdf.min.js'), 'Heavy client-side PDF engines are precached for 100% offline usage');
           assert(swContent.includes('event.waitUntil'), 'Background revalidation is guaranteed via event.waitUntil');
@@ -1437,6 +1437,71 @@
           assert(cssContent.includes('.drawer-closing'), 'Compiled bundle includes .drawer-closing exit transition rules');
           assert(cssContent.includes('.is-active-tool'), 'Compiled bundle includes .is-active-tool glowing indicator styling');
           assert(cssContent.includes('touch-action:manipulation'), 'Compiled bundle enforces touch-action manipulation for fast tap responsiveness');
+
+          // UI & Interactive Polish Feature 3: Thumbnail Grid & Page Cards Polish (Hover Dock, Quick-Actions, Glass Elevation)
+          assert(typeof window.rotatePage === 'function', 'rotatePage controller is exported on window');
+          assert(typeof window.togglePageSelection === 'function', 'togglePageSelection controller is exported on window');
+
+          // 3a: Test bidirectional rotation logic (CW and CCW)
+          window.removeState.pageRotations.clear();
+          window.rotatePage(1, 90);
+          assert(window.removeState.pageRotations.get(1) === 90, 'rotatePage(+90) rotates page 90 degrees clockwise');
+          window.rotatePage(1, -90);
+          assert(window.removeState.pageRotations.get(1) === 0, 'rotatePage(-90) rotates page counter-clockwise back to 0');
+          window.rotatePage(1, -90);
+          assert(window.removeState.pageRotations.get(1) === 270, 'rotatePage(-90) wraps correctly modulo 360 to 270 degrees');
+          window.removeState.pageRotations.clear();
+
+          // 3b: Test page card hover dock and selection watermark interactions
+          const testGrid = document.createElement('div');
+          testGrid.id = 'pagesGrid';
+          testGrid.className = 'pages-grid';
+          document.body.appendChild(testGrid);
+
+          testGrid.innerHTML = `
+            <div class="page-card" data-page-num="1">
+              <div class="page-header-meta">
+                <span class="page-num-dot">1</span>
+                <span class="page-rot-badge hidden" data-page-num="1"></span>
+              </div>
+              <div class="page-canvas-wrapper">
+                <canvas id="canvas_page_1" width="100" height="140"></canvas>
+                <div class="delete-watermark hidden"><i class="fas fa-trash-alt"></i></div>
+                <div class="page-hover-dock">
+                  <button type="button" class="page-dock-btn" data-action="zoom" data-page-num="1"><i class="fas fa-search-plus"></i></button>
+                  <button type="button" class="page-dock-btn" data-action="rotate-ccw" data-page-num="1"><i class="fas fa-undo"></i></button>
+                  <button type="button" class="page-dock-btn" data-action="rotate-cw" data-page-num="1"><i class="fas fa-redo"></i></button>
+                  <button type="button" class="page-dock-btn delete-dock-btn" data-action="toggle-delete" data-page-num="1"><i class="fas fa-trash-alt"></i></button>
+                </div>
+              </div>
+            </div>
+          `;
+
+          const pageCardEl = testGrid.querySelector('.page-card');
+          const hoverDockEl = testGrid.querySelector('.page-hover-dock');
+          const dockBtns = testGrid.querySelectorAll('.page-dock-btn');
+          assert(hoverDockEl !== null, 'Page card renders quick-action hover dock element');
+          assert(dockBtns.length === 4, 'Hover dock renders all 4 quick-action buttons (zoom, rotate CCW, rotate CW, toggle delete)');
+
+          // 3c: Test page selection toggle updates delete watermark and selected pages state
+          window.removeState.selectedPages.clear();
+          window.togglePageSelection(1);
+          assert(window.removeState.selectedPages.has(1), 'togglePageSelection adds page to selectedPages set');
+          const watermark = pageCardEl.querySelector('.delete-watermark');
+          assert(pageCardEl.classList.contains('marked-for-deletion'), 'Selected page card receives .marked-for-deletion class');
+          assert(watermark !== null, 'Delete watermark badge element is present in card DOM');
+
+          window.togglePageSelection(1);
+          assert(!window.removeState.selectedPages.has(1), 'togglePageSelection toggles off page from selectedPages');
+          assert(!pageCardEl.classList.contains('marked-for-deletion'), 'marked-for-deletion class is removed from page card when deselected');
+
+          testGrid.remove();
+
+          // 3d: Verify CSS bundle contains Feature 3 rules
+          assert(cssContent.includes('.page-hover-dock'), 'Compiled bundle includes .page-hover-dock styles');
+          assert(cssContent.includes('.delete-watermark'), 'Compiled bundle includes .delete-watermark spring pop styles');
+          assert(cssContent.includes('.page-dock-btn'), 'Compiled bundle includes .page-dock-btn interactive styling');
+          assert(cssContent.includes('.image-card'), 'Compiled bundle includes modern image card elevation');
         }
 
         const msg = 'ALL_TESTS_COMPLETED_SUCCESSFULLY (' + results.length + ' assertions passed)';
