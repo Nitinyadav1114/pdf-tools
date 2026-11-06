@@ -413,12 +413,15 @@ body.theme-dark .btn-card-action:hover {
   cursor: grabbing !important;
 }
 
-/* Unified Action Cards */
+/* Unified Action Cards & Sticky Process Dock */
 .merge-action-card, .action-bar-card, .action-bar {
-  background: var(--bg-card);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid var(--border-color);
+  position: sticky;
+  bottom: 1.25rem;
+  z-index: 35;
+  background: var(--surface-card, rgba(255, 255, 255, 0.94));
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border: 1.5px solid var(--border-subtle, rgba(226, 232, 240, 0.85));
   border-radius: 20px;
   padding: 1.25rem 1.5rem;
   display: flex;
@@ -426,16 +429,94 @@ body.theme-dark .btn-card-action:hover {
   justify-content: space-between;
   flex-wrap: wrap;
   gap: 1rem;
-  box-shadow: var(--card-shadow);
+  box-shadow: 0 12px 32px -4px rgba(0, 0, 0, 0.08), 0 4px 12px -2px rgba(0, 0, 0, 0.04);
   margin-bottom: 1.25rem;
-  transition: var(--transition);
+  transition: transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1),
+              box-shadow 0.28s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.2s ease;
+}
+
+.merge-action-card:hover, .action-bar-card:hover, .action-bar:hover {
+  box-shadow: 0 16px 36px -4px rgba(0, 0, 0, 0.12), 0 4px 14px -2px rgba(0, 0, 0, 0.06);
+  border-color: rgba(99, 102, 241, 0.35);
 }
 
 body.theme-dark .merge-action-card,
 body.theme-dark .action-bar-card,
-body.theme-dark .action-bar {
-  background: rgba(19, 27, 46, 0.85);
-  border-color: rgba(30, 41, 59, 0.85);
+body.theme-dark .action-bar,
+html.dark .merge-action-card,
+html.dark .action-bar-card,
+html.dark .action-bar {
+  background: rgba(19, 27, 46, 0.92);
+  border-color: rgba(51, 65, 85, 0.65);
+  box-shadow: 0 16px 36px -4px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(255, 255, 255, 0.05);
+}
+
+body.theme-dark .merge-action-card:hover,
+body.theme-dark .action-bar-card:hover,
+body.theme-dark .action-bar:hover,
+html.dark .merge-action-card:hover,
+html.dark .action-bar-card:hover,
+html.dark .action-bar:hover {
+  border-color: rgba(129, 140, 248, 0.45);
+  box-shadow: 0 20px 42px -4px rgba(0, 0, 0, 0.55), 0 0 20px rgba(99, 102, 241, 0.18);
+}
+
+/* Keyboard Shortcut Badges */
+.shortcut-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.15rem 0.45rem;
+  font-size: 0.68rem;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.22);
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  color: currentColor;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.12);
+  pointer-events: none;
+  user-select: none;
+}
+
+@keyframes keyboardShortcutPulse {
+  0% { transform: scale(1); filter: brightness(1); }
+  40% { transform: scale(0.96) translateY(2px); filter: brightness(1.25); }
+  100% { transform: scale(1) translateY(0); filter: brightness(1); }
+}
+
+.btn-keyboard-active {
+  animation: keyboardShortcutPulse 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+}
+
+/* Shimmering Progress Bar */
+@keyframes progressShimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.progress-bar-fill {
+  background-size: 200% 100% !important;
+  animation: progressShimmer 2.2s infinite linear !important;
+}
+
+.progress-live-indicator {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 9999px;
+  background: #10b981;
+  margin-right: 0.45rem;
+  animation: livePulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  vertical-align: middle;
+}
+
+@keyframes livePulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.35; transform: scale(0.85); }
 }
 
 .output-filename-group, .output-filename-wrapper, .action-bar-left {

@@ -120,7 +120,42 @@ if (typeof window !== 'undefined') {
   window.checkOfflineReadiness = checkOfflineReadiness;
   window.openMobileDrawer = openMobileDrawer;
   window.closeMobileDrawer = closeMobileDrawer;
+  window.getActiveTabPrimaryButton = getActiveTabPrimaryButton;
+  window.triggerActiveTabExecution = triggerActiveTabExecution;
 
+}
+
+export function getActiveTabPrimaryButton() {
+  const currentTab = window.currentTab || 'home';
+  const buttonMap = {
+    merge: 'mergeBtn',
+    remove: 'executeRemoveBtn',
+    slides: 'executeSlidesBtn',
+    invert: 'executeInvertBtn',
+    compress: 'executeCompressBtn',
+    images: 'executeImagesBtn',
+    pdftoimages: 'pdfToImagesExecuteBtn',
+    split: 'executeSplitBtn'
+  };
+  const btnId = buttonMap[currentTab];
+  if (!btnId) return null;
+  const btn = document.getElementById(btnId);
+  if (!btn) return null;
+  const isHidden = btn.offsetParent === null || btn.disabled || btn.classList.contains('hidden');
+  return isHidden ? null : btn;
+}
+
+export function triggerActiveTabExecution() {
+  const btn = getActiveTabPrimaryButton();
+  if (btn) {
+    if (typeof window.playAudioCue === 'function') window.playAudioCue('button');
+    if (typeof window.triggerHaptic === 'function') window.triggerHaptic('medium');
+    btn.classList.add('btn-keyboard-active');
+    setTimeout(() => btn.classList.remove('btn-keyboard-active'), 320);
+    btn.click();
+    return true;
+  }
+  return false;
 }
 
 export {
@@ -421,10 +456,18 @@ export async function init() {
     });
   }
 
-  // Keyboard accessibility: Escape closes drawer
+  // Keyboard accessibility: Escape closes drawer, Ctrl/Cmd+Enter executes active tool
   window.addEventListener('keydown', (e) => {
     if (e.key === 'Escape' && mobileToolsDrawer && !mobileToolsDrawer.classList.contains('hidden')) {
       closeMobileDrawer();
+      return;
+    }
+
+    if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+      const handled = triggerActiveTabExecution();
+      if (handled) {
+        e.preventDefault();
+      }
     }
   });
 
