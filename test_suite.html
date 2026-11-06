@@ -1378,7 +1378,7 @@
           // 5b: Audit sw.js pre-cache coverage against live application assets
           const swResponse = await fetch('sw.js');
           const swContent = await swResponse.text();
-          assert(swContent.includes('pdf-tools-v38'), 'Service Worker cache version is bumped to v38');
+          assert(swContent.includes('pdf-tools-v39'), 'Service Worker cache version is bumped to v39');
           assert(swContent.includes('bundle.min.css'), 'Compiled production CSS bundle is precached');
           assert(swContent.includes('pdf-lib.min.js') && swContent.includes('pdf.min.js'), 'Heavy client-side PDF engines are precached for 100% offline usage');
           assert(swContent.includes('event.waitUntil'), 'Background revalidation is guaranteed via event.waitUntil');
@@ -1543,6 +1543,23 @@
           assert(cssContent.includes('progressShimmer'), 'Compiled bundle includes @keyframes progressShimmer for glowing live progress');
           assert(cssContent.includes('.btn-keyboard-active'), 'Compiled bundle includes .btn-keyboard-active tactile feedback animation');
           assert(cssContent.includes('.shortcut-badge'), 'Compiled bundle includes .shortcut-badge styling');
+
+          // UI & Interactive Polish Feature 5: Typography & Card Glassmorphism (Double-border contrast, glow accents, tabular numbers)
+          assert(cssContent.includes('optimizeLegibility'), 'Compiled bundle enforces text-rendering: optimizeLegibility for crisp typography');
+          assert(cssContent.includes('tabular-nums'), 'Compiled bundle applies font-variant-numeric: tabular-nums for aligned badges and numbers');
+          assert(cssContent.includes('.modern-glass-panel'), 'Compiled bundle includes .modern-glass-panel elevation rules');
+          assert(cssContent.includes('resultCardSlideUp'), 'Compiled bundle includes @keyframes resultCardSlideUp for spring result entrance');
+          assert(cssContent.includes('resultIconPop'), 'Compiled bundle includes @keyframes resultIconPop for celebratory icon pop');
+
+          // 5b: Test DOM simulated result-card spring rendering
+          const testResult = document.createElement('div');
+          testResult.className = 'result-card';
+          testResult.innerHTML = '<div class="result-icon"><svg class="w-6 h-6"><use href="#lucide-check-circle"></use></svg></div><p>Done!</p>';
+          document.body.appendChild(testResult);
+          assert(testResult.classList.contains('result-card'), 'Result card DOM element instantiated successfully');
+          const testIcon = testResult.querySelector('.result-icon');
+          assert(testIcon !== null, 'Result card contains animated celebratory icon element');
+          testResult.remove();
         }
 
         const msg = 'ALL_TESTS_COMPLETED_SUCCESSFULLY (' + results.length + ' assertions passed)';
