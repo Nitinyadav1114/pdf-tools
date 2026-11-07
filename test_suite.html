@@ -1378,7 +1378,7 @@
           // 5b: Audit sw.js pre-cache coverage against live application assets
           const swResponse = await fetch('sw.js');
           const swContent = await swResponse.text();
-          assert(swContent.includes('pdf-tools-v39'), 'Service Worker cache version is bumped to v39');
+          assert(swContent.includes('pdf-tools-v40'), 'Service Worker cache version is bumped to v40');
           assert(swContent.includes('bundle.min.css'), 'Compiled production CSS bundle is precached');
           assert(swContent.includes('pdf-lib.min.js') && swContent.includes('pdf.min.js'), 'Heavy client-side PDF engines are precached for 100% offline usage');
           assert(swContent.includes('event.waitUntil'), 'Background revalidation is guaranteed via event.waitUntil');
@@ -1560,6 +1560,17 @@
           const testIcon = testResult.querySelector('.result-icon');
           assert(testIcon !== null, 'Result card contains animated celebratory icon element');
           testResult.remove();
+
+          // UI Modern Ambient, Specular Glass & Streamlined Header (v40)
+          // Verify header has removed sound and search buttons
+          assert(!indexHtml.includes('id="cmdPaletteBtn"'), 'Search button (cmdPaletteBtn) removed from header for clean minimalist UI');
+          assert(!indexHtml.includes('id="soundToggleBtn"'), 'Sound toggle button (soundToggleBtn) removed from header for clean UI');
+          assert(!indexHtml.includes('id="mobileDrawerSearchBtn"'), 'Mobile search button removed from drawer for clutter-free navigation');
+
+          // Verify ambient living orbs and specular glass in compiled CSS bundle
+          assert(cssContent.includes('ambientFloat1'), 'Compiled bundle includes @keyframes ambientFloat1 for living ambient mesh glow');
+          assert(cssContent.includes('saturate(180%)'), 'Compiled bundle enforces backdrop saturation boost for Apple-grade vibrant glass');
+          assert(cssContent.includes('.ambient-glow-wrapper'), 'Compiled bundle includes .ambient-glow-wrapper atmosphere styling');
         }
 
         const msg = 'ALL_TESTS_COMPLETED_SUCCESSFULLY (' + results.length + ' assertions passed)';

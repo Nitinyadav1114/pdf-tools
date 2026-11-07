@@ -32,7 +32,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=block" rel="stylesheet">
 
   <!-- Production Single Minified Stylesheet (Zero-Waterfall Pre-bundled Architecture) -->
-  <link rel="stylesheet" href="assets/css/bundle.min.css?v=39">
+  <link rel="stylesheet" href="assets/css/bundle.min.css?v=40">
 
   <!-- Canonical URL -->
   <link rel="canonical" href="https://nitinyadav1114.github.io/pdf-tools/">
@@ -129,16 +129,7 @@
           <span class="privacy-text-full">100% Private &amp; Offline</span>
           <span class="privacy-text-short">Private</span>
         </div>
-                <button id="cmdPaletteBtn" class="cmd-palette-trigger-btn" type="button" aria-label="Search tools and commands (Ctrl+K)" title="Quick Search &amp; Actions (Ctrl+K)">
-          <svg class="w-4 h-4 shrink-0 text-slate-500 dark:text-slate-400" aria-hidden="true"><use href="#lucide-search"></use></svg>
-          <span class="cmd-trigger-text hidden md:inline text-xs text-slate-500 dark:text-slate-400 font-medium">Search...</span>
-          <kbd class="cmd-trigger-kbd hidden sm:inline-flex">Ctrl K</kbd>
-        </button>
-        <button id="soundToggleBtn" class="sound-toggle-btn" type="button" aria-label="Toggle sound effects" title="Toggle audio cues &amp; haptics">
-          <svg class="sound-icon-on w-4 h-4 shrink-0 text-slate-700 dark:text-slate-300" aria-hidden="true"><use href="#lucide-volume-2"></use></svg>
-          <svg class="sound-icon-off hidden w-4 h-4 shrink-0 text-slate-400 dark:text-slate-500" aria-hidden="true"><use href="#lucide-volume-x"></use></svg>
-        </button>
-        <button id="themeToggleBtn" class="theme-toggle-btn" type="button" aria-label="Toggle dark/light mode" title="Toggle theme">
+                <button id="themeToggleBtn" class="theme-toggle-btn" type="button" aria-label="Toggle dark/light mode" title="Toggle theme">
           <svg class="theme-icon light-icon w-4 h-4 shrink-0 text-slate-700" aria-hidden="true"><use href="#lucide-moon"></use></svg>
           <svg class="theme-icon dark-icon hidden w-4 h-4 shrink-0 text-amber-400" aria-hidden="true"><use href="#lucide-sun"></use></svg>
         </button>
@@ -2283,15 +2274,7 @@
           <svg class="w-4 h-4" aria-hidden="true"><use href="#lucide-x"></use></svg>
         </button>
       </div>
-            <!-- Mobile Quick Search Trigger -->
-      <button type="button" id="mobileDrawerSearchBtn" class="w-full mb-3 flex items-center justify-between px-3 py-2 rounded-xl bg-slate-100/90 dark:bg-white/5 border border-slate-200/80 dark:border-white/10 text-xs text-slate-500 dark:text-slate-400 cursor-pointer">
-        <span class="flex items-center gap-2">
-          <svg class="w-4 h-4 text-indigo-500" aria-hidden="true"><use href="#lucide-search"></use></svg>
-          <span class="font-medium text-slate-700 dark:text-slate-200">Search tools &amp; actions...</span>
-        </span>
-        <kbd class="cmd-kbd-sm">Ctrl K</kbd>
-      </button>
-      <div class="grid grid-cols-2 gap-2 text-xs">
+            <div class="grid grid-cols-2 gap-2 text-xs">
         <button type="button" class="mobile-drawer-tool-item" data-drawer-tab="merge">
           <div class="w-8 h-8 rounded-lg bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 flex items-center justify-center shrink-0">
             <svg class="w-4 h-4" aria-hidden="true"><use href="#lucide-merge"></use></svg>
@@ -2373,7 +2356,7 @@
   <script defer src="assets/vendor/sortable.min.js" integrity="sha384-BSxuMLxX+FCbTdYec3TbXlnMGEEM2QXTFdtDaveen71o+jswm2J36+xFqp8k4VHM" crossorigin="anonymous"></script>
 
   <!-- Main Orchestrator & Bootloader (PDF-Lib and PDF.js dynamically lazy-loaded on demand) -->
-  <script type="module" src="assets/js/app.js?v=39"></script>
+  <script type="module" src="assets/js/app.js?v=40"></script>
   <script>
     // Register Service Worker for fast browser caching & offline access
     if ('serviceWorker' in navigator) {
