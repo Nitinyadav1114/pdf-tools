@@ -17,6 +17,7 @@ export class WorkerPoolManager {
     this.hasOffscreenCanvas = false;
     this.initPromise = null;
     this.taskIdCounter = 0;
+    this.tasksProcessedCounter = 0;
     this.pendingCallbacks = new Map();
   }
 
@@ -96,6 +97,7 @@ export class WorkerPoolManager {
     if (cb) {
       this.pendingCallbacks.delete(id);
       if (success) {
+        this.tasksProcessedCounter++;
         cb.resolve(rest);
       } else {
         cb.reject(new Error(error || (fallback ? 'WORKER_FALLBACK' : 'Worker task failed')));
@@ -103,6 +105,21 @@ export class WorkerPoolManager {
     }
 
     this._drainQueue();
+  }
+
+  _replaceWorker(deadWorker) {
+    const idx = this.workers.indexOf(deadWorker);
+    if (idx !== -1) {
+      try { deadWorker.terminate(); } catch (e) {}
+      try {
+        const replacement = new Worker(this.workerPath);
+        replacement.onmessage = (e) => this._handleMessage(e, replacement);
+        replacement.onerror = (err) => this._handleError(err, replacement);
+        this.workers[idx] = replacement;
+      } catch (e) {
+        this.workers.splice(idx, 1);
+      }
+    }
   }
 
   _handleError(err, worker) {
@@ -117,7 +134,36 @@ export class WorkerPoolManager {
         cb.reject(new Error(err && err.message ? err.message : 'Worker execution error'));
       }
     }
+    this._replaceWorker(worker);
     this._drainQueue();
+  }
+
+  getStats() {
+    return {
+      poolSize: this.workers.length,
+      activeWorkers: this.busyWorkers.size,
+      idleWorkers: Math.max(0, this.workers.length - this.busyWorkers.size),
+      queueDepth: this.queue.length,
+      isAvailable: this.isAvailable,
+      hasOffscreenCanvas: this.hasOffscreenCanvas,
+      tasksProcessed: this.tasksProcessedCounter
+    };
+  }
+
+  async runBatch(tasks, onProgress = null) {
+    if (!Array.isArray(tasks) || tasks.length === 0) return [];
+    let completed = 0;
+    const total = tasks.length;
+    return Promise.all(
+      tasks.map(async (task) => {
+        const result = await this.encodeImageOffscreen(task);
+        completed++;
+        if (typeof onProgress === 'function') {
+          try { onProgress(completed, total); } catch (e) {}
+        }
+        return result;
+      })
+    );
   }
 
   _drainQueue() {

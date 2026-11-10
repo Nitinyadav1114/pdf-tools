@@ -1378,7 +1378,7 @@
           // 5b: Audit sw.js pre-cache coverage against live application assets
           const swResponse = await fetch('sw.js');
           const swContent = await swResponse.text();
-          assert(swContent.includes('pdf-tools-v41'), 'Service Worker cache version is bumped to v41');
+          assert(swContent.includes('pdf-tools-v42'), 'Service Worker cache version is bumped to v42');
           assert(swContent.includes('bundle.min.css'), 'Compiled production CSS bundle is precached');
           assert(swContent.includes('pdf-lib.min.js') && swContent.includes('pdf.min.js'), 'Heavy client-side PDF engines are precached for 100% offline usage');
           assert(swContent.includes('event.waitUntil'), 'Background revalidation is guaranteed via event.waitUntil');
@@ -1594,6 +1594,27 @@
           await window.preloadEngineForTool('compress');
           const updatedEngineStatus = window.getEngineStatus();
           assert(updatedEngineStatus.preloadedTools.includes('compress'), 'preloadEngineForTool registers preloaded tool intent');
+
+          // Performance & Engine Architecture Feature 2: Multi-Threaded Web Worker Offscreen Canvas Encoding (v42)
+          assert(typeof window.PDF_TOOLS_WORKER_POOL.getStats === 'function', 'WorkerPool getStats method is available');
+          const poolStats = window.PDF_TOOLS_WORKER_POOL.getStats();
+          assert(typeof poolStats === 'object' && poolStats !== null, 'getStats returns structured pool telemetry');
+          assert(typeof poolStats.poolSize === 'number' && poolStats.poolSize > 0, 'Worker pool reflects hardware concurrency size');
+          assert(typeof poolStats.tasksProcessed === 'number', 'Worker pool tracks processed tasks count');
+
+          assert(typeof window.PDF_TOOLS_WORKER_POOL.runBatch === 'function', 'WorkerPool runBatch method is available');
+          let progressCount = 0;
+          const batchTasks = [1, 2, 3].map(val => {
+            const b = new Uint8ClampedArray(12 * 12 * 4);
+            b.fill(val * 40);
+            return { buffer: b.buffer, width: 12, height: 12, mimeType: 'image/jpeg' };
+          });
+          const batchRes = await window.PDF_TOOLS_WORKER_POOL.runBatch(batchTasks, (done, total) => {
+            progressCount = done;
+          });
+          assert(batchRes.length === 3, 'WorkerPool runBatch processes all batch tasks');
+          assert(progressCount === 3, 'WorkerPool runBatch invokes onProgress callback with accurate count');
+          assert(window.PDF_TOOLS_WORKER_POOL.getStats().tasksProcessed >= 3, 'tasksProcessed counter correctly increments on completion');
         }
 
         const msg = 'ALL_TESTS_COMPLETED_SUCCESSFULLY (' + results.length + ' assertions passed)';
