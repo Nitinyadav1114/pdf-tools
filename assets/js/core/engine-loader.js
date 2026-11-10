@@ -5,6 +5,7 @@
 
 let pdfLibPromise = null;
 let pdfJsPromise = null;
+const preloadedTools = new Set();
 
 function getVendorPath(relativePath) {
   try {
@@ -15,18 +16,79 @@ function getVendorPath(relativePath) {
   return relativePath.replace(/^(\.\.\/)+/, 'assets/');
 }
 
-const PDF_LIB_PATH = getVendorPath('../../vendor/pdf-lib.min.js');
-const PDF_JS_PATH = getVendorPath('../../vendor/pdf.min.js');
-const PDF_WORKER_PATH = getVendorPath('../../vendor/pdf.worker.min.js');
+export const PDF_LIB_PATH = getVendorPath('../../vendor/pdf-lib.min.js');
+export const PDF_JS_PATH = getVendorPath('../../vendor/pdf.min.js');
+export const PDF_WORKER_PATH = getVendorPath('../../vendor/pdf.worker.min.js');
+
+/**
+ * Dynamically injects a <link rel="prefetch"> hint into <head> for low-priority background caching.
+ *
+ * @param {string} url
+ * @param {string} [asType='script']
+ * @returns {HTMLLinkElement|null}
+ */
+export function injectPrefetchHint(url, asType = 'script') {
+  if (typeof document === 'undefined' || !url) return null;
+  const existing = document.querySelector(`link[rel="prefetch"][href*="${url}"], link[rel="preload"][href*="${url}"]`);
+  if (existing) return existing;
+
+  const link = document.createElement('link');
+  link.rel = 'prefetch';
+  link.href = url;
+  link.as = asType;
+  link.crossOrigin = 'anonymous';
+  (document.head || document.documentElement).appendChild(link);
+  return link;
+}
+
+/**
+ * Pre-warms the PDF.js Web Worker background environment.
+ * Ensures GlobalWorkerOptions.workerSrc is configured with zero latency for first document parse.
+ *
+ * @returns {Promise<boolean>}
+ */
+export async function prewarmPdfWorker() {
+  if (typeof window === 'undefined') return false;
+  try {
+    const pdfjs = await ensurePdfJsLoaded();
+    if (pdfjs && pdfjs.GlobalWorkerOptions && !pdfjs.GlobalWorkerOptions.workerSrc) {
+      pdfjs.GlobalWorkerOptions.workerSrc = PDF_WORKER_PATH;
+    }
+    return true;
+  } catch (err) {
+    console.warn('[EngineLoader] Worker prewarm notice:', err);
+    return false;
+  }
+}
+
+/**
+ * Returns structured real-time telemetry on PDF engines status and preloaded tools.
+ *
+ * @returns {{ pdfLib: string, pdfJs: string, pdfWorker: string, preloadedTools: string[] }}
+ */
+export function getEngineStatus() {
+  const hasPdfLib = typeof window !== 'undefined' && Boolean(window.PDFLib);
+  const hasPdfJs = typeof window !== 'undefined' && Boolean(window.pdfjsLib);
+  const hasWorker = hasPdfJs && Boolean(window.pdfjsLib?.GlobalWorkerOptions?.workerSrc);
+
+  return {
+    pdfLib: hasPdfLib ? 'ready' : (pdfLibPromise ? 'loading' : 'idle'),
+    pdfJs: hasPdfJs ? 'ready' : (pdfJsPromise ? 'loading' : 'idle'),
+    pdfWorker: hasWorker ? 'ready' : 'idle',
+    preloadedTools: Array.from(preloadedTools)
+  };
+}
 
 /**
  * Dynamically loads and returns the PDFLib global object.
  * If already loaded (e.g. in test suite), resolves immediately.
  * Cached so concurrent or repeated calls share the same promise.
  *
+ * @param {Object} [options]
+ * @param {'high'|'low'|'auto'} [options.priority='auto']
  * @returns {Promise<any>}
  */
-export function ensurePdfLibLoaded() {
+export function ensurePdfLibLoaded(options = {}) {
   if (typeof window === 'undefined') {
     return Promise.resolve(null);
   }
@@ -39,13 +101,18 @@ export function ensurePdfLibLoaded() {
     return pdfLibPromise;
   }
 
+  if (typeof performance !== 'undefined' && performance.mark) {
+    performance.mark('pdf-lib-load-start');
+  }
+
+  // Pre-inject resource hint
+  injectPrefetchHint(PDF_LIB_PATH, 'script');
+
   pdfLibPromise = new Promise((resolve, reject) => {
-    // Check if it became available synchronously
     if (window.PDFLib) {
       return resolve(window.PDFLib);
     }
 
-    // Check if script tag is already in DOM
     const existingScript = document.querySelector('script[src*="pdf-lib.min.js"]');
     if (existingScript) {
       if (window.PDFLib) {
@@ -53,6 +120,9 @@ export function ensurePdfLibLoaded() {
       }
       existingScript.addEventListener('load', () => {
         if (window.PDFLib) {
+          if (typeof performance !== 'undefined' && performance.mark) {
+            performance.mark('pdf-lib-load-end');
+          }
           resolve(window.PDFLib);
         } else {
           pdfLibPromise = null;
@@ -73,9 +143,15 @@ export function ensurePdfLibLoaded() {
     script.src = PDF_LIB_PATH;
     script.async = true;
     script.crossOrigin = 'anonymous';
+    if (options.priority) {
+      script.fetchPriority = options.priority;
+    }
 
     script.onload = () => {
       if (window.PDFLib) {
+        if (typeof performance !== 'undefined' && performance.mark) {
+          performance.mark('pdf-lib-load-end');
+        }
         resolve(window.PDFLib);
       } else {
         pdfLibPromise = null;
@@ -101,9 +177,11 @@ export function ensurePdfLibLoaded() {
  * Initializes GlobalWorkerOptions.workerSrc immediately on load.
  * Cached so concurrent or repeated calls share the same promise.
  *
+ * @param {Object} [options]
+ * @param {'high'|'low'|'auto'} [options.priority='auto']
  * @returns {Promise<any>}
  */
-export function ensurePdfJsLoaded() {
+export function ensurePdfJsLoaded(options = {}) {
   if (typeof window === 'undefined') {
     return Promise.resolve(null);
   }
@@ -118,6 +196,14 @@ export function ensurePdfJsLoaded() {
   if (pdfJsPromise) {
     return pdfJsPromise;
   }
+
+  if (typeof performance !== 'undefined' && performance.mark) {
+    performance.mark('pdf-js-load-start');
+  }
+
+  // Pre-inject resource hints for both library and worker
+  injectPrefetchHint(PDF_JS_PATH, 'script');
+  injectPrefetchHint(PDF_WORKER_PATH, 'script');
 
   pdfJsPromise = new Promise((resolve, reject) => {
     if (window.pdfjsLib) {
@@ -140,6 +226,9 @@ export function ensurePdfJsLoaded() {
           if (window.pdfjsLib.GlobalWorkerOptions && !window.pdfjsLib.GlobalWorkerOptions.workerSrc) {
             window.pdfjsLib.GlobalWorkerOptions.workerSrc = PDF_WORKER_PATH;
           }
+          if (typeof performance !== 'undefined' && performance.mark) {
+            performance.mark('pdf-js-load-end');
+          }
           resolve(window.pdfjsLib);
         } else {
           pdfJsPromise = null;
@@ -160,11 +249,17 @@ export function ensurePdfJsLoaded() {
     script.src = PDF_JS_PATH;
     script.async = true;
     script.crossOrigin = 'anonymous';
+    if (options.priority) {
+      script.fetchPriority = options.priority;
+    }
 
     script.onload = () => {
       if (window.pdfjsLib) {
         if (window.pdfjsLib.GlobalWorkerOptions && !window.pdfjsLib.GlobalWorkerOptions.workerSrc) {
           window.pdfjsLib.GlobalWorkerOptions.workerSrc = PDF_WORKER_PATH;
+        }
+        if (typeof performance !== 'undefined' && performance.mark) {
+          performance.mark('pdf-js-load-end');
         }
         resolve(window.pdfjsLib);
       } else {
@@ -189,10 +284,11 @@ export function ensurePdfJsLoaded() {
 /**
  * Ensures both PDF-Lib and PDF.js engines are fully loaded and ready.
  *
+ * @param {Object} [options]
  * @returns {Promise<[any, any]>}
  */
-export function ensureAllPdfEngines() {
-  return Promise.all([ensurePdfLibLoaded(), ensurePdfJsLoaded()]);
+export function ensureAllPdfEngines(options = {}) {
+  return Promise.all([ensurePdfLibLoaded(options), ensurePdfJsLoaded(options)]);
 }
 
 /**
@@ -202,6 +298,10 @@ export function ensureAllPdfEngines() {
  * @returns {Promise<any>}
  */
 export function preloadEngineForTool(toolName) {
+  if (toolName) {
+    preloadedTools.add(toolName);
+  }
+
   switch (toolName) {
     case 'merge':
     case 'remove':
@@ -266,7 +366,7 @@ export function initEnginePreloader() {
 
     // Dropzones across the entire app
     document.querySelectorAll('.dropzone, .universal-dropzone').forEach((dropzoneEl) => {
-      ['mouseenter', 'dragenter', 'touchstart'].forEach((evt) => {
+      ['mouseenter', 'dragenter', 'dragover', 'touchstart'].forEach((evt) => {
         dropzoneEl.addEventListener(evt, () => ensureAllPdfEngines().catch(() => {}), { once: true, passive: true });
       });
     });
@@ -286,4 +386,7 @@ if (typeof window !== 'undefined') {
   window.ensureAllPdfEngines = ensureAllPdfEngines;
   window.preloadEngineForTool = preloadEngineForTool;
   window.initEnginePreloader = initEnginePreloader;
+  window.injectPrefetchHint = injectPrefetchHint;
+  window.prewarmPdfWorker = prewarmPdfWorker;
+  window.getEngineStatus = getEngineStatus;
 }

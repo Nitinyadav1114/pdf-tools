@@ -55,7 +55,10 @@ import {
   ensurePdfJsLoaded,
   ensureAllPdfEngines,
   preloadEngineForTool,
-  initEnginePreloader
+  initEnginePreloader,
+  injectPrefetchHint,
+  prewarmPdfWorker,
+  getEngineStatus
 } from './core/engine-loader.js';
 
 // Configure PDF.js worker
@@ -97,6 +100,9 @@ if (typeof window !== 'undefined') {
   window.ensurePdfJsLoaded = ensurePdfJsLoaded;
   window.ensureAllPdfEngines = ensureAllPdfEngines;
   window.preloadEngineForTool = preloadEngineForTool;
+  window.injectPrefetchHint = injectPrefetchHint;
+  window.prewarmPdfWorker = prewarmPdfWorker;
+  window.getEngineStatus = getEngineStatus;
   window.toggleThemeWithTransition = toggleThemeWithTransition;
   window.showToast = showToast;
   window.updatePipelineProgress = updatePipelineProgress;
@@ -163,7 +169,10 @@ export {
   ensurePdfJsLoaded,
   ensureAllPdfEngines,
   preloadEngineForTool,
-  initEnginePreloader
+  initEnginePreloader,
+  injectPrefetchHint,
+  prewarmPdfWorker,
+  getEngineStatus
 };
 
 /**
@@ -204,6 +213,10 @@ export function switchTab(tab) {
     });
 
     let activeBtn = null;
+    if (tab !== 'home') {
+      preloadEngineForTool(tab).catch(() => {});
+    }
+
     if (tab === 'home') {
       activeBtn = tabHomeBtn;
       if (tabHomeBtn) tabHomeBtn.classList.add('active');
