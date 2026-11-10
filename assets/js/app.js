@@ -301,11 +301,13 @@ export function switchTab(tab) {
     window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   if (typeof document !== 'undefined' && document.startViewTransition && !hasReducedMotion) {
-    document.startViewTransition(() => {
+    const vt = document.startViewTransition(() => {
       performDomUpdate();
     });
+    return vt.ready.catch(() => {});
   } else {
     performDomUpdate();
+    return Promise.resolve();
   }
 
   if (typeof window !== 'undefined' && window.history && window.history.replaceState) {

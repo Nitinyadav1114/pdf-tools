@@ -1378,7 +1378,7 @@
           // 5b: Audit sw.js pre-cache coverage against live application assets
           const swResponse = await fetch('sw.js');
           const swContent = await swResponse.text();
-          assert(swContent.includes('pdf-tools-v43'), 'Service Worker cache version is bumped to v43');
+          assert(swContent.includes('pdf-tools-v44'), 'Service Worker cache version is bumped to v44');
           assert(swContent.includes('bundle.min.css'), 'Compiled production CSS bundle is precached');
           assert(swContent.includes('pdf-lib.min.js') && swContent.includes('pdf.min.js'), 'Heavy client-side PDF engines are precached for 100% offline usage');
           assert(swContent.includes('event.waitUntil'), 'Background revalidation is guaranteed via event.waitUntil');
@@ -1644,6 +1644,16 @@
           assert(typeof window.cleanupGalleryMemory === 'function', 'cleanupGalleryMemory controller is exported on window');
           const cleanedBlobs = window.cleanupGalleryMemory();
           assert(typeof cleanedBlobs === 'number', 'cleanupGalleryMemory executes safely and returns count');
+
+          // Performance & Engine Architecture Feature 4: Zero CLS & Instant View Transitions (v44)
+          const switchPromise = window.switchTab('split');
+          assert(switchPromise instanceof Promise, 'switchTab returns a Promise for asynchronous transition completion');
+          await switchPromise;
+          assert(window.currentTab === 'split', 'switchTab successfully transitions to split view');
+          await window.switchTab('home');
+          assert(window.currentTab === 'home', 'switchTab successfully transitions back to home view');
+          assert(cssContent.includes('contain-intrinsic-size'), 'Compiled CSS bundle enforces contain-intrinsic-size layout stability');
+          assert(cssContent.includes('active-tab-view'), 'Compiled CSS bundle registers active-tab-view transition name');
         }
 
         const msg = 'ALL_TESTS_COMPLETED_SUCCESSFULLY (' + results.length + ' assertions passed)';

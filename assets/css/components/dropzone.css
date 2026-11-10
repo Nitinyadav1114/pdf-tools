@@ -4,6 +4,8 @@
 
 .dropzone-section {
   margin-bottom: 1.75rem;
+  contain-intrinsic-size: 1px 240px;
+  content-visibility: auto;
 }
 
 .dropzone {
