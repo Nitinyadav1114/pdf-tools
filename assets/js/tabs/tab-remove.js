@@ -20,6 +20,32 @@ import { ensureAllPdfEngines, ensurePdfLibLoaded } from '../core/engine-loader.j
 const MAX_CONCURRENT_THUMBNAILS = 3;
 export const MAX_ACTIVE_CANVASES = 18;
 
+export function getOptimalCanvasBudget() {
+  if (typeof navigator === 'undefined') return 18;
+  const mem = navigator.deviceMemory || 4;
+  const isMobile = typeof window !== 'undefined' && (window.innerWidth <= 768 || /Mobi|Android|iPhone/i.test(navigator.userAgent || ''));
+  if (mem <= 2 || isMobile) return 10;
+  if (mem <= 4) return 14;
+  return 20;
+}
+
+export function evictAllCanvases() {
+  if (typeof document === 'undefined') return 0;
+  const canvases = document.querySelectorAll('.page-canvas');
+  let count = 0;
+  canvases.forEach((c) => {
+    if (c.width > 0 || c.height > 0) {
+      c.width = 0;
+      c.height = 0;
+      count++;
+    }
+  });
+  if (removeState && removeState.renderedPages) {
+    removeState.renderedPages.clear();
+  }
+  return count;
+}
+
 export function evictPageCanvas(pageNum) {
   const canvas = document.getElementById(`canvas_page_${pageNum}`);
   if (canvas && canvas.width > 0) {
@@ -247,7 +273,8 @@ export function renderPagesGrid() {
           }
         } else {
           // Virtualize & evict offscreen canvas buffers if document is large and active canvases exceed budget
-          if (removeState.totalPages > 12 && removeState.renderedPages.size > MAX_ACTIVE_CANVASES) {
+          const budget = getOptimalCanvasBudget();
+          if (removeState.totalPages > 12 && removeState.renderedPages.size > budget) {
             evictPageCanvas(pageNum);
           }
         }
@@ -822,6 +849,8 @@ export async function triggerPageLightbox(pageNum) {
 if (typeof window !== 'undefined') {
   window.triggerPageLightbox = triggerPageLightbox;
   window.evictPageCanvas = evictPageCanvas;
+  window.evictAllCanvases = evictAllCanvases;
+  window.getOptimalCanvasBudget = getOptimalCanvasBudget;
   window.rehydratePageCanvas = rehydratePageCanvas;
   window.renderPageThumbnail = renderPageThumbnail;
   window.MAX_ACTIVE_CANVASES = MAX_ACTIVE_CANVASES;

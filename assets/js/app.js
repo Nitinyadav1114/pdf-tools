@@ -42,12 +42,12 @@ import { initConfetti, triggerSuccessBurst, triggerGlowPulse } from './core/conf
 
 
 import { initMergeTab, setDefaultOutputFilename, handleMergeFilesAdded } from './tabs/tab-merge.js';
-import { initRemoveTab, handleRemoveFileSelected, evictPageCanvas, rehydratePageCanvas, MAX_ACTIVE_CANVASES } from './tabs/tab-remove.js';
+import { initRemoveTab, handleRemoveFileSelected, evictPageCanvas, evictAllCanvases, getOptimalCanvasBudget, rehydratePageCanvas, MAX_ACTIVE_CANVASES } from './tabs/tab-remove.js';
 import { initSlidesTab, handleSlidesFileSelected } from './tabs/tab-slides.js';
 import { initInvertTab, handleInvertFileSelected } from './tabs/tab-invert.js';
 import { initCompressTab, handleCompressFileSelected } from './tabs/tab-compress.js';
 import { initImagesTab, handleImageFilesAdded } from './tabs/tab-images.js';
-import { initPdfToImagesTab, handlePdfToImagesFileSelected } from './tabs/tab-pdftoimages.js';
+import { initPdfToImagesTab, handlePdfToImagesFileSelected, cleanupGalleryMemory } from './tabs/tab-pdftoimages.js';
 import { initSplitTab, handleSplitFileSelected, parseRangeGroups } from './tabs/tab-split.js';
 import { initHomeTab } from './tabs/tab-home.js';
 import {
@@ -121,6 +121,9 @@ if (typeof window !== 'undefined') {
   window.triggerSuccessBurst = triggerSuccessBurst;
   window.triggerGlowPulse = triggerGlowPulse;
   window.evictPageCanvas = evictPageCanvas;
+  window.evictAllCanvases = evictAllCanvases;
+  window.getOptimalCanvasBudget = getOptimalCanvasBudget;
+  window.cleanupGalleryMemory = cleanupGalleryMemory;
   window.rehydratePageCanvas = rehydratePageCanvas;
   window.MAX_ACTIVE_CANVASES = MAX_ACTIVE_CANVASES;
   window.checkOfflineReadiness = checkOfflineReadiness;

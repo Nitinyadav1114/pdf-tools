@@ -363,6 +363,21 @@ export async function sharePdfImages() {
   }
 }
 
+export function cleanupGalleryMemory() {
+  if (!pdfToImagesState || !pdfToImagesState.images) return 0;
+  let count = 0;
+  pdfToImagesState.images.forEach((img) => {
+    if (img.dataUrl) {
+      try {
+        URL.revokeObjectURL(img.dataUrl);
+        count++;
+      } catch (e) {}
+    }
+  });
+  pdfToImagesState.images = [];
+  return count;
+}
+
 export function resetPdfToImages() {
   if (pdfToImagesState.pdfjsDoc) {
     pdfToImagesState.pdfjsDoc.destroy().catch(() => {});
@@ -371,10 +386,7 @@ export function resetPdfToImages() {
   pdfToImagesState.arrayBuffer = null;
   pdfToImagesState.pdfjsDoc = null;
   pdfToImagesState.totalPages = 0;
-  pdfToImagesState.images.forEach((img) => {
-    if (img.dataUrl) URL.revokeObjectURL(img.dataUrl);
-  });
-  pdfToImagesState.images = [];
+  cleanupGalleryMemory();
   pdfToImagesState.zipBlob = null;
   if (elements.pdfToImagesGallery) elements.pdfToImagesGallery.innerHTML = '';
   if (elements.pdfToImagesFileInput) elements.pdfToImagesFileInput.value = '';
@@ -519,4 +531,8 @@ export function initPdfToImagesTab() {
   if (pdfToImagesDownloadZipBtn) pdfToImagesDownloadZipBtn.addEventListener('click', downloadAllPdfImagesZip);
   if (pdfToImagesShareBtn) pdfToImagesShareBtn.addEventListener('click', sharePdfImages);
   if (pdfToImagesResetBtn) pdfToImagesResetBtn.addEventListener('click', resetPdfToImages);
+}
+
+if (typeof window !== 'undefined') {
+  window.cleanupGalleryMemory = cleanupGalleryMemory;
 }

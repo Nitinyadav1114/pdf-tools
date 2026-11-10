@@ -1378,7 +1378,7 @@
           // 5b: Audit sw.js pre-cache coverage against live application assets
           const swResponse = await fetch('sw.js');
           const swContent = await swResponse.text();
-          assert(swContent.includes('pdf-tools-v42'), 'Service Worker cache version is bumped to v42');
+          assert(swContent.includes('pdf-tools-v43'), 'Service Worker cache version is bumped to v43');
           assert(swContent.includes('bundle.min.css'), 'Compiled production CSS bundle is precached');
           assert(swContent.includes('pdf-lib.min.js') && swContent.includes('pdf.min.js'), 'Heavy client-side PDF engines are precached for 100% offline usage');
           assert(swContent.includes('event.waitUntil'), 'Background revalidation is guaranteed via event.waitUntil');
@@ -1615,6 +1615,35 @@
           assert(batchRes.length === 3, 'WorkerPool runBatch processes all batch tasks');
           assert(progressCount === 3, 'WorkerPool runBatch invokes onProgress callback with accurate count');
           assert(window.PDF_TOOLS_WORKER_POOL.getStats().tasksProcessed >= 3, 'tasksProcessed counter correctly increments on completion');
+
+          // Performance & Engine Architecture Feature 3: Canvas Buffer Virtualization & Aggressive RAM Eviction (v43)
+          assert(typeof window.getOptimalCanvasBudget === 'function', 'getOptimalCanvasBudget controller is exported on window');
+          const optimalBudget = window.getOptimalCanvasBudget();
+          assert(typeof optimalBudget === 'number' && optimalBudget >= 8 && optimalBudget <= 24, 'getOptimalCanvasBudget calculates safe hardware-tuned memory boundary');
+
+          assert(typeof window.evictAllCanvases === 'function', 'evictAllCanvases controller is exported on window');
+          const testCanvas1 = document.createElement('canvas');
+          testCanvas1.className = 'page-canvas';
+          testCanvas1.width = 150;
+          testCanvas1.height = 200;
+          document.body.appendChild(testCanvas1);
+
+          const testCanvas2 = document.createElement('canvas');
+          testCanvas2.className = 'page-canvas';
+          testCanvas2.width = 150;
+          testCanvas2.height = 200;
+          document.body.appendChild(testCanvas2);
+
+          const evictedCount = window.evictAllCanvases();
+          assert(evictedCount >= 2, 'evictAllCanvases detects and resets active canvas memory buffers');
+          assert(testCanvas1.width === 0 && testCanvas1.height === 0, 'evictAllCanvases zeros dimensions of canvas 1');
+          assert(testCanvas2.width === 0 && testCanvas2.height === 0, 'evictAllCanvases zeros dimensions of canvas 2');
+          testCanvas1.remove();
+          testCanvas2.remove();
+
+          assert(typeof window.cleanupGalleryMemory === 'function', 'cleanupGalleryMemory controller is exported on window');
+          const cleanedBlobs = window.cleanupGalleryMemory();
+          assert(typeof cleanedBlobs === 'number', 'cleanupGalleryMemory executes safely and returns count');
         }
 
         const msg = 'ALL_TESTS_COMPLETED_SUCCESSFULLY (' + results.length + ' assertions passed)';
