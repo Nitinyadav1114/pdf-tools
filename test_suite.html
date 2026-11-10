@@ -1378,7 +1378,7 @@
           // 5b: Audit sw.js pre-cache coverage against live application assets
           const swResponse = await fetch('sw.js');
           const swContent = await swResponse.text();
-          assert(swContent.includes('pdf-tools-v44'), 'Service Worker cache version is bumped to v44');
+          assert(swContent.includes('pdf-tools-v45'), 'Service Worker cache version is bumped to v45');
           assert(swContent.includes('bundle.min.css'), 'Compiled production CSS bundle is precached');
           assert(swContent.includes('pdf-lib.min.js') && swContent.includes('pdf.min.js'), 'Heavy client-side PDF engines are precached for 100% offline usage');
           assert(swContent.includes('event.waitUntil'), 'Background revalidation is guaranteed via event.waitUntil');
@@ -1654,6 +1654,13 @@
           assert(window.currentTab === 'home', 'switchTab successfully transitions back to home view');
           assert(cssContent.includes('contain-intrinsic-size'), 'Compiled CSS bundle enforces contain-intrinsic-size layout stability');
           assert(cssContent.includes('active-tab-view'), 'Compiled CSS bundle registers active-tab-view transition name');
+
+          // Performance & Engine Architecture Feature 5: Streaming Service Worker Cache & Offline Pre-cache (v45)
+          assert(swContent.includes('isVendorImmutable'), 'Service Worker isolates immutable vendor binaries for Cache-First efficiency');
+          assert(swContent.includes('Stale-While-Revalidate'), 'Service Worker implements Stale-While-Revalidate strategy for application code');
+          const finalReadiness = await window.checkOfflineReadiness();
+          assert(finalReadiness.supported === true, 'Offline readiness reports CacheStorage API operational');
+          assert(typeof finalReadiness.cachedCount === 'number', 'Offline readiness audits cached assets count');
         }
 
         const msg = 'ALL_TESTS_COMPLETED_SUCCESSFULLY (' + results.length + ' assertions passed)';

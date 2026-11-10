@@ -1,4 +1,4 @@
-const CACHE_NAME = 'pdf-tools-v44';
+const CACHE_NAME = 'pdf-tools-v45';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
@@ -85,7 +85,7 @@ self.addEventListener('activate', (event) => {
   );
 });
 
-// Fetch: Cache-First strategy with Network Fallback
+// Fetch: Optimized Multi-Tier Caching Strategy
 self.addEventListener('fetch', (event) => {
   if (event.request.method !== 'GET') return;
 
@@ -98,10 +98,22 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
+  // Immutable vendor scripts (Cache-First without unnecessary background network roundtrips)
+  const isVendorImmutable = url.pathname.includes('/assets/vendor/') ||
+    url.pathname.endsWith('pdf-lib.min.js') ||
+    url.pathname.endsWith('pdf.min.js') ||
+    url.pathname.endsWith('pdf.worker.min.js') ||
+    url.pathname.endsWith('sortable.min.js');
+
   event.respondWith(
     caches.match(event.request, { ignoreSearch: true }).then((cachedResponse) => {
       if (cachedResponse) {
-        // Cache hit: serve from cache immediately, then revalidate in background if online
+        // Cache hit: For immutable vendor assets, return immediately (zero background traffic)
+        if (isVendorImmutable) {
+          return cachedResponse;
+        }
+
+        // Stale-While-Revalidate for application scripts, styles & views
         event.waitUntil(
           fetch(event.request)
             .then((networkResponse) => {
