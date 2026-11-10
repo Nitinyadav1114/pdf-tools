@@ -32,41 +32,104 @@
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=block" rel="stylesheet">
 
   <!-- Production Single Minified Stylesheet (Zero-Waterfall Pre-bundled Architecture) -->
-  <link rel="stylesheet" href="assets/css/bundle.min.css?v=45">
+  <link rel="stylesheet" href="assets/css/bundle.min.css?v=46">
 
   <!-- Canonical URL -->
   <link rel="canonical" href="https://nitinyadav1114.github.io/pdf-tools/">
 
+  <!-- Alternate Hreflang Canonical -->
+  <link rel="alternate" hreflang="x-default" href="https://nitinyadav1114.github.io/pdf-tools/">
+  <link rel="alternate" hreflang="en" href="https://nitinyadav1114.github.io/pdf-tools/">
+
   <!-- Open Graph / WhatsApp / Facebook / Telegram -->
   <meta property="og:type" content="website">
+  <meta property="og:site_name" content="PDF Tools">
+  <meta property="og:locale" content="en_US">
   <meta property="og:url" content="https://nitinyadav1114.github.io/pdf-tools/">
   <meta property="og:title" content="PDF Tools — All-in-One Private Browser PDF Suite">
   <meta property="og:description" content="Merge, compress, remove pages, convert slides to A4, invert colors, and convert images to PDF. 100% private in your browser — zero file uploads, no app downloads required.">
   <meta property="og:image" content="https://nitinyadav1114.github.io/pdf-tools/assets/og-preview.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="PDF Tools — All-in-One Private Browser PDF Suite">
 
   <!-- Twitter / X -->
   <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@nitinyadav">
+  <meta name="twitter:creator" content="@nitinyadav">
   <meta name="twitter:url" content="https://nitinyadav1114.github.io/pdf-tools/">
   <meta name="twitter:title" content="PDF Tools — All-in-One Private Browser PDF Suite">
   <meta name="twitter:description" content="Merge, compress, remove pages, convert slides to A4, invert colors, and convert images to PDF. 100% private in your browser.">
   <meta name="twitter:image" content="https://nitinyadav1114.github.io/pdf-tools/assets/og-preview.png">
+  <meta name="twitter:image:alt" content="PDF Tools — All-in-One Private Browser PDF Suite">
 
-  <!-- JSON-LD Structured Data Schema -->
+  <!-- Rich JSON-LD Structured Data Schema (@graph with WebApplication, FAQPage & FeatureList) -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
-    "@type": "WebApplication",
-    "name": "PDF Tools",
-    "url": "https://nitinyadav1114.github.io/pdf-tools/",
-    "description": "All-in-one free browser PDF tools. Merge PDFs, compress files up to 90%, remove pages, convert slides to A4 handouts, invert colors to save ink, and convert images to PDF. 100% private in browser.",
-    "applicationCategory": "UtilitiesApplication",
-    "operatingSystem": "All",
-    "browserRequirements": "Requires JavaScript. Requires HTML5.",
-    "offers": {
-      "@type": "Offer",
-      "price": "0",
-      "priceCurrency": "USD"
-    }
+    "@graph": [
+      {
+        "@type": "WebApplication",
+        "@id": "https://nitinyadav1114.github.io/pdf-tools/#webapp",
+        "name": "PDF Tools",
+        "url": "https://nitinyadav1114.github.io/pdf-tools/",
+        "description": "All-in-one free browser PDF tools. Merge PDFs, compress files up to 90%, remove pages, convert slides to A4 handouts, invert colors to save ink, and convert images to PDF. 100% private in browser.",
+        "applicationCategory": "UtilitiesApplication",
+        "operatingSystem": "All",
+        "browserRequirements": "Requires JavaScript. Requires HTML5.",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD"
+        },
+        "featureList": [
+          "Merge multiple PDFs with drag-and-drop reordering",
+          "Compress PDF files with zero or visually-lossless quality",
+          "Remove pages and rotate PDF pages",
+          "Convert slides to A4 multi-page printable handouts",
+          "Invert dark PDF background to clean white paper (Ink Saver)",
+          "Convert JPG, PNG, and WebP images to PDF",
+          "Convert PDF pages to high-resolution JPG/PNG images and export to ZIP",
+          "Split PDF by page ranges or extract individual pages"
+        ],
+        "screenshot": "https://nitinyadav1114.github.io/pdf-tools/assets/og-preview.png",
+        "author": {
+          "@type": "Person",
+          "name": "Nitin Yadav",
+          "url": "https://github.com/Nitinyadav1114"
+        }
+      },
+      {
+        "@type": "FAQPage",
+        "@id": "https://nitinyadav1114.github.io/pdf-tools/#faq",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "Are my PDF files uploaded to any remote server?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "No. PDF Tools operates 100% inside your browser using client-side JavaScript, Web Workers, and WebAssembly. Zero bytes of your documents ever leave your device."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Can I use PDF Tools offline without an internet connection?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes. PDF Tools is a Progressive Web App (PWA) with complete offline caching. Once loaded, all 8 PDF tools remain fully functional even without internet."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Is PDF Tools completely free?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes. PDF Tools is 100% free with unlimited document processing, no sign-ups, and no file size paywalls."
+            }
+          }
+        ]
+      }
+    ]
   }
   </script>
 
@@ -2356,7 +2419,7 @@
   <script defer src="assets/vendor/sortable.min.js" integrity="sha384-BSxuMLxX+FCbTdYec3TbXlnMGEEM2QXTFdtDaveen71o+jswm2J36+xFqp8k4VHM" crossorigin="anonymous"></script>
 
   <!-- Main Orchestrator & Bootloader (PDF-Lib and PDF.js dynamically lazy-loaded on demand) -->
-  <script type="module" src="assets/js/app.js?v=45"></script>
+  <script type="module" src="assets/js/app.js?v=46"></script>
   <script>
     // Register Service Worker for fast browser caching & offline access
     if ('serviceWorker' in navigator) {

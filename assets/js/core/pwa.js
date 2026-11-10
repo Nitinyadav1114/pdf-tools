@@ -172,9 +172,31 @@ export async function checkOfflineReadiness() {
   }
 }
 
+/**
+ * Monitors online and offline connectivity and notifies user with non-intrusive status pills.
+ */
+export function initConnectivityMonitor() {
+  if (typeof window === 'undefined') return;
+
+  const showStatusPill = (message, type = 'info') => {
+    if (typeof window.showToast === 'function') {
+      window.showToast(message, type);
+    }
+  };
+
+  window.addEventListener('offline', () => {
+    showStatusPill('⚡ Offline Mode Active • 100% Private & Locally Functional', 'info');
+  });
+
+  window.addEventListener('online', () => {
+    showStatusPill('✓ Back Online', 'success');
+  });
+}
+
 if (typeof window !== 'undefined') {
   window.openInstallModal = openInstallModal;
   window.closeInstallModal = closeInstallModal;
   window.triggerInstallFlow = triggerInstallFlow;
   window.checkOfflineReadiness = checkOfflineReadiness;
+  window.initConnectivityMonitor = initConnectivityMonitor;
 }

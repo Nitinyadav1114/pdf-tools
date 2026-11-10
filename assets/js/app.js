@@ -31,7 +31,7 @@ import {
 } from './core/utils.js';
 import { isValidPdfFile, isValidImageFile } from './core/validators.js';
 import { createZipArchive } from './core/zip-builder.js';
-import { initPWAInstallBanner, checkOfflineReadiness } from './core/pwa.js';
+import { initPWAInstallBanner, checkOfflineReadiness, initConnectivityMonitor } from './core/pwa.js';
 import { initCounter, incrementProcessedCounter, getCounterStats } from './core/counter.js';
 import { initCommandPalette } from './core/command-palette.js';
 import { initPipelineProgress, updatePipelineProgress, resetPipelineProgress } from './core/pipeline-progress.js';
@@ -127,6 +127,7 @@ if (typeof window !== 'undefined') {
   window.rehydratePageCanvas = rehydratePageCanvas;
   window.MAX_ACTIVE_CANVASES = MAX_ACTIVE_CANVASES;
   window.checkOfflineReadiness = checkOfflineReadiness;
+  window.initConnectivityMonitor = initConnectivityMonitor;
   window.openMobileDrawer = openMobileDrawer;
   window.closeMobileDrawer = closeMobileDrawer;
   window.getActiveTabPrimaryButton = getActiveTabPrimaryButton;
@@ -423,6 +424,7 @@ export async function init() {
   // Delegated click listener above handles all .nav-tab buttons
 
   initPWAInstallBanner();
+  initConnectivityMonitor();
   initCounter();
   initPipelineProgress();
   initCommandPalette({
