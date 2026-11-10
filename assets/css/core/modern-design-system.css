@@ -3030,6 +3030,9 @@ html.dark .os-status-pulse {
     border-top-left-radius: 12px;
     border-top-right-radius: 12px;
   }
+  .dropzone-os-dots {
+    margin-right: 0.5rem;
+  }
 }
 
 
