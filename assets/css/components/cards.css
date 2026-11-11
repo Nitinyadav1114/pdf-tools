@@ -641,6 +641,8 @@ html.dark .action-bar:hover {
 
 /* Result Card */
 .result-card {
+  position: relative;
+  overflow: hidden;
   background: var(--bg-card);
   border: 2px solid var(--success);
   border-radius: var(--border-radius);
@@ -652,6 +654,53 @@ html.dark .action-bar:hover {
   gap: 1.25rem;
   box-shadow: var(--card-shadow);
   animation: fadeIn 0.3s ease;
+}
+
+/* Result Card SaaS Spotlight Support */
+.result-card.saas-spotlight-card,
+.saas-spotlight-card.result-card {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.result-card.saas-spotlight-card::before,
+.saas-spotlight-card.result-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(
+    340px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+    rgba(16, 185, 129, 0.16),
+    transparent 80%
+  );
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 1;
+}
+
+.result-card.saas-spotlight-card:hover::before,
+.saas-spotlight-card.result-card:hover::before {
+  opacity: 1;
+}
+
+.result-card.saas-spotlight-card > *,
+.saas-spotlight-card.result-card > * {
+  position: relative;
+  z-index: 2;
+}
+
+body.theme-dark .result-card.saas-spotlight-card::before,
+body.theme-dark .saas-spotlight-card.result-card::before,
+html.dark .result-card.saas-spotlight-card::before,
+html.dark .saas-spotlight-card.result-card::before {
+  background: radial-gradient(
+    340px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+    rgba(52, 211, 153, 0.22),
+    transparent 80%
+  );
 }
 
 @keyframes fadeIn {

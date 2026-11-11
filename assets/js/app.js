@@ -38,6 +38,8 @@ import { initPipelineProgress, updatePipelineProgress, resetPipelineProgress } f
 import { initTactileFeedback, playAudioCue, triggerHaptic, toggleSound, isSoundEnabled, setSoundEnabled, showDropzoneSuccessBadge } from './core/tactile-feedback.js';
 import { initLightbox, openLightbox, closeLightbox, zoomBy, resetZoom, rotateCW } from './core/lightbox.js';
 import { initConfetti, triggerSuccessBurst, triggerGlowPulse } from './core/confetti.js';
+import { initSpotlightTracking } from './core/spotlight.js';
+export { initSpotlightTracking };
 
 
 
@@ -132,6 +134,7 @@ if (typeof window !== 'undefined') {
   window.closeMobileDrawer = closeMobileDrawer;
   window.getActiveTabPrimaryButton = getActiveTabPrimaryButton;
   window.triggerActiveTabExecution = triggerActiveTabExecution;
+  window.initSpotlightTracking = initSpotlightTracking;
 
 }
 
@@ -389,6 +392,7 @@ export async function init() {
   initTactileFeedback();
   initLightbox();
   initConfetti();
+  initSpotlightTracking();
   setDefaultOutputFilename();
 
   // Initialize individual tool tabs

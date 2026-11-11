@@ -2159,7 +2159,7 @@ body.theme-dark .mobile-drawer-tool-item.is-active-tool::after {
   position: absolute;
   inset: -1px;
   border-radius: 18px;
-  background: radial-gradient(circle 240px at var(--mouse-x, 50%) var(--mouse-y, 0%), var(--card-glow, rgba(99, 102, 241, 0.22)) 0%, transparent 80%);
+  background: radial-gradient(circle 280px at var(--mouse-x, 50%) var(--mouse-y, 50%), var(--card-glow, rgba(99, 102, 241, 0.22)) 0%, transparent 80%);
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.3s ease;
@@ -3201,3 +3201,207 @@ html.dark .nav-tab.active {
   box-shadow: 0 4px 16px rgba(99, 102, 241, 0.35),
               inset 0 1px 1px 0 rgba(255, 255, 255, 0.15) !important;
 }
+
+/* ==========================================================================
+   Modern SaaS Glassmorphism, Cursor-Tracking Spotlight & Fluid Animations
+   ========================================================================== */
+
+/* 1. Raycast-Style Cursor-Tracking Spotlight Cards */
+.saas-spotlight-card {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.saas-spotlight-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(
+    380px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+    var(--card-spotlight-color, rgba(99, 102, 241, 0.15)),
+    transparent 80%
+  );
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 1;
+}
+
+.saas-spotlight-card:hover::before {
+  opacity: 1;
+}
+
+.saas-spotlight-card > * {
+  position: relative;
+  z-index: 2;
+}
+
+body.theme-dark .saas-spotlight-card::before,
+html.dark .saas-spotlight-card::before {
+  background: radial-gradient(
+    380px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+    var(--card-spotlight-dark, rgba(129, 140, 248, 0.22)),
+    transparent 80%
+  );
+}
+
+/* 2. Dynamic Diagonal Light Beams Across Badges (.shimmer-badge) & CTA Buttons */
+@keyframes saasShimmerSweep {
+  0% {
+    transform: rotate(25deg) translateX(-160%);
+  }
+  100% {
+    transform: rotate(25deg) translateX(160%);
+  }
+}
+
+.shimmer-badge {
+  position: relative;
+  overflow: hidden;
+  display: inline-flex;
+  align-items: center;
+  isolation: isolate;
+}
+
+.shimmer-badge::after {
+  content: '';
+  position: absolute;
+  top: -60%;
+  left: -60%;
+  width: 220%;
+  height: 220%;
+  background: linear-gradient(
+    60deg,
+    transparent 20%,
+    rgba(255, 255, 255, 0.45) 50%,
+    transparent 80%
+  );
+  animation: saasShimmerSweep 3.2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  pointer-events: none;
+  z-index: 1;
+}
+
+body.theme-dark .shimmer-badge::after,
+html.dark .shimmer-badge::after {
+  background: linear-gradient(
+    60deg,
+    transparent 20%,
+    rgba(255, 255, 255, 0.25) 50%,
+    transparent 80%
+  );
+}
+
+.btn-cta,
+.btn-shimmer {
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-cta::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -60%;
+  width: 220%;
+  height: 200%;
+  background: linear-gradient(
+    60deg,
+    transparent 20%,
+    rgba(255, 255, 255, 0.25) 45%,
+    rgba(255, 255, 255, 0.45) 50%,
+    rgba(255, 255, 255, 0.25) 55%,
+    transparent 80%
+  );
+  animation: saasShimmerSweep 4s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  pointer-events: none;
+  z-index: 1;
+}
+
+body.theme-dark .btn-cta::after,
+html.dark .btn-cta::after {
+  background: linear-gradient(
+    60deg,
+    transparent 20%,
+    rgba(255, 255, 255, 0.15) 45%,
+    rgba(255, 255, 255, 0.3) 50%,
+    rgba(255, 255, 255, 0.15) 55%,
+    transparent 80%
+  );
+}
+
+/* 3. Staggered Card Entrance on Load */
+@keyframes saasStaggerFadeUp {
+  0% {
+    opacity: 0;
+    transform: translateY(18px) scale(0.97);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.home-tool-grid .home-tool-card,
+.saas-stagger-fade-up,
+.stagger-card {
+  animation: saasStaggerFadeUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.home-tool-grid .home-tool-card:nth-child(1) { animation-delay: 0.04s; }
+.home-tool-grid .home-tool-card:nth-child(2) { animation-delay: 0.08s; }
+.home-tool-grid .home-tool-card:nth-child(3) { animation-delay: 0.12s; }
+.home-tool-grid .home-tool-card:nth-child(4) { animation-delay: 0.16s; }
+.home-tool-grid .home-tool-card:nth-child(5) { animation-delay: 0.20s; }
+.home-tool-grid .home-tool-card:nth-child(6) { animation-delay: 0.24s; }
+.home-tool-grid .home-tool-card:nth-child(7) { animation-delay: 0.28s; }
+.home-tool-grid .home-tool-card:nth-child(8) { animation-delay: 0.32s; }
+
+/* 4. Dual-Layer Specular Inset Highlights for Liquid Glass Realism */
+.modern-glass-panel,
+.home-tool-card {
+  backdrop-filter: blur(20px) saturate(190%) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(190%) !important;
+  box-shadow: 0 14px 34px -4px rgba(0, 0, 0, 0.06),
+              inset 0 1px 1.5px 0 rgba(255, 255, 255, 0.9),
+              inset 0 0 0 1px rgba(255, 255, 255, 0.4) !important;
+}
+
+.home-tool-card:hover {
+  box-shadow: 0 20px 44px -8px var(--card-glow, rgba(99, 102, 241, 0.28)),
+              0 0 0 1px var(--card-accent, #6366f1),
+              inset 0 1.5px 2px 0 rgba(255, 255, 255, 1),
+              inset 0 0 0 1px rgba(255, 255, 255, 0.55) !important;
+}
+
+body.theme-dark .modern-glass-panel,
+body.theme-dark .home-tool-card,
+html.dark .modern-glass-panel,
+html.dark .home-tool-card {
+  background: rgba(15, 23, 42, 0.85) !important;
+  border-color: rgba(51, 65, 85, 0.65) !important;
+  box-shadow: 0 18px 42px -4px rgba(0, 0, 0, 0.58),
+              inset 0 1px 1.5px 0 rgba(255, 255, 255, 0.2),
+              inset 0 0 0 1px rgba(255, 255, 255, 0.08) !important;
+}
+
+body.theme-dark .home-tool-card:hover,
+html.dark .home-tool-card:hover {
+  box-shadow: 0 24px 50px -8px var(--card-glow, rgba(99, 102, 241, 0.4)),
+              0 0 0 1px var(--card-accent, #6366f1),
+              inset 0 1.5px 2px 0 rgba(255, 255, 255, 0.3),
+              inset 0 0 0 1px rgba(255, 255, 255, 0.12) !important;
+}
+
+/* Reduced Motion Graceful Degradation */
+@media (prefers-reduced-motion: reduce) {
+  .home-tool-grid .home-tool-card,
+  .saas-stagger-fade-up,
+  .stagger-card,
+  .shimmer-badge::after,
+  .btn-cta::after {
+    animation: none !important;
+  }
+}
+

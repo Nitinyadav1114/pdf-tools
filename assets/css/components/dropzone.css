@@ -642,3 +642,60 @@ html.dark .dropzone-success-pulse-badge {
   color: #f8fafc;
   box-shadow: 0 20px 45px -10px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(99, 102, 241, 0.4);
 }
+
+/* ==========================================================================
+   SaaS Spotlight Card Integration for Dropzones
+   ========================================================================== */
+.dropzone.saas-spotlight-card {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.dropzone.saas-spotlight-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(
+    420px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+    var(--dropzone-spotlight, rgba(99, 102, 241, 0.14)),
+    transparent 80%
+  );
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 1;
+}
+
+.dropzone.saas-spotlight-card:hover::before {
+  opacity: 1;
+}
+
+.dropzone.saas-spotlight-card .dropzone-content,
+.dropzone.saas-spotlight-card .dropzone-chips,
+.dropzone.saas-spotlight-card > * {
+  position: relative;
+  z-index: 2;
+}
+
+body.theme-dark .dropzone.saas-spotlight-card::before,
+html.dark .dropzone.saas-spotlight-card::before {
+  background: radial-gradient(
+    420px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+    var(--dropzone-spotlight-dark, rgba(129, 140, 248, 0.2)),
+    transparent 80%
+  );
+}
+
+/* Tool-specific spotlight accents for dropzones */
+#homeTabView .dropzone.saas-spotlight-card { --dropzone-spotlight: rgba(99, 102, 241, 0.14); --dropzone-spotlight-dark: rgba(129, 140, 248, 0.22); }
+#mergeTabView .dropzone.saas-spotlight-card { --dropzone-spotlight: rgba(16, 185, 129, 0.14); --dropzone-spotlight-dark: rgba(52, 211, 153, 0.22); }
+#removeTabView .dropzone.saas-spotlight-card { --dropzone-spotlight: rgba(244, 63, 94, 0.14); --dropzone-spotlight-dark: rgba(251, 113, 133, 0.22); }
+#slidesTabView .dropzone.saas-spotlight-card { --dropzone-spotlight: rgba(99, 102, 241, 0.14); --dropzone-spotlight-dark: rgba(129, 140, 248, 0.22); }
+#invertTabView .dropzone.saas-spotlight-card { --dropzone-spotlight: rgba(139, 92, 246, 0.14); --dropzone-spotlight-dark: rgba(167, 139, 250, 0.22); }
+#compressTabView .dropzone.saas-spotlight-card { --dropzone-spotlight: rgba(245, 158, 11, 0.14); --dropzone-spotlight-dark: rgba(251, 191, 36, 0.22); }
+#imagesTabView .dropzone.saas-spotlight-card { --dropzone-spotlight: rgba(13, 148, 136, 0.14); --dropzone-spotlight-dark: rgba(45, 212, 191, 0.22); }
+#pdfToImagesTabView .dropzone.saas-spotlight-card { --dropzone-spotlight: rgba(2, 132, 199, 0.14); --dropzone-spotlight-dark: rgba(56, 189, 248, 0.22); }
+#splitTabView .dropzone.saas-spotlight-card { --dropzone-spotlight: rgba(234, 88, 12, 0.14); --dropzone-spotlight-dark: rgba(251, 146, 60, 0.22); }
+
